@@ -7,7 +7,7 @@ type RWDModalProps = BaseModalWrapperProps;
 
 const RWDModal: React.FC<RWDModalProps> = (props) => {
     return(
-        <MediaQuery minWidth={500}>
+        <MediaQuery minWidth={580}>
         {
             (matches: any) => matches ? (
             <BaseModalWrapper 

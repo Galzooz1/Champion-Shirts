@@ -12,7 +12,7 @@ export const DesktopModalContainer = styled(ModalContainer)`
   border-radius: 7px;
   box-shadow: 0 0 32px rgba(0,0,0,0.5);
   padding: 40px;
-  width: 450px;
+  width: 600px;
   font-size: 26px;
   `
 
@@ -66,6 +66,11 @@ export const CloseSign = styled.div`
   }
   &:after {
     transform: rotate(-45deg);
+  }
+  &:hover::before,
+  &:hover::after {
+      background-color: red;
+      color:red;
   }
 `;
 

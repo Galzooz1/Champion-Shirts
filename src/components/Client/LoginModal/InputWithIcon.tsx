@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 const InputWrapper = styled.div`
@@ -15,19 +14,21 @@ const InputWrapper = styled.div`
   }
 `;
 
-const InputContainer = styled(InputWrapper)`
+export const InputContainer = styled(InputWrapper)`
   margin-bottom: 10px;
   width: 100%;
   font-size: 60%;
   border: 1px solid grey;
   padding: 5px;
 `
-const IconContainer = styled.div`
+export const IconContainer = styled.div`
   width: 33px;
-  padding-left: 6px;
-`
+  padding-left: 3px;
+  border-radius: 10px;
+  margin-right:6px;
+`;
 
-const ModalInput = styled.input`
+export const ModalInput = styled.input`
   display: inline-block;
   outline: none;
   padding: 5px 0;
@@ -36,14 +37,7 @@ const ModalInput = styled.input`
   text-indent: 8px;
 `;
 
-
-type InputWithIconProps = {icon?: JSX.Element} & JSX.IntrinsicElements['input'] 
-
-const InputWithIcon: React.FC<InputWithIconProps> = ({icon, ref, ...props}) => {
-    return (<InputContainer>
-    {icon && <IconContainer>{icon}</IconContainer>}
-    <ModalInput {...props} />
-    </InputContainer>);
-}
-
-export default InputWithIcon
+export const LabelContainer = styled.label`
+    font-size: 16px;
+    color:#D6AF05;
+`
