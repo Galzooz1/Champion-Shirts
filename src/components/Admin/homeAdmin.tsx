@@ -1,7 +1,11 @@
 import React from 'react';
 import HeaderAdmin from './headerAdmin';
 
-const HomeAdmin = () => {
+interface HomeAdminProps {
+
+};
+
+const HomeAdmin: React.FC<HomeAdminProps> = () => {
     return(
         <React.Fragment>
             <HeaderAdmin/>
