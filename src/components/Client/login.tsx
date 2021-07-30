@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
 import { doApiMethod, URL_API } from '../services/apiService';
 import LoginForm, { LoginFunction } from './loginForm';
+import { SignUpFunction } from './signUpForm';
 
 interface LoginProps {
     
@@ -36,11 +37,15 @@ const Login: React.FC<LoginProps> = () => {
         }
     }
 
+    const onSignUpRequested: SignUpFunction = async(SignUpArgs: any) => {
+        alert(SignUpArgs);
+    }
+
     return(
         <>
         <div>
             <button onClick={toggleModal} className="btn btn-primary">Login</button>
-            <LoginForm isModalVisible={isModalVisible} onLoginRequested={onLoginRequested} onClose={onBackdropClick}/>
+            <LoginForm isModalVisible={isModalVisible} onLoginRequested={onLoginRequested} onSignUpRequested={onSignUpRequested} onClose={onBackdropClick}/>
         <ReactTooltip/>
         </div>
         </>

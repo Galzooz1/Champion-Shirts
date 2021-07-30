@@ -4,8 +4,10 @@ import { IconContainer, InputContainer, LabelContainer, ModalInput } from './Log
 import RWDModal from './LoginModal/RWDModal';
 import UserIcon from '../../assets/user.svg';
 import PasswordIcon from '../../assets/password.svg'
+import { useState } from 'react';
+import SignUpForm, { SignUpFunction } from './signUpForm';
 
-    export interface LoginArgs {
+    interface LoginArgs {
         email: string;
         password: string;
     }
@@ -17,19 +19,25 @@ import PasswordIcon from '../../assets/password.svg'
         isModalVisible: boolean;
         loginError?: string;
         onLoginRequested: LoginFunction;
+        onSignUpRequested: SignUpFunction;
     };
 
-const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onClose, onLoginRequested,}) => {
+const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onClose, onLoginRequested, onSignUpRequested}, props) => {
 
     const {register, handleSubmit, formState: { errors }} = useForm<LoginArgs>();
     // let history = useHistory();
 
     let emailRef = register("email",{required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i});
     let passwordRef = register("password",{required: true, minLength:3})
+    let [isSignUp, setIsSignUp] = useState<boolean>(false);
 
     const onSubmit = (LoginArgs:any) => { 
         console.log(LoginArgs);
         onLoginRequested(LoginArgs);
+    }
+
+    const toggleSignUp = () => { 
+        setIsSignUp(wasSignUp => !wasSignUp);
     }
 
     // const doApi = async(dataBody:any) => { 
@@ -53,6 +61,7 @@ const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onCl
         header="Login"
         message="Please Log in"
         content={
+        (!isSignUp ? 
             <form onSubmit={handleSubmit(onSubmit)} className="col-lg-6 mx-auto p-2 shadow mt-3" data-type="info" data-tip="Login to both client and admin, enter the admin panel from regular homePage if the user is an admin">
                 <div className="mb-3">
                     <LabelContainer className="text-warning">Email</LabelContainer>
@@ -70,8 +79,19 @@ const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onCl
                     </InputContainer>
                     {errors.password && <span className="text-danger">Password not valid!</span>}
                 </div>
+                <hr className="bg-white" />
+                <div className="d-flex justify-content-around">
                 <button type="submit" className="btn btn-primary">Login</button>
+                <h2 className="text-white">Or</h2>
+                <button className="btn btn-danger" onClick={toggleSignUp}>SignUp</button>
+                </div>
             </form>
+            :
+            <div>
+            <SignUpForm {...props} onSignUpRequested={onSignUpRequested}/>
+            <button className="btn btn-danger" onClick={toggleSignUp}>SignUp</button>
+            </div>
+            )
         }
             />
         </>
