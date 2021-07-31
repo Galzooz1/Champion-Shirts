@@ -19,7 +19,7 @@ export const InputContainer = styled(InputWrapper)`
   width: 100%;
   font-size: 60%;
   border: 1px solid grey;
-  padding: 5px;
+  padding: 8px;
 `
 export const IconContainer = styled.div`
   width: 33px;
@@ -31,7 +31,7 @@ export const IconContainer = styled.div`
 export const ModalInput = styled.input`
   display: inline-block;
   outline: none;
-  padding: 5px 0;
+  /* padding: 10px; */
   margin: 5px 0;
   width: 100%;
   text-indent: 8px;

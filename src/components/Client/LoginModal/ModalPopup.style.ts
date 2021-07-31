@@ -11,8 +11,8 @@ const ModalContainer = styled.div`
 export const DesktopModalContainer = styled(ModalContainer)`
   border-radius: 7px;
   box-shadow: 0 0 32px rgba(0,0,0,0.5);
-  padding: 40px;
-  width: 600px;
+  padding: 15px;
+  width: 800px;
   font-size: 26px;
   `
 
@@ -22,7 +22,7 @@ bottom: 0;
 left: 0;
 right: 0;
 width: 100%;
-padding: 15px;
+padding: 30px;
 min-height: 150px;
 font-size: 26px;
 `;
@@ -32,15 +32,15 @@ color: white;
 font-size: 35px;
 line-height: 1em;
 font-weight: 300;
-margin: 5px 0 10px;
 text-align: center;
 `
 
 export const Message = styled.p`
 color:#aaa;
 font-size: 15px;
+margin-top:10px;
 font-weight: 500;
-margin: 0 0 36px;
+/* margin: 0 0 36px; */
 text-align: center;
 `;
 

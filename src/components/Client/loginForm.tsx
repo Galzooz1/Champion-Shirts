@@ -40,44 +40,31 @@ const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onCl
         setIsSignUp(wasSignUp => !wasSignUp);
     }
 
-    // const doApi = async(dataBody:any) => { 
-    //     let url:string = URL_API + "/users/login";
-    //     let data = await doApiMethod(url, "POST", dataBody);
-    //     console.log(data);
-    //     if(data.token){
-    //         localStorage.setItem("token", data.token);
-    //         history.push("/admin");
-    //         toast.success("You logged in!");
-    //     }else{
-    //         toast.error("Username or password incorrect!");
-    //     }
-    // }
-
     return(
         <>
         <RWDModal
         onBackdropClick={onClose}
         isModalVisble={isModalVisible}
-        header="Login"
-        message="Please Log in"
+        header={(!isSignUp ? "Login" : "Sign Up")}
+        message={(!isSignUp ? "Please Login" : "Sign Up Now")}
         content={
         (!isSignUp ? 
-            <form onSubmit={handleSubmit(onSubmit)} className="col-lg-6 mx-auto p-2 shadow mt-3" data-type="info" data-tip="Login to both client and admin, enter the admin panel from regular homePage if the user is an admin">
+            <form onSubmit={handleSubmit(onSubmit)} data-type="info" data-tip="Login to both client and admin, enter the admin panel from regular homePage if the user is an admin">
                 <div className="mb-3">
                     <LabelContainer className="text-warning">Email</LabelContainer>
                     <InputContainer>
                     {UserIcon && <IconContainer><img src={UserIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
                     <ModalInput {...emailRef} type="text" className="form-control" />
+                    {errors.email && <span className="text-danger m-2 text-center">Email not valid!</span>}
                     </InputContainer>
-                    {errors.email && <span className="text-danger">Email not valid!</span>}
                 </div>
                 <div className="mb-3">
                     <LabelContainer className="text-warning">Password</LabelContainer>
                     <InputContainer>
                     {PasswordIcon && <IconContainer><img src={PasswordIcon} width="24px" height="24px" alt="password-icon" /></IconContainer>}
                     <ModalInput {...passwordRef} type="text" name="password" id="password" className="form-control" />
+                    {errors.password && <span className="text-danger m-2 text-center">Password not valid!</span>}
                     </InputContainer>
-                    {errors.password && <span className="text-danger">Password not valid!</span>}
                 </div>
                 <hr className="bg-white" />
                 <div className="d-flex justify-content-around">
@@ -88,8 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onCl
             </form>
             :
             <div>
-            <SignUpForm {...props} onSignUpRequested={onSignUpRequested}/>
-            <button className="btn btn-danger" onClick={toggleSignUp}>SignUp</button>
+            <SignUpForm {...props} onSignUpRequested={onSignUpRequested} toggleSignUp={toggleSignUp}/>
             </div>
             )
         }

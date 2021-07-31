@@ -38,7 +38,16 @@ const Login: React.FC<LoginProps> = () => {
     }
 
     const onSignUpRequested: SignUpFunction = async(SignUpArgs: any) => {
-        alert(SignUpArgs);
+        let url = URL_API + "/users/";
+        let data = await doApiMethod(url, "POST", SignUpArgs);
+        console.log(data);
+        if(data._id){
+            toast.success("Signed up successful!")
+        }else if(data.code === 11000){
+            toast.error("Email already exist!")
+        }else{
+            toast.error("A problem occuried");
+        }
     }
 
     return(
