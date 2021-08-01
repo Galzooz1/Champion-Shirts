@@ -7,6 +7,7 @@ import HomeAdmin from './components/Admin/homeAdmin';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from './components/Client/login';
+import UserConfirm from './components/Client/userConfirm';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route exact path={`/`} component={Login} />
           <Route exact path={`/login`} component={LoginForm} />
           <Route exact path={`/admin`} component={HomeAdmin} />
+          <Route path="/users/confirm/:confirmationCode" component={UserConfirm}/>
         </Switch>
         <ToastContainer
         position= "bottom-right"

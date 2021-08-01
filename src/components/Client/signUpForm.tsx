@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import NameIcon from '../../assets/name.svg';
 import PasswordIcon from '../../assets/password.svg'
 import UserIcon from '../../assets/user.svg';
+import {  doApiGet,  URL_API } from '../services/apiService';
 import { IconContainer, InputContainer, LabelContainer, ModalInput } from './LoginModal/InputWithIcon';
 
 interface SignUpFormProps {
@@ -16,82 +20,117 @@ interface SignUpFormProps {
 interface SignUpArgs {
     firstName: string;
     lastName: string;
-    email:string;
-    password:string;
-    // password2?:string;
+    email: string;
+    password: string;
+    password2: string;
     // phone:string; -> on CheckOut
     // address:string; -> on CheckOut
 };
 
-export type SignUpFunction = (args: SignUpArgs) => Promise<void>;
+// export type UserConfirmFunction = (code: string) => Promise<void>;
+export type SignUpFunction = (args: SignUpArgs) => Promise<any[]>;
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
-    const {register, handleSubmit, getValues, formState: {errors} } = useForm();
-
-    let firstNameRef = register("firstName", {required: true, minLength: 2});
-    let lastNameRef = register("lastName", {required: true, minLength: 2});
-    let emailRef = register("email",{required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i});
-    let passwordRef = register("password",{required: true, minLength:3})
-    let password2Ref = register("password2",{required: true, validate: (val: any) => {
-        return val === getValues().password;
-    }})
-
-
-    const onSubmit = (SignUpArgs: any) => {
+    let history = useHistory();
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm<SignUpArgs>();
+    let [isSigned, setIsSigned] = useState<boolean>(false);
+    let [confirmationCode, setConfirmationCode] = useState<string>("");
+    let verifyCodeRef = useRef<HTMLInputElement | any>();
+    // let [isVerified, setIsVerified] = useState<boolean>(false);
+    let results:any[] = [];
+    const onSubmit = async(SignUpArgs: any) => {
         console.log(SignUpArgs);
-        props.onSignUpRequested(SignUpArgs);
+        delete SignUpArgs['password2'];
+        results = await props.onSignUpRequested(SignUpArgs);
+        setIsSigned(results[0]);
+        setConfirmationCode(results[1]);
     }
-    return(
-        <form onClick={handleSubmit(onSubmit)}>
+
+    const verifyUser = () => { 
+        console.log(verifyCodeRef.current.value);
+        console.log(confirmationCode);
+        if(verifyCodeRef.current.value === confirmationCode){
+            doUserConfirm(verifyCodeRef.current.value)
+            // setIsVerified(true);
+            toast.success("Confirmation succeed!")
+            history.push("/users/confirm/" + verifyCodeRef.current.value);
+        }else{
+            alert("please verify it again!")
+        }
+    }
+
+    const doUserConfirm = async(code: string) => { 
+        let url = URL_API + "/users/confirm/" + code;
+        let data = await doApiGet(url);
+        console.log(data);
+    }
+
+    return (
+        (!isSigned ?
+            <form onSubmit={handleSubmit(onSubmit)}>
             <div className="d-flex">
                 <div className="me-3">
-                <LabelContainer className="text-warning">First Name</LabelContainer>
-                <InputContainer>
-                {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
-                <ModalInput {...firstNameRef} type="text" name="firstName" id="firstName" className="form-control" />
-                {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
-                </InputContainer>
+                    <LabelContainer className="text-warning">First Name</LabelContainer>
+                    <InputContainer>
+                        {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
+                        <ModalInput {...register("firstName", { required: true, minLength: 2 })} type="text" name="firstName" id="firstName" className="form-control" />
+                        {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
+                    </InputContainer>
                 </div>
                 <div className="ms-3">
-                <LabelContainer className="text-warning">Last Name</LabelContainer>
-                <InputContainer>
-                {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
-                <ModalInput {...lastNameRef} type="text" name="lastName" id="lastName" className="form-control" />
-                {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
-                </InputContainer>
+                    <LabelContainer className="text-warning">Last Name</LabelContainer>
+                    <InputContainer>
+                        {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
+                        <ModalInput {...register("lastName", { required: true, minLength: 2 })} type="text" name="lastName" id="lastName" className="form-control" />
+                        {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
+                    </InputContainer>
                 </div>
             </div>
             <div className="mb-3">
                 <LabelContainer className="text-warning">Email</LabelContainer>
                 <InputContainer>
-                {UserIcon && <IconContainer><img src={UserIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
-                <ModalInput {...emailRef} type="text" name="email" id="email" className="form-control" />
-                {errors.email && <span className="text-danger m-2 text-center">Email not valid!</span>}
+                    {UserIcon && <IconContainer><img src={UserIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
+                    <ModalInput {...register("email", { required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i })} type="text" name="email" id="email" className="form-control" />
+                    {errors.email && <span className="text-danger m-2 text-center">Email not valid!</span>}
                 </InputContainer>
             </div>
             <div className="mb-3">
                 <LabelContainer className="text-warning">Password</LabelContainer>
                 <InputContainer>
-                {PasswordIcon && <IconContainer><img src={PasswordIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
-                <ModalInput {...passwordRef} type="text" name="password" id="password" className="form-control" />
-                {errors.password && <span className="text-danger m-2 text-center">Password not valid!</span>}
+                    {PasswordIcon && <IconContainer><img src={PasswordIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
+                    <ModalInput {...register("password", { required: true, minLength: 3 })} type="text" name="password" id="password" className="form-control" />
+                    {errors.password && <span className="text-danger m-2 text-center">Password not valid!</span>}
                 </InputContainer>
             </div>
             <div className="mb-3">
                 <LabelContainer className="text-warning">Confirm Password</LabelContainer>
                 <InputContainer>
-                {PasswordIcon && <IconContainer><img src={PasswordIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
-                <ModalInput {...password2Ref} type="text" name="password2" id="password2" className="form-control" />
-                {errors.password2 && <span className="text-danger m-2 text-center">Password doesn't match!</span>}
+                    {PasswordIcon && <IconContainer><img src={PasswordIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>}
+                    <ModalInput {...register("password2", {
+                        required: true, validate: (val: any) => {
+                            return val === getValues().password;
+                        }
+                    })} type="text" name="password2" id="password2" className="form-control" />
+                    {errors.password2 && <span className="text-danger m-2 text-center">Password doesn't match!</span>}
                 </InputContainer>
             </div>
             <hr className="bg-white mt-4" />
             <div className="d-flex justify-content-center mt-4">
-            <button type="submit" className="btn btn-primary me-4">Sign Up</button>
-            <h2 className="text-white">Or</h2>
-            <button className="btn btn-danger ms-4" onClick={props.toggleSignUp}>Back</button>
+                <button type="submit" className="btn btn-primary me-4">Sign Up</button>
+                <h2 className="text-white">Or</h2>
+                <button className="btn btn-danger ms-4" onClick={props.toggleSignUp}>Back</button>
             </div>
         </form>
+        :
+        <>
+        <div>We Sent you an Email verification, please write the code below</div>
+        <InputContainer>
+        <ModalInput ref={verifyCodeRef} type="text" name="verify" className="form-control"/>
+        <button onClick={verifyUser} className="btn btn-success">Verify</button>
+        </InputContainer>
+        {/* {isVerified ? <UserConfirm doUserConfirm={doUserConfirm} /> : null} */}
+        </>
+    )
     )
 }
 

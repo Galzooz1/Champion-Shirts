@@ -22,7 +22,7 @@ import SignUpForm, { SignUpFunction } from './signUpForm';
         onSignUpRequested: SignUpFunction;
     };
 
-const LoginForm: React.FC<LoginFormProps> = ({  loginError, isModalVisible, onClose, onLoginRequested, onSignUpRequested}, props) => {
+const LoginForm: React.FC<LoginFormProps> = ({ loginError, isModalVisible, onClose, onLoginRequested, onSignUpRequested}, props) => {
 
     const {register, handleSubmit, formState: { errors }} = useForm<LoginArgs>();
     // let history = useHistory();

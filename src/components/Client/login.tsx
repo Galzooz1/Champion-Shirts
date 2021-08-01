@@ -37,16 +37,20 @@ const Login: React.FC<LoginProps> = () => {
         }
     }
 
-    const onSignUpRequested: SignUpFunction = async(SignUpArgs: any) => {
+    const onSignUpRequested: SignUpFunction = async(SignUpArgs: any):Promise<any[]> => {
         let url = URL_API + "/users/";
         let data = await doApiMethod(url, "POST", SignUpArgs);
         console.log(data);
         if(data._id){
             toast.success("Signed up successful!")
+            console.log(data.confirmationCode)
+            return [true, data.confirmationCode];
         }else if(data.code === 11000){
             toast.error("Email already exist!")
+            return [false, 0];
         }else{
             toast.error("A problem occuried");
+            return [false, 0];
         }
     }
 
