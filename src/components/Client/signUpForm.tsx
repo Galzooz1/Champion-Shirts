@@ -27,23 +27,32 @@ interface SignUpArgs {
     // address:string; -> on CheckOut
 };
 
+// export type returnedValues = {
+// isSigned: boolean,
+// confirmationCode?: string,
+// userId?: string
+// }
+
 // export type UserConfirmFunction = (code: string) => Promise<void>;
 export type SignUpFunction = (args: SignUpArgs) => Promise<any[]>;
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     let history = useHistory();
+    let results:any[] = [];
     const { register, handleSubmit, getValues, formState: { errors } } = useForm<SignUpArgs>();
     let [isSigned, setIsSigned] = useState<boolean>(false);
     let [confirmationCode, setConfirmationCode] = useState<string>("");
+    let [userId, setUserId] = useState<string>();
     let verifyCodeRef = useRef<HTMLInputElement | any>();
     // let [isVerified, setIsVerified] = useState<boolean>(false);
-    let results:any[] = [];
+
     const onSubmit = async(SignUpArgs: any) => {
         console.log(SignUpArgs);
         delete SignUpArgs['password2'];
         results = await props.onSignUpRequested(SignUpArgs);
         setIsSigned(results[0]);
         setConfirmationCode(results[1]);
+        setUserId(results[2]);
     }
 
     const verifyUser = () => { 
@@ -63,6 +72,15 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         let url = URL_API + "/users/confirm/" + code;
         let data = await doApiGet(url);
         console.log(data);
+    }
+
+    const resendConfirmationCode = async() => { 
+        let url = URL_API + "/users/confirm/" + userId;
+        let data = await doApiGet(url);
+        console.log(data);
+        setConfirmationCode(data);
+        toast.info("Confirmation code sent again, Please check your Email!")
+        // console.log(confirmationCode);
     }
 
     return (
@@ -118,16 +136,20 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
             <div className="d-flex justify-content-center mt-4">
                 <button type="submit" className="btn btn-primary me-4">Sign Up</button>
                 <h2 className="text-white">Or</h2>
-                <button className="btn btn-danger ms-4" onClick={props.toggleSignUp}>Back</button>
+                <button className="btn btn-danger ms-4" onClick={props.toggleSignUp}>Login</button>
             </div>
         </form>
         :
         <>
-        <div>We Sent you an Email verification, please write the code below</div>
-        <InputContainer>
+        <div className="p-2 text-white">We Sent you an Email verification, please write the code below</div>
+        <InputContainer className="p-3">
         <ModalInput ref={verifyCodeRef} type="text" name="verify" className="form-control"/>
         <button onClick={verifyUser} className="btn btn-success">Verify</button>
         </InputContainer>
+        <div className="d-flex justify-content-around mt-3">
+        <div className="display-6 text-white">Didn't get a code?</div>
+        <button onClick={resendConfirmationCode} className="btn btn-danger">Send me code Again</button>
+        </div>
         {/* {isVerified ? <UserConfirm doUserConfirm={doUserConfirm} /> : null} */}
         </>
     )

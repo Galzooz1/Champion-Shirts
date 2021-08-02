@@ -43,14 +43,15 @@ const Login: React.FC<LoginProps> = () => {
         console.log(data);
         if(data._id){
             toast.success("Signed up successful!")
-            console.log(data.confirmationCode)
-            return [true, data.confirmationCode];
+            // console.log(data.confirmationCode)
+            // console.log(data._id)
+            return [true, data.confirmationCode, data._id];
         }else if(data.code === 11000){
             toast.error("Email already exist!")
-            return [false, 0];
+            return [false, 0, ""];
         }else{
             toast.error("A problem occuried");
-            return [false, 0];
+            return [false, 0, ""];
         }
     }
 

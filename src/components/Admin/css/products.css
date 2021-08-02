@@ -1,0 +1,19 @@
+tbody tr{
+    transition: 0.5s;
+    border:1px solid black;
+}
+tbody tr:hover{
+    transform: scale(1.02);
+    background-color: #212529;
+    cursor: pointer;
+    /* color:aliceblue; */
+}
+tbody tr:hover > td {
+    color:white;
+    border:1px solid white;
+}
+
+tbody tr .number{
+    border-right:1px solid black;
+    border-radius: 10px;
+}
