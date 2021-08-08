@@ -1,0 +1,7 @@
+.nav_side_out{
+    transform: translate(-105%, 0);
+}
+
+.nav_side_in{
+    transform: translate(0, 0);
+}

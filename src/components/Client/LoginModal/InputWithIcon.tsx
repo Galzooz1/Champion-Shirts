@@ -33,7 +33,7 @@ export const ModalInput = styled.input`
   outline: none;
   /* padding: 10px; */
   margin: 5px 0;
-  width: 100%;
+  max-width: 100%;
   text-indent: 8px;
 `;
 

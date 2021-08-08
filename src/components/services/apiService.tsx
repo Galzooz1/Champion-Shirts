@@ -14,13 +14,13 @@ export const doApiGet = async(_url:string) => {
     }
   }
 
-  export const doApiMethod = async (_url:string, _method:any, _body:any) => {
+  export const doApiMethod = async (_url:string, _method:any, _body?:any) => {
     try {
       let resp = await fetch(_url, {
         method: _method,
         body: JSON.stringify(_body),
         headers: {
-          'auth-token': localStorage["tok"],
+          'auth-token': localStorage["token"],
           'content-type': "application/json"
         }
       })

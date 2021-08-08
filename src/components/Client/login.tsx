@@ -59,7 +59,7 @@ const Login: React.FC<LoginProps> = () => {
         <>
         <div>
             <button onClick={toggleModal} className="btn btn-primary">Login</button>
-            <LoginForm isModalVisible={isModalVisible} onLoginRequested={onLoginRequested} onSignUpRequested={onSignUpRequested} onClose={onBackdropClick}/>
+            <LoginForm isModalVisible={isModalVisible} onClose={onBackdropClick} onLoginRequested={onLoginRequested} onSignUpRequested={onSignUpRequested}/>
         <ReactTooltip/>
         </div>
         </>
