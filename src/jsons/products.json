@@ -1,0 +1,51 @@
+{
+    "sale": {
+        "onSale": false,
+        "amount": 0,
+        "timeInHours": 0
+    },
+    "quantity_sold": 0,
+    "_id": "61111910c4ece37bd82bd3d4",
+    "name": "Basic Shirt",
+    "info": "Such a beauty shirt",
+    "price": 999,
+    "image": "https://cdn.pixabay.com/photo/2016/06/20/04/30/character-1468032_1280.jpg",
+    "category_s_id": 1,
+    "properties": [
+        {
+            "amount": {
+                "XS": 100,
+                "S": 50,
+                "M": 100,
+                "L": 0,
+                "XL": 0,
+                "XXL": 0,
+                "XXXL": 0
+            },
+            "_id": "61111910c4ece37bd82bd3d5",
+            "color": "white",
+            "frontImg": "https://mms-images.out.customink.com/mms/images/catalog/colors/15000/views/front.jpg?digest=1626297873",
+            "sizeOfCanvasFront": {
+                "width": 200,
+                "height": 300
+            },
+            "positionOfCanvasFront": {
+                "x": 30,
+                "y": 50
+            },
+            "backImg": "https://www.kindpng.com/picc/m/385-3858404_t-shirt-png-white-back-transparent-png.png",
+            "sizeOfCanvasBack": {
+                "width": 200,
+                "height": 300
+            },
+            "positionOfCanvasBack": {
+                "x": 30,
+                "y": 50
+            }
+        }
+    ],
+    "date_created": "2021-08-09T12:01:20.901Z",
+    "user_id": "60b4eaa230dab411dcbe1f2d",
+    "s_id": 280631,
+    "__v": 0
+}

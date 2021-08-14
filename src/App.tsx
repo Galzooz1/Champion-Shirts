@@ -8,16 +8,21 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from './components/Client/login';
 import UserConfirm from './components/Client/userConfirm';
+import HomePage from './components/Client/homePage';
+import SingleCategory from './components/Client/singleCategory';
+import Categories from './components/Client/categories';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Switch>
-          <Route exact path={`/`} component={Login} />
+          <Route exact path={`/`} component={HomePage} />
           <Route exact path={`/login`} component={LoginForm} />
           <Route path={`/admin`} component={HomeAdmin} />
           <Route path="/users/confirm/:confirmationCode" component={UserConfirm}/>
+          <Route exact path={"/categories"} component={Categories} />
+          <Route path="/categories/single/:s_id" component={SingleCategory} />
         </Switch>
         <ToastContainer
         position= "bottom-right"

@@ -1,15 +1,16 @@
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { InputContainer, LabelContainer, ModalInput } from '../Client/LoginModal/InputWithIcon';
-import RWDModal from '../Client/LoginModal/RWDModal';
-import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
-import { ICategories } from './interfaces/categoriesArgs';
-import { IProdItems } from './interfaces/prodItems';
+import { InputContainer, LabelContainer, ModalInput } from '../../Client/LoginModal/InputWithIcon';
+import RWDModal from '../../Client/LoginModal/RWDModal';
+import { doApiGet, doApiMethod, URL_API } from '../../services/apiService';
+import { ICategories } from '../interfaces/categoriesArgs';
+import { IProdItems } from '../interfaces/prodItems';
 
 interface EditProductProps {
     isModalVisible: boolean;
@@ -19,8 +20,9 @@ interface EditProductProps {
     params: string;
 };
 
-const SpanUpload = styled.span`
+const SpanUpload = styled(motion.span)`
 cursor: pointer;
+color:white;
 &:hover{
     text-decoration: underline;
 }
@@ -142,9 +144,10 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
                                     <div>
                                         <ModalInput style={{width:"550px"}} {...register("image", { required: false, minLength: 2 })} type="text" name="image" id="image" className="form-control" />
                                         {errors.image && <span className="text-danger m-2 text-center">Enter valid Image!</span>}
-                                        <h3>Or <SpanUpload onClick={showUploadContainer}>Upload Image</SpanUpload></h3>
+                                        <h3 className="text-white">Or <SpanUpload animate={{ marginTop:20, x: 380, color:'#ff2994', fontWeight:'bold'}} transition={{delay: 0.3, type:'spring', stiffness:100}} onClick={showUploadContainer} className="btn btn-outline-light">Upload Image</SpanUpload></h3>
+                                        
                                         {!isUploadShown ?
-                                            <div className="d-flex justify-content-between">
+                                            <motion.div transition={{delay:0.5}} className="d-flex justify-content-between">
                                                 {productData.image?.includes("http")
                                                     ?
                                                     <img src={productData.image} height="150" alt={productData.name} />
@@ -152,7 +155,7 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
                                                     <img src={URL_API + productData.image + "?" + Date.now()} height="150" alt={productData.name} />
                                                 }
                                                 <ModalInput ref={fileRef} type="file" onChange={uploadFile} className="me-3" />
-                                            </div>
+                                            </motion.div>
                                             : ""
                                         }
                                     </div>

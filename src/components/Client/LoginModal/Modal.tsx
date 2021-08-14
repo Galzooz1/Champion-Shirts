@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React from 'react';
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
@@ -7,7 +8,7 @@ interface ModalProps {
     onBackdropClick: () => void;
 };
 
-const Overlay = styled.div`
+const Overlay = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   height: 100%;
@@ -19,10 +20,15 @@ const Overlay = styled.div`
   justify-content: center;
 `
 
+const backdrop = {
+    visible: {opacity: 1},
+    hidden: {opacity: 0}
+}
+
 const Modal: React.FC<ModalProps> = ({onBackdropClick, children}) => {
     //Creates a portal. Portals provide a way to render children into a DOM node that exists outside the hierarchy of the DOM component.
     return ReactDOM.createPortal(
-        <Overlay onClick={onBackdropClick}>
+        <Overlay variants={backdrop} animate="visible" initial="hidden" onClick={onBackdropClick}>
             {/* Preventing the modal from disappear if clicked */}
             <div onClick={e => e.stopPropagation()}>
             {children}

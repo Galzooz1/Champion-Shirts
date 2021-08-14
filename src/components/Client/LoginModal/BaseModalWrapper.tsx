@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 import Modal from './Modal';
-import { CloseSign , Header, Message } from './ModalPopup.style';
+import { CloseSign , Content, Header, Message } from './ModalPopup.style';
 
 export interface BaseModalWrapperProps {
     isModalVisble: boolean;
@@ -34,7 +34,7 @@ const BaseModalWrapper: React.FC<Props> = ({onBackdropClick, isModalVisble, head
                 </CloseButtonComponent> */}
                 <Header>{header}</Header>
                 {message && <Message>{message}</Message>}
-                {content}
+                <Content>{content}</Content>
             </ContainerComponent>
         </Modal>
     )

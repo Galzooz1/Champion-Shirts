@@ -3,5 +3,5 @@ export interface ICategories {
     name:         string;
     info:         string;
     s_id:         number;
-    date_created: Date;
+    date_created: string;
 }

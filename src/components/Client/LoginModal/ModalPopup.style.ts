@@ -6,7 +6,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-`;
+  `;
 
 export const DesktopModalContainer = styled(ModalContainer)`
   border-radius: 7px;
@@ -42,6 +42,28 @@ margin-top:10px;
 font-weight: 500;
 /* margin: 0 0 36px; */
 text-align: center;
+`;
+
+export const Content = styled.div`
+  padding:12px;
+  position:relative;
+  height:500px;
+  overflow-y: auto;
+  &::-webkit-scrollbar{
+    width:0.3em;
+  }
+  &::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #D4AA70;
+    border-radius: 100px;
+  }
+  &::-webkit-scrollbar-thumb{
+    border-radius: 100px;
+    /* background-color: darkgrey; */
+    background-image: linear-gradient(180deg, #D0368A 0%, #708AD4 99%);
+
+  outline: 1px solid slategrey;
+  }
 `;
 
 export const CloseSign = styled.div`

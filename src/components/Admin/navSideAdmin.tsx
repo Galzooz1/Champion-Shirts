@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -24,6 +25,15 @@ min-height: 100vh;
 border:1px solid black;
 `;
 
+const Links = {
+    visible: {
+        backgroundImage:"linear-gradient(180deg, #D0368A 0%, #708AD4 99%)"
+    },
+    hidden:{
+        backgroundImage:'linear-gradient(180deg, #222021 0%, #404142 99%)'
+    }
+}
+
 
 const NavSideAdmin: React.FC<NavSideAdminProps> = ({isNavSideShown}) => {
     let [animationCss, setAnimationCss] = useState<string>("");
@@ -39,8 +49,18 @@ const NavSideAdmin: React.FC<NavSideAdminProps> = ({isNavSideShown}) => {
     return(
         <WrapperDiv className={animationCss}>
         <NavAdmin>
-            <Link className="d-block border p-4 text-white" to="/admin/products">Products</Link>
-            <Link className="d-block border p-4 text-white" to="/admin/categories">Categories</Link>
+            <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
+            <Link className="d-block text-white" to="/admin/products">Products</Link>
+            </motion.div>
+            <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
+            <Link className="d-block text-white" to="/admin/categories">Categories</Link>
+            </motion.div>
+            <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
+            <Link className="d-block text-white" to="/admin/designs">Designs</Link>
+            </motion.div>
+            <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
+            <Link className="d-block text-white" to="/admin/users">Users</Link>
+            </motion.div>
         </NavAdmin>
         </WrapperDiv>
     )
