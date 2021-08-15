@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = () => {
                     </div>
                 </div>
             </HeaderDiv>
-            <Navbar className="container-fluid d-flex justify-content-center" sticky="top" bg="danger" expand="lg">
+            <Navbar className="container-fluid d-flex justify-content-center" /*sticky="top"*/ bg="danger" expand="lg">
                 <Container className="container-fluid">
                     {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */}
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -30,7 +30,8 @@ const Login: React.FC<LoginProps> = () => {
         console.log(data);
         if(data.token){
             localStorage.setItem("token", data.token);
-            history.push("/admin");
+            // history.push("/home");
+            onBackdropClick();
             toast.success("You logged in!");
         }else{
             toast.error("Username or password incorrect!");

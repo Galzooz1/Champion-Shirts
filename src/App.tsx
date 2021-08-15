@@ -11,6 +11,7 @@ import UserConfirm from './components/Client/userConfirm';
 import HomePage from './components/Client/homePage';
 import SingleCategory from './components/Client/singleCategory';
 import Categories from './components/Client/categories';
+import SingleProductDesign from './components/Client/singleProductDesign';
 
 function App() {
   return (
@@ -18,11 +19,13 @@ function App() {
       <Router>
         <Switch>
           <Route exact path={`/`} component={HomePage} />
+          <Route exact path={`/home`} component={HomePage} />
           <Route exact path={`/login`} component={LoginForm} />
           <Route path={`/admin`} component={HomeAdmin} />
           <Route path="/users/confirm/:confirmationCode" component={UserConfirm}/>
           <Route exact path={"/categories"} component={Categories} />
           <Route path="/categories/single/:s_id" component={SingleCategory} />
+          <Route exact path={`/product/:s_id`} component={SingleProductDesign} />
         </Switch>
         <ToastContainer
         position= "bottom-right"

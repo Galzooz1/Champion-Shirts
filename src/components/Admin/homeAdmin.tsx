@@ -10,6 +10,8 @@ import ProductsAdmin from './Products/productsAdmin';
 import SingleProduct from './Products/singleProducts';
 import DesignsAdmin from './Designs/designsAdmin';
 import UsersAdmin from './Users/usersAdmin';
+import ReadyProductsAdmin from './readyProducts/readyProductsAdmin';
+// import AuthAdmin from './authAdmin';
 
 interface HomeAdminProps {
 
@@ -46,6 +48,8 @@ const HomeAdmin: React.FC<HomeAdminProps> = () => {
                         <Route exact path={`/admin/designs/:page`} component={DesignsAdmin} />
                         <Route exact path={`/admin/users`} component={UsersAdmin} />
                         <Route exact path={`/admin/users/:page`} component={UsersAdmin} />
+                        <Route exact path={`/admin/readyProducts`} component={ReadyProductsAdmin} />
+                        <Route exact path={`/admin/readyProducts/:page`} component={ReadyProductsAdmin} />
                     </Switch>
                 </div>
                 {/* </> */}

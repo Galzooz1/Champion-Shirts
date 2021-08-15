@@ -6,6 +6,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  /* z-index:9999; */
   `;
 
 export const DesktopModalContainer = styled(ModalContainer)`

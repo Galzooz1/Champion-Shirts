@@ -11,6 +11,7 @@ export interface IProdItems {
     date_created:  string;
     user_id:       string;
     s_id:          number;
+    catName:       string;
 }
 
 export interface Property {

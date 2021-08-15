@@ -61,6 +61,9 @@ const NavSideAdmin: React.FC<NavSideAdminProps> = ({isNavSideShown}) => {
             <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
             <Link className="d-block text-white" to="/admin/users">Users</Link>
             </motion.div>
+            <motion.div variants={Links} initial="hidden" transition={{duration:0.7, delay:0.1}} whileHover="visible" className="border p-4">
+            <Link className="d-block text-white" to="/admin/readyProducts">Ready Products</Link>
+            </motion.div>
         </NavAdmin>
         </WrapperDiv>
     )
