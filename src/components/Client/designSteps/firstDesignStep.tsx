@@ -1,5 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
+import Slider from "react-slick";
+import FirstDesignStepCarousel from './firstDesignStepCarousel';
+import { useHistory } from 'react-router-dom';
 
 interface FirstDesignStepProps {
     errors: any;
@@ -7,124 +11,155 @@ interface FirstDesignStepProps {
     productData: Partial<IProdItems>;
 };
 
-interface colorSizeAr {
-    color:string;
-    sizes:string[];
-}
+const SizeInput = styled.input`
+		position: absolute;
+		left: -9999px;
+		&:checked + span {
+			background-color: mix(#fff, #00005c, 84%);
+			&:before {
+				box-shadow: inset 0 0 0 0.4375em #00005c;
+			}
+		}
+`;
+
+const SizeLabel = styled.label`
+display: flex;
+	cursor: pointer;
+	font-weight: 500;
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 0.375em;
+`;
+
+const SizeSpan = styled.span`
+		display: flex;
+		align-items: center;
+		padding: 0.375em 0.75em 0.375em 0.375em;
+		border-radius: 99em; // or something higher...
+		transition: 0.25s ease;
+		&:hover {
+			background-color: mix(#fff, $primary-color, 84%);
+		}
+		&:before {
+			display: flex;
+			flex-shrink: 0;
+			content: "";
+			background-color: #fff;
+			width: 1.5em;
+			height: 1.5em;
+			border-radius: 50%;
+			margin-right: 0.375em;
+			transition: 0.25s ease;
+			box-shadow: inset 0 0 0 0.125em #00005c;
+        }
+`;
 
 const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, register }) => {
+    let [indexPicked, setIndexPicked] = React.useState<number>(555);
+    let history = useHistory();
+    React.useEffect(() => {
+        // console.log(JSON.stringify(productData));
+        // initialArray()
+    }, []);
+    const handleChange = (i: number) => {
+        setIndexPicked(i)
+    }
 
-    // React.useEffect( () => { 
-    // initialArray()
-    // },[]);
-    
-    // let colorSizeAr:any[] = [{
-    // }];
-    // // let data_array = [];
-    // // let my_object = {};
-    // const initialArray = () => {
-    //     productData.properties?.forEach((item, i) => {
-    //         console.log(item.amount.XS);
-    //         colorSizeAr[i].color = item.color
-    //         if(item.amount.XS > 0){
-    //             colorSizeAr[i].sizes.push("XS");
-    //         }
-    //         if(item.amount.S > 0){
-    //             colorSizeAr[i].sizes.push("S");
-    //         }
-    //         if(item.amount.M > 0){
-    //             colorSizeAr[i].sizes.push("M");
-    //         }
-    //         if(item.amount.L > 0){
-    //             colorSizeAr[i].sizes.push("L");
-    //         }
-    //         if(item.amount.XL > 0){
-    //             colorSizeAr[i].sizes.push("XL");
-    //         }
-    //         if(item.amount.XXL > 0){
-    //             colorSizeAr[i].sizes.push("XXL");
-    //         }
-    //         if(item.amount.XXXL > 0){
-    //             colorSizeAr[i].sizes.push("XXXL");
-    //         }
-    //     });
-    //     console.log(colorSizeAr);
-    // }
-    // let colorsAr = [
-    //     {
-    //         color:"pink",
-    //         sizes:["XS","M"]
-    //     }
-    // ]
-    // let sizeAr: string[] = [];
-    // let colorAr: string[] = [];
     return (
         <>
-            <div className="d-flex justify-content-center">
+            <div style={{ height: "598px" }} className="d-lg-flex justify-content-around border shadow p-4">
                 <div>
                     <h2>{productData?.name}</h2>
                     <h4>{productData?.info}</h4>
-                    <div className="d-flex">
+                    <div className="d-flex justify-content-center">
                         <h4>Colors:</h4>
                         {productData.properties?.map((item, i) => {
-                            // { sizeAr.push(...colorAr) };
                             return (
                                 <>
-                                {/* { colorsAr.push({color:`${item?.color}`, sizes:[]}) } */}
-                                    <div className="form-check">
-                                        <input {...register("color", { required: true })} type="radio" value={`${item?.color}`}
-                                            name="flexRadioDisabled" id="properties.color"
-                                            className="form-check-input border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} data-tip={`${item?.color}`} />
+                                    <div style={{ width: "66.63px" }}>
+                                        <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
+                                            name="color" id="properties.color" onInput={() => handleChange(i)}
+                                            className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} data-tip={`${item?.color}`} />
+                                        <div className="my-2">
+                                            {indexPicked === i ?
+                                                <>
+                                                    <h3>Size:</h3>
+                                                    <div className="d-block">
+                                                        {item?.amount.XS > 0 ?
+                                                            <SizeLabel>
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
+                                                                <SizeSpan>XS</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.S > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
+                                                                <SizeSpan>S</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.M > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
+                                                                <SizeSpan>M</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.L > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
+                                                                <SizeSpan>L</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.XL > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
+                                                                <SizeSpan>XL</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.XXL > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
+                                                                <SizeSpan>XXL</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                        {item?.amount.XXXL > 0 ?
+                                                            <SizeLabel>
+
+                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
+                                                                <SizeSpan>XXXL</SizeSpan>
+                                                            </SizeLabel>
+                                                            : null}
+                                                    </div>
+                                                </>
+                                                : null
+                                            }
+                                        </div>
                                     </div>
-                                    {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
-                                    {/* {item.amount.XS > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."XS"]}) : null}
-                                    {item.amount.S > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."S"]}) : null}
-                                    {item.amount.M > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."M"]}) : null}
-                                    {item.amount.L > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."L"]}) : null}
-                                    {item.amount.XL > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."XL"]}) : null}
-                                    {item.amount.XXL > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."XXL"]}) : null}
-                                    {item.amount.XXXL > 0 ? colorsAr.push({color:`${item?.color}`, sizes:[..."XXXL"]}) : null}
-                                    {console.log(colorsAr)} */}
                                 </>
                             )
                         })}
-                        {/* SIZES */}
-                        {/* {sizeAr.map((item, i) => {
-                            return (
-                                <>
-                                <div className="form-check">
-                                <label>
-                                {item}
-                                <input type="radio" value={`${item}`}
-                                name="flexRadioDisabled" id="properties.color"
-                                className="form-check-input border border-dark p-3 m-1" />
-                                </label>
-                                </div>
-                                </>
-                                )
-                            })} */}
-                        {/* {productData?.properties?..amount.XS > 0 ?
-                        <div className="form-check">
-                        <label>
-                        <span>XS</span>
-                        <input type="radio" value={`${item?.color}`}
-                        name="flexRadioDisabled" id="properties.color"
-                        className="form-check-input border border-dark p-3 m-1" data-tip={`${item?.color}`} />
-                        </label>
-                        </div>
-                        : null
-                    } */}
+
                     </div>
+                    {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
+                    {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
-                    <h3>Price: {productData?.price} $</h3>
+                        <h3>Price: {productData?.price} $</h3>
+                    </div>
+                    <div className="d-flex justify-content-center align-items-end m-3">          
+                            <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
+                            <button type="button" className="btn btn-outline-primary mx-4">Continue</button>
                     </div>
                 </div>
-                <div className="mx-5">
-                <img className="border rounded-2 shadow mb-4" src={productData?.image} alt={productData?.name} width="400" />
-                <div className="d-flex justify-content-around">
-                <button className="btn btn-outline-danger">Back</button>
-                <button className="btn btn-outline-primary">Continue</button>
-                </div>
+                <div>
+                    {indexPicked === 555 ?
+                        <img className="border rounded-2 shadow mb-4" width="300px" src={productData.image} alt={productData?.name} />
+                        :
+                        <FirstDesignStepCarousel productData={productData} indexPicked={indexPicked} />
+                    }
                 </div>
             </div>
         </>

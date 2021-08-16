@@ -15,9 +15,6 @@ const HomePage: React.FC<HomePageProps> = () => {
         <Strip/>
         <HowItWorks />
         <Categories />
-        <div>
-            HomePage work
-        </div>
         </>
     )
 }

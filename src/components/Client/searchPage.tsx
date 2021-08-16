@@ -1,55 +1,41 @@
-import { motion } from 'framer-motion';
 import React from 'react';
-import { Breadcrumb, OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
-import { Omit, BsPrefixProps } from 'react-bootstrap/esm/helpers';
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
-import styled from 'styled-components';
-import { ICategories } from '../Admin/interfaces/categoriesArgs';
-import { Amount, IProdItems, Property } from '../Admin/interfaces/prodItems';
+import { motion } from 'framer-motion';
+import { Tooltip } from 'react-bootstrap';
+import { Breadcrumb, OverlayTrigger } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
+import { IProdItems } from '../Admin/interfaces/prodItems';
 import { doApiGet, URL_API } from '../services/apiService';
-import FilterForm from './filterForm';
 import Header from './header';
 import Loading from './loading';
+import { WrapperDiv } from './singleCategory';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
 
-interface SingleCategoryParams {
-    s_id: string;
+interface SearchPageProps {
+location?: any;
 };
 
-type SingleCategoryProps = RouteComponentProps<SingleCategoryParams>
-
-export const WrapperDiv = styled(motion.div)`
-min-height: 600px;
-margin:16px;
-border-radius: 5px;
-padding-bottom: 8px;
-cursor:pointer;
-`;
-
-const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
+const SearchPage: React.FC<SearchPageProps> = (props) => {
     let history = useHistory();
-    let [categoryData, setCategoryData] = React.useState<Partial<ICategories>>({});
-    let [productsData, setProductsData] = React.useState<Partial<IProdItems[]>>([]);
-    // let [productAmount, setProductAmount] = React.useState<Partial<Property[]>>([])
+    let [search, setSearch] = React.useState<any>("");
+    let [prods_ar, setProdsAr] = React.useState<Partial<IProdItems[]>>([]);
+    let [loadingShow, setLoadingShow] = React.useState(true)
+
     React.useEffect(() => {
-        getSingleCatData();
-        getProductsData();
-    }, [])
+        // בשביל לאסוף קווארי סטרינג בצד לקוח
+        let urlParams = new URLSearchParams(window.location.search);
+        //?q=koko
+        setLoadingShow(true);
+        setSearch(urlParams.get('q'));
+        doApiSearch(urlParams.get('q'));
+        // props.location -> ככה שאם אנחנו כבר בחיפוש אז הוא יתרנדר מחדש
+    }, [props.location])
 
-    const getSingleCatData = async () => {
-        let url = URL_API + "/categories/single/" + props.match.params.s_id;
+    const doApiSearch = async (_searchFor: string | null) => {
+        let url = URL_API + "/products/search?q=" + _searchFor;
         let data = await doApiGet(url);
+        setProdsAr(data);
+        setLoadingShow(false);
         console.log(data);
-        setCategoryData(data);
-    }
-
-    const getProductsData = async () => {
-        let url = URL_API + "/products?category=" + props.match.params.s_id;
-        let data = await doApiGet(url);
-        console.log(data);
-        setProductsData(data);
-        // setProductAmount(data[0].properties);
     }
 
     const renderTooltip = (props: any, color: any) => (
@@ -59,28 +45,29 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     return (
         <>
             <Header />
-            <div className="d-flex">
-                {/* <FilterForm productsData={productsData} /> */}
-                <div className="container mt-5">
-                    <Breadcrumb>
-                        <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item active>{categoryData?.name}</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <HR />
-                    <H2HR>
-                        <SpanH2>
-                            {categoryData?.name}
-                        </SpanH2>
-                    </H2HR>
-                    {productsData.length === 0 && 
+            <div className="container mt-5">
+                <Breadcrumb>
+                    <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item active>Search for {search}</Breadcrumb.Item>
+                </Breadcrumb>
+                <HR />
+                <H2HR>
+                    <SpanH2>
+                        Search for {search} :
+                    </SpanH2>
+                </H2HR>
+                {loadingShow &&
                     <Loading />}
-                    <div className="d-flex flex-wrap">
-                        {productsData.map((item, i) => {
-                            return (
-                                <>
-                                    <WrapperDiv transition={{duration:0.4}} onClick={() => {history.push("/product/" + item?.s_id)}} className="col-lg-3 mx-5 shadow border rounded-1">
-                                        <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                {!loadingShow && prods_ar.length === 0 &&
+                    <div className="display-5">There's nothing here, try again</div>
+                }
+                <div className="d-flex flex-wrap mb-5">
+                    {prods_ar.map((item, i) => {
+                        return (
+                            <>
+                                <WrapperDiv whileHover={{scale:1.05}} transition={{duration:0.4}} onClick={() => {history.push("/product/" + item?.s_id)}} className="col-lg-3 mx-5 shadow rounded-1">
+                                <img src={item?.image} alt={item?.name} height="350px" width="100%" />
                                         <h2>{item?.name}</h2>
                                         <h3>{item?.price} $</h3>
                                         {/* <div className="text-info border p-3">
@@ -93,13 +80,13 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                             )
                                         })}
                                     </div> */}
-                                        <div className="text-dark border p-3">
+                                        <div className="text-info border p-3">
                                             <h3>Available:</h3>
                                             {item?.properties.map((prop, i) => {
                                                 // const amounts = productAmount.amount;
                                                 return (
                                                     <>
-                                                        <motion.div className="border p-2 d-flex justify-content-around">
+                                                        <div className="border border-dark p-2 d-flex justify-content-around">
                                                             <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
                                                                 <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
                                                             </OverlayTrigger>
@@ -139,21 +126,19 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                                 null
                                                             }
 
-                                                        </motion.div>
+                                                        </div>
                                                     </>
                                                 )
                                             })}
                                         </div>
-                                    </WrapperDiv>
-                                </>
-                            )
-                        })}
-                    </div>
+                                </WrapperDiv>
+                            </>
+                    )
+                    })}
                 </div>
             </div>
-            <ReactTooltip />
         </>
     )
 }
 
-export default SingleCategory
+export default SearchPage

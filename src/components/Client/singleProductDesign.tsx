@@ -8,6 +8,7 @@ import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { doApiGet, URL_API } from '../services/apiService';
 import FirstDesignStep from './designSteps/firstDesignStep';
 import Header from './header';
+import Loading from './loading';
 
 interface SingleProductDesignParams {
     s_id: string;
@@ -27,6 +28,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<Partial<IReadyproducts>>({ mode: 'all' });
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
     let [formStep, setFormStep] = React.useState<number>(0);
+    let [isLoading, setIsLoading] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         getSingleProdData();
@@ -43,12 +45,16 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         let url = URL_API + "/products/single/" + props.match.params.s_id;
         let data = await doApiGet(url)
         console.log(data);
+        setIsLoading(false)
         let url_cat = URL_API + "/categories/single/" + data.category_s_id;
         let dataCategory = await doApiGet(url_cat);
         console.log(dataCategory);
         data.catName = dataCategory.name;
-
         setProductData(data);
+    }
+
+    const onSubmit = (dataBody: any) => {
+        console.log(dataBody);
     }
 
     return (
@@ -61,29 +67,33 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                     <Breadcrumb.Item><Link to={"/categories/single/" + productData?.category_s_id}>{productData?.catName}</Link></Breadcrumb.Item>
                     <Breadcrumb.Item active>{productData?.name}</Breadcrumb.Item>
                 </Breadcrumb>
-                <div className="d-flex justify-content-around m-5 pb-5">
+                <div className="d-flex justify-content-around m-5">
                     {formStep >= 0 ?
                         <StepsDiv className="bg-info">Step 1: Choose Your Product</StepsDiv>
                         : <StepsDiv>Step 1: Choose Your Product</StepsDiv>
                     }
-                    <hr/>
+                    <hr />
                     {formStep >= 1 ?
                         <StepsDiv className="bg-info">Step 2: Design Your Shirt</StepsDiv>
                         : <StepsDiv>Step 2: Design Your Shirt</StepsDiv>
                     }
-                    <hr/>
+                    <hr />
                     {formStep >= 2 ?
                         <StepsDiv className="bg-info">Step 3: Buy Your Masterpiece</StepsDiv>
                         : <StepsDiv>Step 3: Buy Your Masterpiece</StepsDiv>
                     }
                 </div>
-                <form>
+                {isLoading ? <Loading />
+                :
+                <form onSubmit={handleSubmit(onSubmit)}>
                     {formStep >= 0 && (
                         <section className={formStep === 0 ? "d-block" : "d-none"}>
                             <FirstDesignStep errors={errors} register={register} productData={productData} />
+                            <button type="submit">Send</button>
                         </section>
                     )}
                 </form>
+                }
             </div>
         </>
     )

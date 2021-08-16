@@ -30,9 +30,12 @@ const Login: React.FC<LoginProps> = () => {
         console.log(data);
         if(data.token){
             localStorage.setItem("token", data.token);
-            // history.push("/home");
+            let url2 = URL_API + "/users/myInfo"
+            let userInfo = await doApiMethod(url2, "GET");
+            localStorage.setItem("userName", userInfo.name);
             onBackdropClick();
-            toast.success("You logged in!");
+            history.push("/home");
+            toast.success("Welcome Back, "+userInfo.name + "!");
         }else{
             toast.error("Username or password incorrect!");
         }
@@ -59,7 +62,7 @@ const Login: React.FC<LoginProps> = () => {
     return(
         <>
         <div>
-            <button onClick={toggleModal} className="btn btn-primary">Login</button>
+            <button onClick={toggleModal} className="btn btn-primary mx-4">Login</button>
             <LoginForm isModalVisible={isModalVisible} onClose={onBackdropClick} onLoginRequested={onLoginRequested} onSignUpRequested={onSignUpRequested}/>
         <ReactTooltip/>
         </div>

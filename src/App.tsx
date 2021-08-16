@@ -12,6 +12,7 @@ import HomePage from './components/Client/homePage';
 import SingleCategory from './components/Client/singleCategory';
 import Categories from './components/Client/categories';
 import SingleProductDesign from './components/Client/singleProductDesign';
+import SearchPage from './components/Client/searchPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route exact path={"/categories"} component={Categories} />
           <Route path="/categories/single/:s_id" component={SingleCategory} />
           <Route exact path={`/product/:s_id`} component={SingleProductDesign} />
+          <Route exact path={`/search/`} component={SearchPage} />
         </Switch>
         <ToastContainer
         position= "bottom-right"

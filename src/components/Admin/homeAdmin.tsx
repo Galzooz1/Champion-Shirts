@@ -11,7 +11,7 @@ import SingleProduct from './Products/singleProducts';
 import DesignsAdmin from './Designs/designsAdmin';
 import UsersAdmin from './Users/usersAdmin';
 import ReadyProductsAdmin from './readyProducts/readyProductsAdmin';
-// import AuthAdmin from './authAdmin';
+import AuthAdmin from './authAdmin';
 
 interface HomeAdminProps {
 
@@ -27,7 +27,7 @@ const HomeAdmin: React.FC<HomeAdminProps> = () => {
 
     return (
         <>
-            {/* <Route strict path={`/admin/`} component={AuthAdmin} /> */}
+            <Route strict path={`/admin`} component={AuthAdmin} />
             <HeaderAdmin showHideNav={showHideNav} />
             <div className="d-flex">
                 {/* {isNavSideShown ? 
