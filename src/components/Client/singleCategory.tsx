@@ -99,10 +99,11 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                 // const amounts = productAmount.amount;
                                                 return (
                                                     <>
-                                                        <motion.div className="border p-2 d-flex justify-content-around">
+                                                        <motion.div className="border p-2 text-start d-flex justify-content-around">
                                                             <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
                                                                 <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
                                                             </OverlayTrigger>
+
                                                             {prop?.amount.XS > 0 ?
                                                                 <h4>XS</h4>
                                                                 :
@@ -138,7 +139,6 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                                 :
                                                                 null
                                                             }
-
                                                         </motion.div>
                                                     </>
                                                 )

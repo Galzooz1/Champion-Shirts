@@ -13,6 +13,8 @@ export interface IDesigns {
     price:        number;
     name:         string;
     image:        string;
+    width:        number;
+    height:       number;
     info:         string;
     date_created: string;
     user_id:      string;

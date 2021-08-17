@@ -41,8 +41,8 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
             } else {
                 toast.success("Design Added!")
                 window.location.reload();
-            }   
-        }else{
+            }
+        } else {
             console.log(dataBody)
             toast.error("There's a problem!")
         }
@@ -52,7 +52,7 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
         setIsUploadShown(wasUploadShown => !wasUploadShown);
     }
 
-    const uploadFile = async(s_id: number) => {
+    const uploadFile = async (s_id: number) => {
         console.log(fileRef.current.files[0]);
         const myData = new FormData();
         myData.append("fileSend", fileRef.current.files[0]);
@@ -106,31 +106,45 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
                                     <LabelContainer className="text-warning">Price</LabelContainer>
                                     <InputContainer>
                                         {/* {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>} */}
-                                        <ModalInput {...register("price", { required: true, minLength: 1 })} type="number" name="price" id="price" className="form-control" />
+                                        <ModalInput {...register("price", { required: false, minLength: 1 })} type="number" name="price" id="price" className="form-control" />
                                         {errors.price && <span className="text-danger m-2 text-center">Please type Price</span>}
                                     </InputContainer>
                                 </div>
                                 <div>
-                                <LabelContainer className="text-warning">Image</LabelContainer>
-                                        <InputContainer>
-                                            <div>
-                                                <ModalInput style={{ width: "550px" }} {...register("image", { required: false, minLength: 2 })} type="text" name="image" id="image" className="form-control" />
-                                                {errors.image && <span className="text-danger m-2 text-center">Enter valid Image!</span>}
-                                                <h3>Or <SpanUpload onClick={showUploadContainer}>Upload Image</SpanUpload></h3>
-                                                {!isUploadShown ?
-                                                    <div className="d-flex justify-content-between">
-                                                        {/* {productData.image?.includes("http")
+                                    <LabelContainer className="text-warning">Image</LabelContainer>
+                                    <InputContainer>
+                                        <div>
+                                            <ModalInput style={{ width: "550px" }} {...register("image", { required: false, minLength: 2 })} type="text" name="image" id="image" className="form-control" />
+                                            {errors.image && <span className="text-danger m-2 text-center">Enter valid Image!</span>}
+                                            <h3>Or <SpanUpload onClick={showUploadContainer}>Upload Image</SpanUpload></h3>
+                                            {!isUploadShown ?
+                                                <div className="d-flex justify-content-between">
+                                                    {/* {productData.image?.includes("http")
                                                                 ?
                                                                 <img src={productData.image} height="150" alt={productData.name} />
                                                                 :
                                                                 <img src={URL_API + productData.image + "?" + Date.now()} height="150" alt={productData.name} />
                                                             } */}
-                                                        <ModalInput ref={fileRef} type="file" className="me-3" />
-                                                    </div>
-                                                    : ""
-                                                }
-                                            </div>
-                                        </InputContainer>
+                                                    <ModalInput ref={fileRef} type="file" className="me-3" />
+                                                </div>
+                                                : ""
+                                            }
+                                        </div>
+                                    </InputContainer>
+                                </div>
+                                <div>
+                                    <LabelContainer className="text-warning">Width</LabelContainer>
+                                    <InputContainer>
+                                        <ModalInput {...register("width", { required: true, minLength: 1 })} type="number" name="width" id="width" className="form-control" />
+                                        {errors.width && <span className="text-danger m-2 text-center">Please type Width</span>}
+                                    </InputContainer>
+                                </div>
+                                <div>
+                                    <LabelContainer className="text-warning">Height</LabelContainer>
+                                    <InputContainer>
+                                        <ModalInput {...register("height", { required: true, minLength: 1 })} type="number" name="height" id="height" className="form-control" />
+                                        {errors.height && <span className="text-danger m-2 text-center">Please type Height</span>}
+                                    </InputContainer>
                                 </div>
                             </div>
                             <button className="btn btn-primary" type="submit">Add Design</button>

@@ -13,5 +13,4 @@ export const SpanH2 = styled.span`
 background:white;
 padding:8px;
 position: relative;
-z-index: 0;
 `;

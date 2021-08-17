@@ -48,6 +48,7 @@ cursor:pointer;
 const SearchInput = styled(motion.input)`
     border-right: 0 !important;
     border-left: 0 !important;
+    border:2px solid #fa316796;
     &:focus{
     color: #495057;
     background-color: #fff;
@@ -112,7 +113,7 @@ const Header: React.FC<HeaderProps> = () => {
                                             }
                                         }} ref={searchRef} style={{ borderRadius: "40px 0 0 40px" }} type="text" className="form-control h-75" />
                                         <div style={{ marginRight: "2px" }} className="input-group-append">
-                                            <span onClick={handleSearchBox} style={{ borderRadius: "0 40px 40px 0", cursor: "pointer" }} className="h-75 input-group-text">
+                                            <span onClick={handleSearchBox} style={{ borderRadius: "0 40px 40px 0", cursor: "pointer", border:"1px solid #fa316796" }} className="h-75 input-group-text">
                                                 {searchIcon()}
                                             </span>
                                         </div>
@@ -144,12 +145,14 @@ const Header: React.FC<HeaderProps> = () => {
                             <NavDropdown className="text-dark" title="Categories" id="collasible-nav-dropdown">
                                 {categoriesAr.map((item, i) => {
                                     return (
-                                        <NavDropdown.Item><Link className="dropdown-item" key={i} to={"/categories/single/" + item.s_id}>{item.name}</Link></NavDropdown.Item>
+                                        <React.Fragment key={i}>
+                                        <NavDropdown.Item onClick={() => {history.push("/categories/single/" + item.s_id)}}>{item.name}</NavDropdown.Item>
+                                        </React.Fragment>
                                         )
                                     })}
                             </NavDropdown>
                                     <Nav.Link href="#link"><Link className="text-dark text-decoration-none mx-5" to="/">About</Link></Nav.Link>
-                                    <Nav.Link href="#link"><Link className="text-dark text-decoration-none mx-5" to="/">Contact</Link></Nav.Link>
+                                    <Nav.Link href="#link"><Link className="text-dark text-decoration-none" to="/">Contact</Link></Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

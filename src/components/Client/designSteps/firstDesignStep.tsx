@@ -9,6 +9,7 @@ interface FirstDesignStepProps {
     errors: any;
     register: any;
     productData: Partial<IProdItems>;
+    indexPickedCallBack:(_value: number) => void;
 };
 
 const SizeInput = styled.input`
@@ -54,7 +55,7 @@ const SizeSpan = styled.span`
         }
 `;
 
-const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, register }) => {
+const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, register, indexPickedCallBack }) => {
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let history = useHistory();
     React.useEffect(() => {
@@ -63,11 +64,12 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, 
     }, []);
     const handleChange = (i: number) => {
         setIndexPicked(i)
+        indexPickedCallBack(i);
     }
 
     return (
         <>
-            <div style={{ height: "598px" }} className="d-lg-flex justify-content-around border shadow p-4">
+            <div style={{ height: "600px" }} className="d-lg-flex justify-content-around border shadow p-4">
                 <div>
                     <h2>{productData?.name}</h2>
                     <h4>{productData?.info}</h4>
@@ -75,7 +77,7 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, 
                         <h4>Colors:</h4>
                         {productData.properties?.map((item, i) => {
                             return (
-                                <>
+                                <React.Fragment key={i}>
                                     <div style={{ width: "66.63px" }}>
                                         <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
                                             name="color" id="properties.color" onInput={() => handleChange(i)}
@@ -139,7 +141,7 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, 
                                             }
                                         </div>
                                     </div>
-                                </>
+                                </React.Fragment>
                             )
                         })}
 
@@ -148,10 +150,6 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, 
                     {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
                         <h3>Price: {productData?.price} $</h3>
-                    </div>
-                    <div className="d-flex justify-content-center align-items-end m-3">          
-                            <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
-                            <button type="button" className="btn btn-outline-primary mx-4">Continue</button>
                     </div>
                 </div>
                 <div>

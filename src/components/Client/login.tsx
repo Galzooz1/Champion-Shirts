@@ -34,7 +34,7 @@ const Login: React.FC<LoginProps> = () => {
             let userInfo = await doApiMethod(url2, "GET");
             localStorage.setItem("userName", userInfo.name);
             onBackdropClick();
-            history.push("/home");
+            window.location.reload();
             toast.success("Welcome Back, "+userInfo.name + "!");
         }else{
             toast.error("Username or password incorrect!");
