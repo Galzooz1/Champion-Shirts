@@ -1,5 +1,6 @@
 import React from 'react';
-import { Breadcrumb } from 'react-bootstrap';
+import { Tooltip } from 'react-bootstrap';
+import { Breadcrumb, OverlayTrigger } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -33,12 +34,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     let [formStep, setFormStep] = React.useState<number>(0);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
     let [indexPicked, setIndexPicked] = React.useState<number>(0);
-
+    let [chosenSide, setChosenSide] = React.useState<string>("");
+    let [priceOfProduct, setPriceOfProduct] = React.useState<number | undefined>();
+    let sum: number;
+    
+    
     React.useEffect(() => {
         getSingleProdData();
+        sum = priceOfProduct!;
     }, []);
 
-    const indexPickedCallBack = (_value: number) => { 
+    const indexPickedCallBack = (_value: number) => {
         setIndexPicked(_value);
     }
 
@@ -59,6 +65,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log(dataCategory);
         data.catName = dataCategory.name;
         setProductData(data);
+        setPriceOfProduct(data.price);
         setPropertiesData(data.properties);
     }
 
@@ -66,10 +73,19 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log(dataBody);
     }
 
+    const changePrice = (amount: number) => { 
+        setPriceOfProduct(sum+amount);
+        alert(priceOfProduct);
+    }
+
+    const renderTooltip = (props: any) => (
+        <Tooltip {...props}>Please set all the fields</Tooltip>
+    )
+
     return (
         <>
             <Header />
-            <div className="container mt-5">
+            <div style={{width:"90%", height:"90%"}} className="mx-auto mt-5">
                 <Breadcrumb>
                     <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
@@ -97,10 +113,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {formStep >= 0 && (
                             <section className={formStep === 0 ? "d-block" : "d-none"}>
-                                <FirstDesignStep indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
+                                <FirstDesignStep priceOfProduct={priceOfProduct} changePrice={changePrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
+                                    {!isValid ? 
+                                    <OverlayTrigger delay={{ show: 250, hide: 500 }} placement="left-start" overlay={renderTooltip(props)}>
                                     <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    </OverlayTrigger>
+                                    :
+                                    <button onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    }
+                                    {/* <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button> */}
                                 </div>
                             </section>
                         )}
@@ -108,8 +131,14 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                             <section className={formStep === 1 ? "d-block" : "d-none"}>
                                 <SecondStepApp indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
-                                    <button type="button"  onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
+                                    <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
+                                    {!isValid ? 
+                                    <OverlayTrigger delay={{ show: 250, hide: 500 }} placement="left-start" overlay={renderTooltip(props)}>
                                     <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    </OverlayTrigger>
+                                    :
+                                    <button onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    }
                                 </div>
                             </section>
                         )}

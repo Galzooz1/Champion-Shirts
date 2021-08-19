@@ -2,6 +2,7 @@ import React from 'react';
 import { IDesigns } from '../../Admin/interfaces/designs';
 import { IProdItems, Property } from '../../Admin/interfaces/prodItems';
 import { doApiGet, URL_API } from '../../services/apiService';
+import Loading from '../loading';
 import SecondStepPanel from './secondStepPanel';
 import SecondStepWorkspace from './secondStepWorkspace';
 
@@ -27,16 +28,27 @@ const newDesign = (_image: any, _width: number, _height: number, _name: string) 
     name: _name
 })
 
+const newUploadedImage = (_image: any) => ({
+    image: _image,
+    width: 100,
+    height: 100
+})
+
 const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
     let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
     let [designsAr, setDesignsAr] = React.useState<any[]>([{}]);
+    let [filesAr, setFilesAr] = React.useState<any[]>([{}]);
+    const [selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
+
     // let DesignsArr:IDesignsArr[] = [];
     React.useEffect(() => {
         getDesignsData();
+        console.log(selectedFiles);
+        
         // fixDesignsData();
         // console.log(DesignsArr);
-    }, []);
+    }, [selectedFiles]);
     
     
     const getDesignsData = async () => {
@@ -51,6 +63,11 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesDa
             _image = URL_API + _image + "?" + Date.now();
         }
         setDesignsAr([...designsAr,{...newDesign(_image,_width,_height,_name)}]);
+        setIsDesignClicked(true);
+    }
+
+    const handleFileClicked = (_image: any) => { 
+        setFilesAr([...filesAr,{...newUploadedImage(_image)}])
         setIsDesignClicked(true);
     }
 
@@ -72,13 +89,14 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesDa
     //     console.log('asd - ',DesignsArr)
     // }
     
-    return (
+    return (    
         <div style={{ height: "600px" }} className="d-flex justify-content-between shadow p-3">
+            {designsData.length === 0 && <Loading />}
             <div className="col-lg-4">
-                <SecondStepPanel designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
+                <SecondStepPanel handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
             </div>
             <div className="col-lg-8">
-                <SecondStepWorkspace setDesignAr={setDesignsAr} designsAr={designsAr} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
+                <SecondStepWorkspace filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
             </div>
         </div>
     )

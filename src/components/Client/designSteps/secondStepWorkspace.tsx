@@ -12,9 +12,11 @@ interface SecondStepWorkspaceProps {
     designsData: Partial<IDesigns[]>;
     indexPicked: number;
     // DesignsArr: IDesignsArr[];
-    isDesignClicked:boolean;
-    designsAr:any[];
-    setDesignAr?:any;
+    isDesignClicked: boolean;
+    designsAr: any[];
+    setDesignAr?: any;
+    filesAr: any;
+    setFilesAr?: any;
 };
 
 const MainImgDiv = styled.div`
@@ -37,12 +39,12 @@ width:100%;
 height:100%;
 `;
 
-const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({designsAr, setDesignAr ,productData, propertiesData, indexPicked, designsData, isDesignClicked}) => {
+const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ filesAr, setFilesAr, designsAr, setDesignAr, productData, propertiesData, indexPicked, designsData, isDesignClicked }) => {
     let [isFrontMain, setIsFrontMain] = React.useState<boolean>(true);
     let stageRef = React.useRef<any>();
     const [selectedDesign, setSelectDesign] = React.useState<any>();
 
-    const changeMainImg = () => { 
+    const changeMainImg = () => {
         setIsFrontMain(wasFrontMain => !wasFrontMain);
     }
 
@@ -53,48 +55,76 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({designsAr, set
             setSelectDesign(null)
         }
     }
-    return(
+    return (
         <div className="d-flex justify-content-center">
-            <MainImgDiv style={{backgroundImage:isFrontMain ? `url(${propertiesData[indexPicked]?.frontImg})` : `url(${propertiesData[indexPicked]?.backImg})`}}>
+            <MainImgDiv style={{ backgroundImage: isFrontMain ? `url(${propertiesData[indexPicked]?.frontImg})` : `url(${propertiesData[indexPicked]?.backImg})` }}>
                 <div className="d-flex justify-content-center">
                     <Stage
-                    style={{border:"1px solid black"}}
-                    width={propertiesData[indexPicked]?.sizeOfCanvasFront.width}
-                    height={propertiesData[indexPicked]?.sizeOfCanvasFront.height}
-                    onMouseDown={checkDeselect}
-                    onTouchStart={checkDeselect}
-                    ref={stageRef}
+                        style={{ border: "1px solid black" }}
+                        width={propertiesData[indexPicked]?.sizeOfCanvasFront.width}
+                        height={propertiesData[indexPicked]?.sizeOfCanvasFront.height}
+                        onMouseDown={checkDeselect}
+                        onTouchStart={checkDeselect}
+                        ref={stageRef}
                     >
                         <Layer>
-                            {isDesignClicked ? 
-                            <>
-                            {designsAr.map((item, key) => {
-                                return(
-                                    <React.Fragment key={key}>
-                                    <SecondStepImage
-                                    key={key}
-                                    designProps={item}
-                                    isSelected={key === selectedDesign}
-                                    onSelect={() => {
-                                        setSelectDesign(key)
-                                    }}
-                                    onChange={(newAttrs) => {
-                                        const imgs = designsAr.slice();
-                                        imgs[key] = newAttrs;
-                                        setDesignAr(imgs);
-                                    }}
-                                    />
-                                    </React.Fragment>
-                                    )
-                                })}
-                            </>
-                            : null}
-                                </Layer>
+                            {isDesignClicked ?
+                                <>
+                                    {designsAr.map((item, key) => {
+                                        return (
+                                            <React.Fragment key={key}>
+                                                <SecondStepImage
+                                                    key={key}
+                                                    designProps={item}
+                                                    isSelected={key === selectedDesign}
+                                                    onSelect={() => {
+                                                        setSelectDesign(key)
+                                                    }}
+                                                    onChange={(newAttrs) => {
+                                                        const imgs = designsAr.slice();
+                                                        imgs[key] = newAttrs;
+                                                        setDesignAr(imgs);
+                                                    }}
+                                                />
+                                            </React.Fragment>
+                                        )
+                                    })}
+                                </>
+                                : null}
+                            {isDesignClicked ?
+                                <>
+                                    {filesAr.map((item: any, key: any) => {
+                                        if(key === 0){
+                                            --key;
+                                        }
+                                        key *= -1;
+                                        return (
+                                            <React.Fragment key={key}>
+                                                <SecondStepImage
+                                                    key={key}
+                                                    designProps={item}
+                                                    isSelected={key === selectedDesign}
+                                                    onSelect={() => {
+                                                        setSelectDesign(key)
+                                                    }}
+                                                    onChange={(newAttrs) => {
+                                                        const imgs = filesAr.slice();
+                                                        imgs[key] = newAttrs;
+                                                        setFilesAr(imgs);
+                                                    }}
+                                                />
+                                            </React.Fragment>
+                                        )
+                                    })}
+                                </>
+                                : null
+                            }
+                        </Layer>
                     </Stage>
                 </div>
             </MainImgDiv>
             <SecondImgDiv onClick={changeMainImg}>
-                <SecondImgImg src={isFrontMain ? propertiesData[indexPicked]?.backImg : propertiesData[indexPicked]?.frontImg} alt={propertiesData[indexPicked]?._id}/>
+                <SecondImgImg src={isFrontMain ? propertiesData[indexPicked]?.backImg : propertiesData[indexPicked]?.frontImg} alt={propertiesData[indexPicked]?._id} />
             </SecondImgDiv>
         </div>
     )

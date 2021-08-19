@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { Nav } from 'react-bootstrap';
+import { Button, DropdownButton, Image, Nav, NavItem } from 'react-bootstrap';
 import { NavDropdown } from 'react-bootstrap';
 import { Container, Navbar } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { ICategories } from '../Admin/interfaces/categoriesArgs';
-import { doApiGet, URL_API } from '../services/apiService';
+import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import Login from './login';
 import './css/header.css';
+import { IUsers } from '../Admin/interfaces/users';
+import UserIcon from '../../assets/user.png';
+// import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
+// import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 
 interface HeaderProps {
@@ -58,15 +62,25 @@ const SearchInput = styled(motion.input)`
     }
 `;
 
+const backdrop = {
+    visible: {opacity: 1, x:0},
+    hidden: {opacity: 0, x:20}
+}
+
 const Header: React.FC<HeaderProps> = () => {
     let history = useHistory();
     let [categoriesAr, setCategoriesAr] = React.useState<ICategories[]>([]);
+    let [userInfo, setUserInfo] = React.useState<IUsers>();
     let [isSearchBox, setIsSearchBox] = React.useState<boolean>(false);
     let searchRef = React.useRef<any>();
+    let toggleRef = React.useRef<any>();
 
 
     React.useEffect(() => {
-        getCategoriesData()
+        getCategoriesData();
+        if (localStorage["token"]) {
+            getUserData();
+        }
     }, []);
 
     const getCategoriesData = async () => {
@@ -95,6 +109,28 @@ const Header: React.FC<HeaderProps> = () => {
             history.push(url);
         }
     }
+
+    const getUserData = async () => {
+        let url = URL_API + "/users/myInfo";
+        let data = await doApiMethod(url, "GET");
+        console.log(data);
+        setUserInfo(data);
+    }
+
+    // const CustomDropDownToggle = React.forwardRef(({ children }, ref) => (
+    //     <a
+    //       href=""
+    //       ref={toggleRef}
+    //     //   onClick={e => {
+    //     //     e.preventDefault();
+    //     //     onClick(e);
+    //     //   }}
+    //     >
+    //       {/* Render custom icon here */}
+    //       &#x25bc;
+    //       {userInfo?.avatar_img}
+    //     </a>
+    //   ));
     return (
         <>
             <HeaderDiv className="bg-dark container-fluid text-white py-2">
@@ -106,21 +142,21 @@ const Header: React.FC<HeaderProps> = () => {
                         <IconsDiv className="icons">
                             {isSearchBox ?
                                 <div className="container d-flex justify-content-center">
-                                    <div className="input-group col-sm-7 input-group-lg">
-                                        <SearchInput onKeyDown={(evt) => {
+                                    <motion.div transition={{duration:0.5, delay:0.2}} variants={backdrop} animate="visible" initial="hidden" className="input-group col-sm-7 input-group-lg">
+                                        <SearchInput transition={{ duration: 0.7, delay: 0.2 }} initial={{ x: -300 }} animate={{ x: 0 }} onKeyDown={(evt) => {
                                             if (evt.key === "Enter") {
                                                 onSearchClick()
                                             }
                                         }} ref={searchRef} style={{ borderRadius: "40px 0 0 40px" }} type="text" className="form-control h-75" />
                                         <div style={{ marginRight: "2px" }} className="input-group-append">
-                                            <span onClick={handleSearchBox} style={{ borderRadius: "0 40px 40px 0", cursor: "pointer", border:"1px solid #fa316796" }} className="h-75 input-group-text">
+                                            <span onClick={handleSearchBox} style={{ borderRadius: "0 40px 40px 0", cursor: "pointer", border: "1px solid #fa316796" }} className="h-75 input-group-text">
                                                 {searchIcon()}
                                             </span>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 </div>
                                 :
-                                <motion.div className="p-1 rounded-circle" style={{ cursor: "pointer", border:"1px dashed rgb(250, 49, 101)" }} whileHover={{border:"1px solid rgb(250, 49, 101)", scale:1.1}} onClick={handleSearchBox}>{searchIcon()}</motion.div>
+                                <motion.div transition={{duration:0.5, delay:0.2}} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
                             }
                             {/* <input type="text" classNameName="form-control" /> */}
                             {/* // <div onClick={handleSearchBox}>aaa</div> */}
@@ -131,28 +167,66 @@ const Header: React.FC<HeaderProps> = () => {
                                     LogOut
                                 </button>
                             }
+                            {/* <Navbar>
+                                <Nav>
+                                    <DropdownMenu
+                                    >
+                                        <DropdownItem eventKey='1'><i className="fa fa-envelope fa-fw"></i> User Profile</DropdownItem>
+                                        <DropdownItem eventKey='2'><i className="fa fa-gear fa-fw"></i> Settings</DropdownItem>
+                                        <DropdownItem divider />
+                                        <DropdownItem eventKey='3'><i className="fa fa-sign-out fa-fw"></i> Logout</DropdownItem>
+                                    </DropdownMenu>
+                                </Nav>
+                            </Navbar> */}
+                            {/* <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                <img src={UserIcon} alt="user" width="37px" height="37px" />
+
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown> */}
+                            {userInfo?.avatar_img ?
+                                // <div className="dropdown">
+                                //     </button>
+                                //     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                //         <li><Link className="dropdown-item" to="/admin">Admin</Link></li>
+                                //     </ul>
+
+                                <div className="p-1 border rounded-circle">
+                                    <img src={userInfo?.avatar_img.includes("http") ? userInfo?.avatar_img : URL_API + userInfo?.avatar_img + "?" + Date.now()} alt={userInfo?.firstName} width="37px" height="37px" className="rounded-circle" />
+                                </div>
+                            :
+                            <div className="p-1 border rounded-circle">
+                                <img src={UserIcon} alt="user" width="37px" height="37px" />
+                            </div>
+                            }
                         </IconsDiv>
                     </div>
                 </div>
             </HeaderDiv>
-            <Navbar className="Navbar container-fluid d-flex justify-content-center" variant="light" sticky="top" expand="lg">
+            <Navbar style={{ position: "sticky", top: 0 }} className="Navbar container-fluid d-flex justify-content-center" fixed="top" variant="light" expand="lg">
                 <Container className="container-fluid">
                     {/* <Navbar.Brand href="#home"><Link className="text-white text-white text-decoration-none" to="/">Home</Link></Navbar.Brand> */}
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav style={{ color: "whitesmoke",fontSize:"20px" }} className="d-flex justify-content-around w-25 mx-auto">
+                        <Nav style={{ color: "whitesmoke", fontSize: "20px" }} className="d-flex justify-content-around w-25 mx-auto">
                             <Nav.Link><Link className="text-dark text-decoration-none me-5" to="/">Home</Link></Nav.Link>
-                            <NavDropdown className="text-dark" title="Categories" id="collasible-nav-dropdown">
+                            <NavDropdown className="text-dark" title={"Categories"} id="collasible-nav-dropdown">
                                 {categoriesAr.map((item, i) => {
                                     return (
                                         <React.Fragment key={i}>
-                                        <NavDropdown.Item onClick={() => {history.push("/categories/single/" + item.s_id)}}>{item.name}</NavDropdown.Item>
+                                            <NavDropdown.Item onClick={() => { history.push("/categories/single/" + item.s_id) }}>{item.name}</NavDropdown.Item>
                                         </React.Fragment>
-                                        )
-                                    })}
+                                    )
+                                })}
                             </NavDropdown>
-                                    <Nav.Link href="#link"><Link className="text-dark text-decoration-none mx-5" to="/">About</Link></Nav.Link>
-                                    <Nav.Link href="#link"><Link className="text-dark text-decoration-none" to="/">Contact</Link></Nav.Link>
+                            <Nav.Link href="#link"><Link className="text-dark text-decoration-none mx-5" to="/">About</Link></Nav.Link>
+                            <Nav.Link href="#link"><Link className="text-dark text-decoration-none" to="/">Contact</Link></Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

@@ -73,6 +73,7 @@ const FirstDesignStepCarousel: React.FC<FirstDesignStepCarouselProps> = ({ produ
                                             <Slider {...SliderSettings}>
                                                 <img className="border rounded-2 shadow mb-4" src={item.frontImg} alt={productData?.name} />
                                                 <img className="border rounded-2 shadow mb-4" src={item.backImg} alt={productData?.name} />
+                                                <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} />
                                             </Slider>
                                         </div>
                                     </>

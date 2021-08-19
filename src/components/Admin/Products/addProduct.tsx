@@ -165,8 +165,8 @@ const AddProduct: React.FC<AddProductProps> = ({ onClose, isModalVisible }) => {
                             {formStep >= 3 && (
                                 <section className={formStep === 3 ? "d-block" : "d-none"}>
                                     <div className="text-center">
-                                        <motion.h2 transition={{ duaration: 1.5, delay: 0.2 }} initial={{ x: '-100vh' }} animate={{ x: 0, color: 'white' }}>All Set?</motion.h2>
-                                        <motion.h2 transition={{ duaration: 1.8, delay: 0.5 }} initial={{ x: '100vh' }} animate={{ x: 0, color: 'orange' }}>Go Ahead And Send it!</motion.h2>
+                                        <motion.h2 transition={{ duration: 1.5, delay: 0.2 }} initial={{ x: '-100vh' }} animate={{ x: 0, color: 'white' }}>All Set?</motion.h2>
+                                        <motion.h2 transition={{ duration: 1.8, delay: 0.5 }} initial={{ x: '100vh' }} animate={{ x: 0, color: 'orange' }}>Go Ahead And Send it!</motion.h2>
                                         <button type="submit" className="btn btn-primary">Add Product</button>
                                         <button onClick={backFormStep} type="button" className="btn btn-danger">
                                             Back

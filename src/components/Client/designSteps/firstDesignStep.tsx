@@ -10,6 +10,10 @@ interface FirstDesignStepProps {
     register: any;
     productData: Partial<IProdItems>;
     indexPickedCallBack:(_value: number) => void;
+    setChosenSide?:any;
+    chosenSide: string;
+    changePrice: (amount: number) => void;
+    priceOfProduct: number | undefined;
 };
 
 const SizeInput = styled.input`
@@ -24,7 +28,7 @@ const SizeInput = styled.input`
 `;
 
 const SizeLabel = styled.label`
-display: flex;
+    display: flex;
 	cursor: pointer;
 	font-weight: 500;
 	position: relative;
@@ -55,16 +59,22 @@ const SizeSpan = styled.span`
         }
 `;
 
-const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, register, indexPickedCallBack }) => {
+const FirstDesignStep: React.FC<FirstDesignStepProps> = ({priceOfProduct ,changePrice ,chosenSide ,setChosenSide ,productData, errors, register, indexPickedCallBack }) => {
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
+    let selectSideRef = React.useRef<HTMLSelectElement>(null);
     let history = useHistory();
     React.useEffect(() => {
-        // console.log(JSON.stringify(productData));
-        // initialArray()
     }, []);
     const handleChange = (i: number) => {
         setIndexPicked(i)
         indexPickedCallBack(i);
+    }
+
+    const chooseSide = (e: any) => { 
+        setChosenSide(e.target.value)
+        if(e.target.value === "both"){
+            changePrice(10);
+        }
     }
 
     return (
@@ -149,7 +159,19 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ productData, errors, 
                     {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
                     {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
+                        <select className="form-select" ref={selectSideRef} onChange={chooseSide}>
+                            <option selected disabled>Choose Side to Design</option>
+                            <option value="front">Front</option>
+                            <option value="back">Back</option>
+                            <option value="both">Both (+10$)</option>
+                        </select>
+                    </div>
+                    <div className="mt-4">
+                        {chosenSide === "both" ?
+                        <h3>Price: {priceOfProduct} $</h3>
+                        :
                         <h3>Price: {productData?.price} $</h3>
+                        }
                     </div>
                 </div>
                 <div>
