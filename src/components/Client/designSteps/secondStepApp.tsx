@@ -12,6 +12,8 @@ interface SecondStepAppProps {
     productData: Partial<IProdItems>;
     propertiesData: Partial<Property[]>;
     indexPicked: number;
+    setValue?:any;
+    chosenSide?:string;
 };
 
 export interface IDesignsArr {
@@ -34,9 +36,10 @@ const newUploadedImage = (_image: any) => ({
     height: 100
 })
 
-const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesData, indexPicked, errors, register }) => {
+const SecondStepApp: React.FC<SecondStepAppProps> = ({ chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
     let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
+    let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
     let [designsAr, setDesignsAr] = React.useState<any[]>([{}]);
     let [filesAr, setFilesAr] = React.useState<any[]>([{}]);
     const [selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
@@ -68,7 +71,7 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesDa
 
     const handleFileClicked = (_image: any) => { 
         setFilesAr([...filesAr,{...newUploadedImage(_image)}])
-        setIsDesignClicked(true);
+        setIsImageFileClicked(true);
     }
 
     // const fixDesignsData = () => {
@@ -96,7 +99,7 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ productData, propertiesDa
                 <SecondStepPanel handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
             </div>
             <div className="col-lg-8">
-                <SecondStepWorkspace filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
+                <SecondStepWorkspace chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
             </div>
         </div>
     )

@@ -61,7 +61,7 @@ overflow-y: auto;
 `;
 
 const DesignsDiv = styled.div`
-max-height: 450px;
+min-height: 450px;
 width: 100%;
 display:flex;
 align-content: flex-start;

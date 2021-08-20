@@ -12,8 +12,8 @@ interface FirstDesignStepProps {
     indexPickedCallBack:(_value: number) => void;
     setChosenSide?:any;
     chosenSide: string;
-    changePrice: (amount: number) => void;
-    priceOfProduct: number | undefined;
+    extraPrice: (amount: number) => void;
+    extraPriceOfProduct?: number | undefined;
 };
 
 const SizeInput = styled.input`
@@ -59,7 +59,7 @@ const SizeSpan = styled.span`
         }
 `;
 
-const FirstDesignStep: React.FC<FirstDesignStepProps> = ({priceOfProduct ,changePrice ,chosenSide ,setChosenSide ,productData, errors, register, indexPickedCallBack }) => {
+const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,extraPrice ,chosenSide ,setChosenSide ,productData, errors, register, indexPickedCallBack }) => {
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let selectSideRef = React.useRef<HTMLSelectElement>(null);
     let history = useHistory();
@@ -73,7 +73,9 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({priceOfProduct ,change
     const chooseSide = (e: any) => { 
         setChosenSide(e.target.value)
         if(e.target.value === "both"){
-            changePrice(10);
+            extraPrice(10);
+        }else{
+            extraPrice(0)
         }
     }
 
@@ -159,16 +161,16 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({priceOfProduct ,change
                     {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
                     {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
-                        <select className="form-select" ref={selectSideRef} onChange={chooseSide}>
-                            <option selected disabled>Choose Side to Design</option>
+                        <select {...register("sideToDesign", {required: true})} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select" ref={selectSideRef} onChange={chooseSide}>
                             <option value="front">Front</option>
                             <option value="back">Back</option>
                             <option value="both">Both (+10$)</option>
                         </select>
                     </div>
+                    {errors.price && <span className="text-danger m-2 text-center">Please choose side to design!</span>}
                     <div className="mt-4">
                         {chosenSide === "both" ?
-                        <h3>Price: {priceOfProduct} $</h3>
+                        <h3>Price: {productData?.price! + extraPriceOfProduct!} $</h3>
                         :
                         <h3>Price: {productData?.price} $</h3>
                         }

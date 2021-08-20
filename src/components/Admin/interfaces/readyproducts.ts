@@ -1,8 +1,8 @@
 // To parse this data:
 //
-//   import { Convert, Readyproducts } from "./file";
+//   import { Convert, ReadyProducts } from "./file";
 //
-//   const readyproducts = Convert.toReadyproducts(json);
+//   const readyProducts = Convert.toReadyProducts(json);
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
@@ -18,38 +18,56 @@ export interface IReadyproducts {
     category_name: string;
     color:         string;
     size:          string;
-    design:        Design;
+    sideToDesign:  string;
+    shirtDesigns:  ShirtDesigns;
     date_created:  string;
     user_id:       string;
     s_id:          number;
 }
 
-export interface Design {
-    front: Back[];
+export interface ShirtDesigns {
+    front: Front[];
     back:  Back[];
 }
 
 export interface Back {
-    design_price:     number;
-    _id:              string;
-    design_s_id:      number;
-    kindOfDesign:     string;
-    image:            string;
-    costume:          Costume;
-    sizeOfDesign:     SizeOfDesign;
-    positionOfDesign: PositionOfDesign;
+    designs: Designs;
+    costume: Costume;
+    _id:     string;
 }
 
 export interface Costume {
-    is_costume: boolean;
+    sizeOfCostume:     SizeOf;
+    positionOfCostume: PositionOf;
+    is_costume:        boolean;
+    costumeImage:      null | string;
 }
 
-export interface PositionOfDesign {
-    x: number;
-    y: number;
+export interface PositionOf {
+    x: number | null;
+    y: number | null;
 }
 
-export interface SizeOfDesign {
-    width:  number;
-    height: number;
+export interface SizeOf {
+    width:  number | null;
+    height: number | null;
+}
+
+export interface Designs {
+    design_prices: number;
+}
+
+export interface Front {
+    design:  Design;
+    costume: Costume;
+    _id:     string;
+}
+
+export interface Design {
+    sizeOfDesign:     SizeOf;
+    positionOfDesign: PositionOf;
+    design_price:     number | null;
+    is_design:        boolean;
+    design_s_id:      number | null;
+    designImage:      null | string;
 }

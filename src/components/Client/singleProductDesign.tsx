@@ -28,20 +28,24 @@ font-weight: bolder;
 
 const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     let history = useHistory();
-    const { register, handleSubmit, formState: { errors, isValid } } = useForm<Partial<IReadyproducts>>({ mode: 'all' });
+    const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<Partial<IReadyproducts>>({ 
+        defaultValues: {
+            sideToDesign: "front"
+        },
+        mode: 'all' });
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
     let [propertiesData, setPropertiesData] = React.useState<Property[]>([]);
     let [formStep, setFormStep] = React.useState<number>(0);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
     let [indexPicked, setIndexPicked] = React.useState<number>(0);
-    let [chosenSide, setChosenSide] = React.useState<string>("");
-    let [priceOfProduct, setPriceOfProduct] = React.useState<number | undefined>();
+    let [chosenSide, setChosenSide] = React.useState<string>("front");
+    let [extraPriceOfProduct, setExtraPriceOfProduct] = React.useState<number | undefined>(0);
     let sum: number;
     
     
     React.useEffect(() => {
         getSingleProdData();
-        sum = priceOfProduct!;
+        sum = extraPriceOfProduct!;
     }, []);
 
     const indexPickedCallBack = (_value: number) => {
@@ -65,7 +69,6 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log(dataCategory);
         data.catName = dataCategory.name;
         setProductData(data);
-        setPriceOfProduct(data.price);
         setPropertiesData(data.properties);
     }
 
@@ -73,9 +76,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log(dataBody);
     }
 
-    const changePrice = (amount: number) => { 
-        setPriceOfProduct(sum+amount);
-        alert(priceOfProduct);
+    const extraPrice = (amount: number) => { 
+        setExtraPriceOfProduct(amount);
+    }
+
+    const setSideAndPriceValues = () => { 
+        console.log(productData?.price!+extraPriceOfProduct!);
+        setValue("price", productData?.price!+extraPriceOfProduct!);
+        setValue("product_s_id", productData.s_id);
+        setValue("product_name", productData.name);
+        setValue("category_s_id", productData.category_s_id);
+        setValue("category_name", productData.catName);
     }
 
     const renderTooltip = (props: any) => (
@@ -113,7 +124,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {formStep >= 0 && (
                             <section className={formStep === 0 ? "d-block" : "d-none"}>
-                                <FirstDesignStep priceOfProduct={priceOfProduct} changePrice={changePrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
+                                <FirstDesignStep extraPriceOfProduct={extraPriceOfProduct} extraPrice={extraPrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
                                     {!isValid ? 
@@ -121,7 +132,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                                     <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
                                     </OverlayTrigger>
                                     :
-                                    <button onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    <button onClick={isValid ? () => {setSideAndPriceValues(); nextFormStep();} : () => console.log("work")} type="button" className="btn btn-outline-primary mx-4">Continue</button>
                                     }
                                     {/* <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button> */}
                                 </div>
@@ -129,7 +140,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                         )}
                         {formStep >= 1 && (
                             <section className={formStep === 1 ? "d-block" : "d-none"}>
-                                <SecondStepApp indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
+                                <SecondStepApp chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
                                     {!isValid ? 
