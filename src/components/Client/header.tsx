@@ -12,6 +12,7 @@ import Login from './login';
 import './css/header.css';
 import { IUsers } from '../Admin/interfaces/users';
 import UserIcon from '../../assets/user.png';
+import { useDispatch, useSelector } from 'react-redux';
 // import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
 // import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
@@ -63,17 +64,20 @@ const SearchInput = styled(motion.input)`
 `;
 
 const backdrop = {
-    visible: {opacity: 1, x:0},
-    hidden: {opacity: 0, x:20}
+    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0, x: 20 }
 }
 
 const Header: React.FC<HeaderProps> = () => {
+    let carts_ar: any = useSelector<any>(store => store.carts_ar)
     let history = useHistory();
     let [categoriesAr, setCategoriesAr] = React.useState<ICategories[]>([]);
     let [userInfo, setUserInfo] = React.useState<IUsers>();
     let [isSearchBox, setIsSearchBox] = React.useState<boolean>(false);
     let searchRef = React.useRef<any>();
     let toggleRef = React.useRef<any>();
+    let dispatch = useDispatch()
+
 
 
     React.useEffect(() => {
@@ -81,7 +85,7 @@ const Header: React.FC<HeaderProps> = () => {
         if (localStorage["token"]) {
             getUserData();
         }
-    }, []);
+    }, [localStorage]);
 
     const getCategoriesData = async () => {
         let url = URL_API + `/categories?sort=_id&reverse=yes&perPage=200`
@@ -142,7 +146,7 @@ const Header: React.FC<HeaderProps> = () => {
                         <IconsDiv className="icons">
                             {isSearchBox ?
                                 <div className="container d-flex justify-content-center">
-                                    <motion.div transition={{duration:0.5, delay:0.2}} variants={backdrop} animate="visible" initial="hidden" className="input-group col-sm-7 input-group-lg">
+                                    <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="input-group col-sm-7 input-group-lg">
                                         <SearchInput transition={{ duration: 0.7, delay: 0.2 }} initial={{ x: -300 }} animate={{ x: 0 }} onKeyDown={(evt) => {
                                             if (evt.key === "Enter") {
                                                 onSearchClick()
@@ -156,8 +160,21 @@ const Header: React.FC<HeaderProps> = () => {
                                     </motion.div>
                                 </div>
                                 :
-                                <motion.div transition={{duration:0.5, delay:0.2}} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
+                                <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
                             }
+                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-3 my-2 my-lg-0">
+                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {
+                                    dispatch({ type: "SHOW_HIDE_CART", flag: true })
+                                }}>
+                                    {cartIcon()}
+                                    {// רק אם יש מוצרים בעגלה יוצג האייקון 
+                                        (carts_ar.length > 0) &&
+                                        <div className="badge bg-danger" style={{ fontSize: "0.5em" }}>
+                                            {cartTotal(carts_ar)}
+                                        </div>
+                                    }
+                                </h3>
+                            </div>
                             {/* <input type="text" classNameName="form-control" /> */}
                             {/* // <div onClick={handleSearchBox}>aaa</div> */}
                             {(!localStorage["token"]) ?
@@ -200,10 +217,10 @@ const Header: React.FC<HeaderProps> = () => {
                                 <div className="p-1 border rounded-circle">
                                     <img src={userInfo?.avatar_img.includes("http") ? userInfo?.avatar_img : URL_API + userInfo?.avatar_img + "?" + Date.now()} alt={userInfo?.firstName} width="37px" height="37px" className="rounded-circle" />
                                 </div>
-                            :
-                            <div className="p-1 border rounded-circle">
-                                <img src={UserIcon} alt="user" width="37px" height="37px" />
-                            </div>
+                                :
+                                <div className="p-1 border rounded-circle">
+                                    <img src={UserIcon} alt="user" width="37px" height="37px" />
+                                </div>
                             }
                         </IconsDiv>
                     </div>
@@ -249,10 +266,27 @@ const Header: React.FC<HeaderProps> = () => {
     )
 }
 
+// מחשב כמה מוצרים יש בסהכ בעגלה
+const cartTotal = (carts_ar: any) => {
+    let total = 0;
+    carts_ar.map((item: { count: number; }) => {
+        total += item.count;
+    })
+    return total;
+}
+
 const searchIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-search m-1" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+        </svg>
+    )
+}
+
+const cartIcon = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-cart4" viewBox="0 0 16 16">
+            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
         </svg>
     )
 }

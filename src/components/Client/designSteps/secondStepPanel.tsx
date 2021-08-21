@@ -10,7 +10,7 @@ import { IDesignsArr } from './secondStepApp';
 interface SecondStepPanelProps {
     productData: Partial<IProdItems>;
     designsData: Partial<IDesigns[]>;
-    handleDesignClicked: (_image: any, _height: any, _width: any, _name: any) => void;
+    handleDesignClicked: (_image: any, _height: any, _width: any, _name: any, _s_id: any) => void;
     setSelectedFiles?: any;
     selectedFiles: any[];
     handleFileClicked: (_image: any) => void;
@@ -32,7 +32,7 @@ flex-direction: column;
 const MethodsDiv = styled.div`
 /* min-height:100%; */
 flex: 1;
-min-height: 500px;
+height: 500px;
 display: block;
 border:1px solid black;
 border-radius: 10px;
@@ -61,7 +61,7 @@ overflow-y: auto;
 `;
 
 const DesignsDiv = styled.div`
-min-height: 450px;
+height: 450px;
 width: 100%;
 display:flex;
 align-content: flex-start;
@@ -194,7 +194,7 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ setSelectedFiles, sel
                             <DesignsDiv>
                                 {designsData.map((item, i) => {
                                     return (
-                                        <DesignBox key={i} onClick={() => handleDesignClicked(item?.image, item?.height, item?.width, item?.name)}>
+                                        <DesignBox key={i} onClick={() => handleDesignClicked(item?.image, item?.height, item?.width, item?.name, item?.s_id)}>
                                             {item?.image?.includes("http") ?
                                                 <img src={item?.image} alt={item?.name} width="100" height="100" />
                                                 :

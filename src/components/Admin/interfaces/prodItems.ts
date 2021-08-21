@@ -7,6 +7,7 @@ export interface IProdItems {
     price:         number;
     image:         string;
     category_s_id: number;
+    isClean:       boolean;
     properties:    Property[];
     date_created:  string;
     user_id:       string;

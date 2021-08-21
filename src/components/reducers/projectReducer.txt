@@ -1,8 +1,0 @@
-const initState = {
-    isModalVisble:boolean;
-    
-}
-
-export const showModal = (state = initState, action) => {
-    
-}

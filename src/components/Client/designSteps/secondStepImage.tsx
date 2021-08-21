@@ -10,21 +10,31 @@ interface SecondStepImageProps {
     onSelect: () => void;
     onChange: (newAttrs: any) => void;
     SetStatesValues: (_width: any, _height: any, _x: any, _y: any, _rotation: any) => void;
+    setValue?:any;
+    key?:any;
+    setIsDesignValue:() => void;
+    unRegister:() => void;
 };
 
-const SecondStepImage: React.FC<SecondStepImageProps> = ({SetStatesValues ,designProps, isSelected, onSelect, onChange }, props) => {
+const SecondStepImage: React.FC<SecondStepImageProps> = ({unRegister ,setIsDesignValue ,key ,setValue ,SetStatesValues ,designProps, isSelected, onSelect, onChange }, props) => {
     let designRef = React.useRef<any>();
     let trRef = React.useRef<any>();
     let deleteRef = React.useRef<any>();
     let [isDesignShown, setIsDesignShown] = React.useState(true);
 
     React.useEffect(() => {
+        // console.log(key)
+        // setValue(`shirtDesigns.front[${props.key}].design.is_design`, true);
         if (isSelected) {
             trRef.current.nodes([designRef.current]);
             trRef.current.getLayer().batchDraw();
             // console.log("aaa" + designWidth, designX, designRotation);
         }
     }, [isSelected]);
+    
+    React.useEffect(() => {
+        setIsDesignValue();
+    }, [])
 
     const [img] = useImage(designProps.image);
     const [deleteImg] = useImage(TrashPng);
@@ -33,6 +43,7 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({SetStatesValues ,desig
         const container: any = e.target.getStage()?.container();
         container!.style.cursor = "default";
         setIsDesignShown(false)
+        unRegister()
     }
 
     const setValues = (e: any) => { 
@@ -49,7 +60,7 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({SetStatesValues ,desig
             {isDesignShown &&
                 <>
                     <Image
-                        key={props.key}
+                        key={key}
                         ref={designRef}
                         image={img}
                         x={20}

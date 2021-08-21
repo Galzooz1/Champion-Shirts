@@ -27,6 +27,16 @@ padding-bottom: 8px;
 cursor:pointer;
 `;
 
+const CleanWrapperDiv = styled(motion.div)`
+min-height: 300px;
+width:90%;
+margin:16px;
+border-radius: 5px;
+padding-bottom: 8px;
+cursor:pointer;
+display: flex;
+`;
+
 const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     let history = useHistory();
     let [categoryData, setCategoryData] = React.useState<Partial<ICategories>>({});
@@ -45,7 +55,7 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     }
 
     const getProductsData = async () => {
-        let url = URL_API + "/products?category=" + props.match.params.s_id;
+        let url = URL_API + "/products?category=" + props.match.params.s_id + "&page=0&sort=isClean&reverse=yes&perPage=5";
         let data = await doApiGet(url);
         console.log(data);
         setProductsData(data);
@@ -73,78 +83,144 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                             {categoryData?.name}
                         </SpanH2>
                     </H2HR>
-                    {productsData.length === 0 && 
-                    <Loading />}
+                    {productsData.length === 0 &&
+                        <Loading />}
                     <div className="d-flex flex-wrap">
                         {productsData.map((item, i) => {
                             return (
                                 <>
-                                    <WrapperDiv transition={{duration:0.4}} onClick={() => {history.push("/product/" + item?.s_id)}} className="col-lg-3 mx-5 shadow border rounded-1">
-                                        <img src={item?.image} alt={item?.name} height="350px" width="100%" />
-                                        <h2>{item?.name}</h2>
-                                        <h3>{item?.price} $</h3>
-                                        {/* <div className="text-info border p-3">
+                                    {item?.isClean &&
+                                        <CleanWrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/clean/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
+                                            <img src={item?.image} alt={item?.name} style={{ maxHeight: "350px" }} />
+                                            <div className="m-5" style={{ maxHeight: "350px" }}>
+                                                <h2>{item?.name}</h2>
+                                                <h3>{item?.price} $</h3>
+                                            </div>
+                                            <div className="text-dark border p-3 m-3">
+                                                <h3>Available:</h3>
+                                                {item?.properties.map((prop, i) => {
+                                                    return (
+                                                        <>
+                                                            <motion.div className="border p-2 text-start d-flex flex-wrap justify-content-around">
+                                                                <div className="w-100 d-flex justify-content-center">
+                                                                <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
+                                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                                </OverlayTrigger>
+                                                                </div>
+
+                                                                {prop?.amount.XS > 0 ?
+                                                                    <h4>XS</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.S > 0 ?
+                                                                    <h4>S</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.M > 0 ?
+                                                                    <h4>M</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.L > 0 ?
+                                                                    <h4>L</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XL > 0 ?
+                                                                    <h4>XL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XXL > 0 ?
+                                                                    <h4>XXL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XXXL > 0 ?
+                                                                    <h4>XXXL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </motion.div>
+                                                        </>
+                                                    )
+                                                })}
+                                            </div>
+                                            <div className="bg-dark d-flex justify-content-center align-items-center" style={{width:"100%"}}>
+                                                <h1 className="text-white">Design Now!</h1>
+                                            </div>
+                                        </CleanWrapperDiv>
+                                    }
+                                    {!item?.isClean &&
+                                        <WrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
+                                            <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                                            <h2>{item?.name}</h2>
+                                            <h3>{item?.price} $</h3>
+                                            {/* <div className="text-info border p-3">
                                         <h3>Colors Available:</h3>
                                         {item?.properties.map((prop, i) => {
                                             return (
                                                 <>
-                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
                                                 </>
-                                            )
-                                        })}
-                                    </div> */}
-                                        <div className="text-dark border p-3">
-                                            <h3>Available:</h3>
-                                            {item?.properties.map((prop, i) => {
-                                                // const amounts = productAmount.amount;
-                                                return (
-                                                    <>
-                                                        <motion.div className="border p-2 text-start d-flex justify-content-around">
-                                                            <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
-                                                                <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                            </OverlayTrigger>
-
-                                                            {prop?.amount.XS > 0 ?
-                                                                <h4>XS</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.S > 0 ?
-                                                                <h4>S</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.M > 0 ?
-                                                                <h4>M</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.L > 0 ?
-                                                                <h4>L</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.XL > 0 ?
-                                                                <h4>XL</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.XXL > 0 ?
-                                                                <h4>XXL</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                            {prop?.amount.XXXL > 0 ?
-                                                                <h4>XXXL</h4>
-                                                                :
-                                                                null
-                                                            }
-                                                        </motion.div>
-                                                    </>
                                                 )
                                             })}
-                                        </div>
-                                    </WrapperDiv>
+                                        </div> */}
+                                            <div className="text-dark border p-3">
+                                                <h3>Available:</h3>
+                                                {item?.properties.map((prop, i) => {
+                                                    // const amounts = productAmount.amount;
+                                                    return (
+                                                        <>
+                                                            <motion.div className="border p-2 text-start d-flex justify-content-around">
+                                                                <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
+                                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                                </OverlayTrigger>
+
+                                                                {prop?.amount.XS > 0 ?
+                                                                    <h4>XS</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.S > 0 ?
+                                                                    <h4>S</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.M > 0 ?
+                                                                    <h4>M</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.L > 0 ?
+                                                                    <h4>L</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XL > 0 ?
+                                                                    <h4>XL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XXL > 0 ?
+                                                                    <h4>XXL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                {prop?.amount.XXXL > 0 ?
+                                                                    <h4>XXXL</h4>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </motion.div>
+                                                        </>
+                                                    )
+                                                })}
+                                            </div>
+                                        </WrapperDiv>
+                                    }
                                 </>
                             )
                         })}

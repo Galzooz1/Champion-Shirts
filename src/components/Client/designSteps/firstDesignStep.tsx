@@ -16,7 +16,7 @@ interface FirstDesignStepProps {
     extraPriceOfProduct?: number | undefined;
 };
 
-const SizeInput = styled.input`
+export const SizeInput = styled.input`
 		position: absolute;
 		left: -9999px;
 		&:checked + span {
@@ -27,7 +27,7 @@ const SizeInput = styled.input`
 		}
 `;
 
-const SizeLabel = styled.label`
+export const SizeLabel = styled.label`
     display: flex;
 	cursor: pointer;
 	font-weight: 500;
@@ -36,7 +36,7 @@ const SizeLabel = styled.label`
 	margin-bottom: 0.375em;
 `;
 
-const SizeSpan = styled.span`
+export const SizeSpan = styled.span`
 		display: flex;
 		align-items: center;
 		padding: 0.375em 0.75em 0.375em 0.375em;

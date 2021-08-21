@@ -18,6 +18,7 @@ export interface IReadyproducts {
     category_name: string;
     color:         string;
     size:          string;
+    isClean:       boolean;
     sideToDesign:  string;
     shirtDesigns:  ShirtDesigns;
     date_created:  string;

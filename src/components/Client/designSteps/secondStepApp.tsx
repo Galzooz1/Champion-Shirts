@@ -14,6 +14,8 @@ interface SecondStepAppProps {
     indexPicked: number;
     setValue?:any;
     chosenSide?:string;
+    reset?:any;
+    unregister?:any;
 };
 
 export interface IDesignsArr {
@@ -23,20 +25,21 @@ export interface IDesignsArr {
     name:any;
 }
 
-const newDesign = (_image: any, _width: number, _height: number, _name: string) => ({
+const newDesign = (_image: any, _width: number, _height: number, _name: string, _s_id: number) => ({
     image: _image,
     width: _width,
     height: _height,
-    name: _name
+    name: _name,
+    s_id: _s_id
 })
 
 const newUploadedImage = (_image: any) => ({
     image: _image,
     width: 100,
-    height: 100
+    height: 100,
 })
 
-const SecondStepApp: React.FC<SecondStepAppProps> = ({ chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
+const SecondStepApp: React.FC<SecondStepAppProps> = ({ unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
     let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
     let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
@@ -61,11 +64,11 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ chosenSide ,setValue ,pro
         setDesignsData(data);
     }
     
-    const handleDesignClicked = (_image: any, _height: any, _width: any, _name: any) => { 
+    const handleDesignClicked = (_image: any, _height: any, _width: any, _name: any, _s_id: number) => { 
         if(!_image.includes("http")){
             _image = URL_API + _image + "?" + Date.now();
         }
-        setDesignsAr([...designsAr,{...newDesign(_image,_width,_height,_name)}]);
+        setDesignsAr([...designsAr,{...newDesign(_image,_width,_height,_name, _s_id)}]);
         setIsDesignClicked(true);
     }
 
@@ -99,7 +102,7 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ chosenSide ,setValue ,pro
                 <SecondStepPanel handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
             </div>
             <div className="col-lg-8">
-                <SecondStepWorkspace chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
+                <SecondStepWorkspace unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
             </div>
         </div>
     )

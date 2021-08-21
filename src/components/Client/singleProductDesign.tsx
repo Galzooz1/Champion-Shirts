@@ -28,9 +28,10 @@ font-weight: bolder;
 
 const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     let history = useHistory();
-    const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<Partial<IReadyproducts>>({ 
+    const { register, handleSubmit, formState: { errors, isValid }, setValue, reset, unregister } = useForm<Partial<IReadyproducts>>({ 
         defaultValues: {
-            sideToDesign: "front"
+            sideToDesign: "front",
+            // shirtDesigns.front.design.is_design: [true]
         },
         mode: 'all' });
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
@@ -46,6 +47,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     React.useEffect(() => {
         getSingleProdData();
         sum = extraPriceOfProduct!;
+        setValue("isClean", true);
     }, []);
 
     const indexPickedCallBack = (_value: number) => {
@@ -87,6 +89,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         setValue("product_name", productData.name);
         setValue("category_s_id", productData.category_s_id);
         setValue("category_name", productData.catName);
+        // setValue(`shirtDesigns.front[${0}]`)
     }
 
     const renderTooltip = (props: any) => (
@@ -122,6 +125,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                 {isLoading ? <Loading />
                     :
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <input {...register("isClean", {required: true})} name="isClean" id="isClean" className="d-none" />
                         {formStep >= 0 && (
                             <section className={formStep === 0 ? "d-block" : "d-none"}>
                                 <FirstDesignStep extraPriceOfProduct={extraPriceOfProduct} extraPrice={extraPrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
@@ -140,7 +144,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                         )}
                         {formStep >= 1 && (
                             <section className={formStep === 1 ? "d-block" : "d-none"}>
-                                <SecondStepApp chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
+                                <SecondStepApp unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
                                     {!isValid ? 
