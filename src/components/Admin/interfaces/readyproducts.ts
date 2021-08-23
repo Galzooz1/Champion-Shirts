@@ -19,11 +19,14 @@ export interface IReadyproducts {
     color:         string;
     size:          string;
     isClean:       boolean;
+    isCart:     boolean;
+    isWish:     boolean;
     sideToDesign:  string;
     shirtDesigns:  ShirtDesigns;
     date_created:  string;
     user_id:       string;
     s_id:          number;
+    count:         number;
 }
 
 export interface ShirtDesigns {

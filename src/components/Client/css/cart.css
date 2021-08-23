@@ -7,14 +7,16 @@
   .cart_side{
     transform: translate(140%, 0);
     position: fixed;
-    top:70px;
+    top:90px;
     right:0;
     width:30%;
+    border-radius: 20px 0 0 20px;
     background:white;
-    height: 80%;
+    height: 70%;
     z-index: 999999;
     border:1px solid grey;
     transition: 1000ms;
+    color:black;
     
     /* overflow: scroll; */
    
@@ -26,8 +28,8 @@
   }
   
   .cart_side .cart_items{
-    height: 80%;
-    overflow-y: scroll;
+    height: 70%;
+    overflow-y: auto;
   }
   
   
