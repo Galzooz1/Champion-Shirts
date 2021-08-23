@@ -81,34 +81,34 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
     const SetCordsValues = (_width: any, _height: any, _x: any, _y: any, _rotation: any, key: any, isDesign?: boolean, isCostume?: boolean) => {
         if (chosenSide === "front" || (chosenSide === "both" && bothSidesStep === 1)) {
             if (isDesign) {
-                setValue(`shirtDesigns.front[${key}].design.sizeOfDesign.width`, _width);
-                setValue(`shirtDesigns.front[${key}].design.sizeOfDesign.height`, _height);
-                setValue(`shirtDesigns.front[${key}].design.positionOfDesign.x`, _x);
-                setValue(`shirtDesigns.front[${key}].design.positionOfDesign.y`, _y);
-                setValue(`shirtDesigns.front[${key}].design.positionOfDesign.rotation`, _rotation);
+                setValue(`shirtDesigns.front.${key}.design.sizeOfDesign.width`, _width);
+                setValue(`shirtDesigns.front.${key}.design.sizeOfDesign.height`, _height);
+                setValue(`shirtDesigns.front.${key}.design.positionOfDesign.x`, _x);
+                setValue(`shirtDesigns.front.${key}.design.positionOfDesign.y`, _y);
+                setValue(`shirtDesigns.front.${key}.design.positionOfDesign.rotation`, _rotation);
             }
             if (isCostume) {
-                setValue(`shirtDesigns.front[${key}].costume.sizeOfCostume.width`, _width);
-                setValue(`shirtDesigns.front[${key}].costume.sizeOfCostume.height`, _height);
-                setValue(`shirtDesigns.front[${key}].costume.positionOfCostume.x`, _x);
-                setValue(`shirtDesigns.front[${key}].costume.positionOfCostume.y`, _y);
-                setValue(`shirtDesigns.front[${key}].costume.positionOfCostume.rotation`, _rotation);
+                setValue(`shirtDesigns.front.${key}.costume.sizeOfCostume.width`, _width);
+                setValue(`shirtDesigns.front.${key}.costume.sizeOfCostume.height`, _height);
+                setValue(`shirtDesigns.front.${key}.costume.positionOfCostume.x`, _x);
+                setValue(`shirtDesigns.front.${key}.costume.positionOfCostume.y`, _y);
+                setValue(`shirtDesigns.front.${key}.costume.positionOfCostume.rotation`, _rotation);
             }
         }
         if (chosenSide === "back" || (chosenSide === "both" && bothSidesStep === 2)) {
             if (isDesign) {
-                setValue(`shirtDesigns.back[${key}].design.sizeOfDesign.width`, _width);
-                setValue(`shirtDesigns.back[${key}].design.sizeOfDesign.height`, _height);
-                setValue(`shirtDesigns.back[${key}].design.positionOfDesign.x`, _x);
-                setValue(`shirtDesigns.back[${key}].design.positionOfDesign.y`, _y);
-                setValue(`shirtDesigns.back[${key}].design.positionOfDesign.rotation`, _rotation);
+                setValue(`shirtDesigns.back.[${key}].design.sizeOfDesign.width`, _width);
+                setValue(`shirtDesigns.back.[${key}].design.sizeOfDesign.height`, _height);
+                setValue(`shirtDesigns.back.[${key}].design.positionOfDesign.x`, _x);
+                setValue(`shirtDesigns.back.[${key}].design.positionOfDesign.y`, _y);
+                setValue(`shirtDesigns.back.[${key}].design.positionOfDesign.rotation`, _rotation);
             }
             if (isCostume) {
-                setValue(`shirtDesigns.back[${key}].costume.sizeOfCostume.width`, _width);
-                setValue(`shirtDesigns.back[${key}].costume.sizeOfCostume.height`, _height);
-                setValue(`shirtDesigns.back[${key}].costume.positionOfCostume.x`, _x);
-                setValue(`shirtDesigns.back[${key}].costume.positionOfCostume.y`, _y);
-                setValue(`shirtDesigns.back[${key}].costume.positionOfCostume.rotation`, _rotation);
+                setValue(`shirtDesigns.back.[${key}].costume.sizeOfCostume.width`, _width);
+                setValue(`shirtDesigns.back.[${key}].costume.sizeOfCostume.height`, _height);
+                setValue(`shirtDesigns.back.[${key}].costume.positionOfCostume.x`, _x);
+                setValue(`shirtDesigns.back.[${key}].costume.positionOfCostume.y`, _y);
+                setValue(`shirtDesigns.back.[${key}].costume.positionOfCostume.rotation`, _rotation);
             }
         }
     }
@@ -176,9 +176,9 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
     //     setValue("")
     // }
 
-    const renderRegisterForm = () => {
-        console.log("work")
-    }
+    // const renderRegisterForm = () => {
+    //     console.log("work")
+    // }
     return (
         <>
             <div className="d-flex justify-content-center">
@@ -218,16 +218,16 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
                                                         setValue={setValue}
                                                     />
                                                     {/* Design */}
-                                                    {/* {chosenSide === "front" || chosenSide === "both" &&
+                                                    {chosenSide === "front" || chosenSide === "both" &&
                                                         <>
-                                                            <input {...register(`shirtDesigns.front[${key}].design.is_design`, { required: true })} className="d-none" name={`shirtDesigns.front[${key}].design.is_design`} id="id_design" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.design_s_id`, { required: true })} className="d-none" name="design_s_id" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.designImage`, { required: true })} className="d-none" name="designImage" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.sizeOfDesign.width`, { required: true })} className="d-none" name="sizeOfDesign.width" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.sizeOfDesign.height`, { required: true })} className="d-none" name="sizeOfDesign.height" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.positionOfDesign.x`, { required: true })} className="d-none" name="positionOfDesign.x" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.positionOfDesign.y`, { required: true })} className="d-none" name="positionOfDesign.y" />
-                                                            <input {...register(`shirtDesigns.front[${key}].design.positionOfDesign.rotation`, { required: true })} className="d-none" name="positionOfDesign.rotation" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.is_design`, { required: true })} className="d-none" id="id_design" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.design_s_id`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.designImage`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.width`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.height`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.x`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.y`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.rotation`, { required: true })} className="d-none"  />
                                                         </>
                                                     }
                                                     {chosenSide === "back" || chosenSide === "both" &&
@@ -241,7 +241,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
                                                             <input {...register(`shirtDesigns.back[${key}].design.positionOfDesign.y`, { required: true })} className="d-none" name="positionOfDesign.y" />
                                                             <input {...register(`shirtDesigns.back[${key}].design.positionOfDesign.rotation`, { required: true })} className="d-none" name="positionOfDesign.rotation" />
                                                         </>
-                                                    } */}
+                                                    }
                                                 </>
                                             )
                                         })}

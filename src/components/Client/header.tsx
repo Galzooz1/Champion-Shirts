@@ -12,7 +12,8 @@ import Login from './login';
 import './css/header.css';
 import { IUsers } from '../Admin/interfaces/users';
 import UserIcon from '../../assets/user.png';
-import { useDispatch, useSelector } from 'react-redux';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import CartSide from './cartSide';
 // import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
 // import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
@@ -69,18 +70,24 @@ const backdrop = {
 }
 
 const Header: React.FC<HeaderProps> = () => {
-    let carts_ar: any = useSelector<any>(store => store.carts_ar)
+    let carts_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.carts_ar);
+    let wish_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.wish_ar);
     let history = useHistory();
     let [categoriesAr, setCategoriesAr] = React.useState<ICategories[]>([]);
     let [userInfo, setUserInfo] = React.useState<IUsers>();
     let [isSearchBox, setIsSearchBox] = React.useState<boolean>(false);
     let searchRef = React.useRef<any>();
+    let [isCartOpen, setIsCartOpen] = React.useState<boolean>(false);
     let toggleRef = React.useRef<any>();
     let dispatch = useDispatch()
 
 
 
     React.useEffect(() => {
+        console.log("Wish: ", wish_ar);
+        console.log("Cart: ", carts_ar);
+        dispatch({type:"RESET_CARTS", carts_ar:[]})
+        dispatch({type:"RESET_WISH", wish_ar:[]})
         getCategoriesData();
         if (localStorage["token"]) {
             getUserData();
@@ -121,6 +128,15 @@ const Header: React.FC<HeaderProps> = () => {
         setUserInfo(data);
     }
 
+    const toggleCart = () => {
+        setIsCartOpen(wasCartOpen => !wasCartOpen);
+        if (!isCartOpen) {
+            dispatch({ type: "SHOW_HIDE_CART", flag: true })
+        } else {
+            dispatch({ type: "SHOW_HIDE_CART", flag: false })
+        }
+    }
+
     // const CustomDropDownToggle = React.forwardRef(({ children }, ref) => (
     //     <a
     //       href=""
@@ -143,6 +159,7 @@ const Header: React.FC<HeaderProps> = () => {
                         <div onClick={() => history.push("/home")} className="logo">
                             <HeaderH2>Champion</HeaderH2>
                         </div>
+                        <CartSide />
                         <IconsDiv className="icons">
                             {isSearchBox ?
                                 <div className="container d-flex justify-content-center">
@@ -163,14 +180,23 @@ const Header: React.FC<HeaderProps> = () => {
                                 <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
                             }
                             <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-3 my-2 my-lg-0">
-                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {
-                                    dispatch({ type: "SHOW_HIDE_CART", flag: true })
-                                }}>
+                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {toggleCart()}}>
                                     {cartIcon()}
                                     {// רק אם יש מוצרים בעגלה יוצג האייקון 
                                         (carts_ar.length > 0) &&
                                         <div className="badge bg-danger" style={{ fontSize: "0.5em" }}>
                                             {cartTotal(carts_ar)}
+                                        </div>
+                                    }
+                                </h3>
+                            </div>
+                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-3 my-2 my-lg-0">
+                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {toggleCart()}}>
+                                    {heartIcon()}
+                                    {// רק אם יש מוצרים בעגלה יוצג האייקון 
+                                        (wish_ar.length > 0) &&
+                                        <div className="badge bg-danger" style={{ fontSize: "0.5em" }}>
+                                            {cartTotal(wish_ar)}
                                         </div>
                                     }
                                 </h3>
@@ -269,7 +295,7 @@ const Header: React.FC<HeaderProps> = () => {
 // מחשב כמה מוצרים יש בסהכ בעגלה
 const cartTotal = (carts_ar: any) => {
     let total = 0;
-    carts_ar.map((item: { count: number; }) => {
+    carts_ar.map((item: any) => {
         total += item.count;
     })
     return total;
@@ -288,6 +314,12 @@ const cartIcon = () => {
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-cart4" viewBox="0 0 16 16">
             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
         </svg>
+    )
+}
+
+const heartIcon = () => {
+    return (
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="red" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181" /></svg>
     )
 }
 

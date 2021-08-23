@@ -6,9 +6,10 @@ import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { IProdItems, Property } from '../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
-import { doApiGet, URL_API } from '../services/apiService';
+import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import FirstDesignStep from './designSteps/firstDesignStep';
 import SecondStepApp from './designSteps/secondStepApp';
+import ThirdDesignStep from './designSteps/thirdDesignStep';
 import Header from './header';
 import Loading from './loading';
 
@@ -35,6 +36,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         },
         mode: 'all' });
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
+    let [readyProductData, setReadyProductData] = React.useState<Partial<IReadyproducts>>({});
     let [propertiesData, setPropertiesData] = React.useState<Property[]>([]);
     let [formStep, setFormStep] = React.useState<number>(0);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -61,6 +63,13 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         setFormStep(cur => cur - 1);
     }
 
+    const addReadyProductDesign = async(dataBody: any) => { 
+        let url = URL_API + "/readyProducts"
+        let data = await doApiMethod(url, "POST", dataBody);
+        console.log(data);
+        setReadyProductData(data);
+    }
+
     const getSingleProdData = async () => {
         let url = URL_API + "/products/single/" + props.match.params.s_id;
         let data = await doApiGet(url)
@@ -75,7 +84,35 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     }
 
     const onSubmit = (dataBody: any) => {
+        // let result = dataBody.shirtDesigns.front.filter((value: any) => JSON.stringify(value) !== '{}');
+        let temp_ar: any[] = []
+        // dataBody.shirtDesigns.front.forEach((element: any) => {
+        //     if(element !== undefined || element !== null || element.design !== null || element.design !== undefined){
+        //         temp_ar.push(element);
+        //     }
+        // })
+        // dataBody.shirtDesigns.front.filter(cur.design => cur.design);
+        console.log("temp", temp_ar)
+        // dataBody.shirtDesigns.front.map((item: any, i: any) => {
+        //     // console.log("Undefined: ",item);
+        //     // let result = item.design.filter((n: any) => n);
+        //     item.filter((value:any) => Object.keys(value).length !== 0)
+            // console.log(result);
+            
+        //     // if(item.design === null){
+        //     //     let index = i;
+        //     //     dataBody.shirtDesigns.front.splice(i, 1);
+        //     //     console.log("Undefined: ",item);
+        //     // }
+        // })
+        if(dataBody.shirtDesigns.front[0] === undefined){
+            dataBody.shirtDesigns.front.shift();
+            alert(dataBody.shirtDesigns.front[0])
+        }else{
+            alert(dataBody.shirtDesigns.front[0])
+        }
         console.log(dataBody);
+        // addReadyProductDesign(dataBody);
     }
 
     const extraPrice = (amount: number) => { 
@@ -149,12 +186,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                                     <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
                                     {!isValid ? 
                                     <OverlayTrigger delay={{ show: 250, hide: 500 }} placement="left-start" overlay={renderTooltip(props)}>
-                                    <button disabled={!isValid} onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    <button disabled={!isValid} onClick={nextFormStep} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
                                     </OverlayTrigger>
                                     :
-                                    <button onClick={nextFormStep} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                    <button onClick={nextFormStep} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
                                     }
                                 </div>
+                            </section>
+                        )}
+                        {formStep >= 2 && (
+                            <section className={formStep === 2 ? "d-block" : "d-none"}>
+                                <ThirdDesignStep readyProductData={readyProductData} />
                             </section>
                         )}
                         <button type="submit">Send</button>

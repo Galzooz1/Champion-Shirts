@@ -1,12 +1,14 @@
 import React from 'react';
 import { Breadcrumb } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import Slider from 'react-slick';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { IProdItems } from '../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
-import { doApiGet, URL_API } from '../services/apiService';
+import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import { SizeInput, SizeLabel, SizeSpan } from './designSteps/firstDesignStep';
 import Header from './header';
 import Loading from './loading';
@@ -77,18 +79,26 @@ margin:8px;
 const SingleProduct: React.FC<SingleProductProps> = (props) => {
     const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<Partial<IReadyproducts>>({ mode: 'all' });
     let history = useHistory();
+    let dispatch = useDispatch();
+    let carts_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.carts_ar);
+    let [countCartItems,setCountCartItems] = React.useState<number>(0);
+    let [countWishItems,setCountWishItems] = React.useState<number>(0);
+    let [isAddToCart,setIsAddToCart] = React.useState<boolean>(false);
+    let [isAddToWish,setIsAddToWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
     
     React.useEffect(() => {
-        getSingleProdData();  
-
-    }, [])
-
-    React.useEffect(() => {
-
-    },[])
+        getSingleProdData();
+        console.log("useEffect singleProduct: ", carts_ar);  
+        carts_ar.map(prodItem => {
+            console.log("map: " , prodItem);
+            if(prodItem._id){
+                setCountCartItems(prodItem.count);
+            }
+        })
+    }, [carts_ar])
 
     const getSingleProdData = async () => {
         let url = URL_API + "/products/single/" + props.match.params.s_id;
@@ -102,12 +112,37 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         setProductData(data);  
     }
 
+    
     const onSubmit = (dataBody: any) => {
-        alert("wow")
         console.log(dataBody)
+        addReadyProduct(dataBody);
     }
-
-    const testFunc = (i: any) => { 
+    
+    const addReadyProduct = async(dataBody: any) => { 
+        console.log("dataBody: " , dataBody);
+        let url = URL_API + "/readyProducts"
+        let data = await doApiMethod(url, "POST", dataBody);
+        data.count = 0;
+        console.log("data: " , data);
+        if(isAddToCart){
+            setCountCartItems(countCartItems+1);
+            data.count = countCartItems+1;
+            dispatch({type:"UPDATE_THE_CART", data:data})
+            console.log("data2: " , data);
+            toast.success(productData.name + " Added to Cart!")
+            setIsAddToCart(false);
+        }
+        if(isAddToWish){
+            setCountWishItems(countWishItems+1);
+            data.count = countWishItems+1;
+            dispatch({type:"UPDATE_THE_WISH", data:data})
+            console.log("data2: " , data);
+            toast.success(productData.name + " Added to Wish!")
+            setIsAddToWish(false);
+        }
+    }
+    
+    const setValuesFunc = (i: any) => { 
         setValue("isClean", false);
         setValue("price", productData.price);
         setValue("product_name", productData.name);
@@ -154,7 +189,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                         <React.Fragment key={i}>
                                             <div style={{ width: "66.63px" }}>
                                                 <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
-                                                    name="color" id="properties.color" onInput={() => { testFunc(i) }}
+                                                    name="color" id="properties.color" onInput={() => { setValuesFunc(i) }}
                                                     className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} />
                                                 <div className="my-2">
                                                     {indexPicked === i ?
@@ -222,6 +257,13 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                             </div>
                             {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
                             {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
+                            <h3>
+                                Price: {productData.price} $
+                            </h3>
+                            <div className="d-flex justify-content-between mt-4">
+                            <button type="submit" onClick={() => {setValue("isCart", true);setIsAddToCart(true)}} className="btn btn-info">Add to Cart</button>
+                            <button type="submit" onClick={() => {setValue("isWish", true);setIsAddToWish(true)}} className="btn btn-danger">Add to Wish</button>
+                            </div>
                         </div>
                         <div style={{ width: "350px" }}>
                             <Slider {...SliderSettings}>
