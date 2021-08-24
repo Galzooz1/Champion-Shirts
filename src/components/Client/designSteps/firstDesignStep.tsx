@@ -94,10 +94,10 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,e
                                         <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
                                             name="color" id="properties.color" onInput={() => handleChange(i)}
                                             className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} data-tip={`${item?.color}`} />
-                                        <div className="my-2">
+                                        <div className="ms-2">
                                             {indexPicked === i ?
                                                 <>
-                                                    <h3>Size:</h3>
+                                                    {/* <h3>Size:</h3> */}
                                                     <div className="d-block">
                                                         {item?.amount.XS > 0 ?
                                                             <SizeLabel>
@@ -164,7 +164,7 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,e
                         <select {...register("sideToDesign", {required: true})} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select" ref={selectSideRef} onChange={chooseSide}>
                             <option value="front">Front</option>
                             <option value="back">Back</option>
-                            <option value="both">Both (+10$)</option>
+                            <option disabled value="both">Both (+10$)</option>
                         </select>
                     </div>
                     {errors.price && <span className="text-danger m-2 text-center">Please choose side to design!</span>}

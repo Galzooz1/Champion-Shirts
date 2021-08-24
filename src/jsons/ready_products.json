@@ -1,1 +1,109 @@
-{"_id":"611ebdf2d17c293f009d08fc","name":"HAHA This is The first full product btw!","info":"lo zarih bemet bemet hahaha","price":150,"product_s_id":209077,"product_name":"POLO Y NOT?","category_s_id":90,"category_name":"Polo Shirts","color":"red","size":"M","shirtDesigns":{"front":[{"design":{"sizeOfDesign":{"width":200,"height":150},"positionOfDesign":{"x":50,"y":75},"design_price":10,"is_design":true,"design_s_id":700868,"designImage":"https://cdn.pixabay.com/photo/2015/07/02/10/44/roses-828945_1280.jpg"},"costume":{"sizeOfCostume":{"width":null,"height":null},"positionOfCostume":{"x":null,"y":null},"is_costume":false,"costumeImage":null},"_id":"611ebdf2d17c293f009d08fd"},{"design":{"sizeOfDesign":{"width":150,"height":100},"positionOfDesign":{"x":30,"y":80},"design_price":5,"is_design":true,"design_s_id":667018,"designImage":"http://localhost:3005/designs_images/667018.jpeg?1629400471841"},"costume":{"sizeOfCostume":{"width":null,"height":null},"positionOfCostume":{"x":null,"y":null},"is_costume":false,"costumeImage":null},"_id":"611ebdf2d17c293f009d08fe"},{"design":{"sizeOfDesign":{"width":null,"height":null},"positionOfDesign":{"x":null,"y":null},"design_price":null,"is_design":false,"design_s_id":null,"designImage":null},"costume":{"sizeOfCostume":{"width":70,"height":60},"positionOfCostume":{"x":40,"y":30},"is_costume":true,"costumeImage":"blob:http://localhost:3000/005dd260-11c0-4772-b32d-f42104113b13"},"_id":"611ebdf2d17c293f009d08ff"}],"back":[{"designs":{"design_prices":0},"costume":{"sizeOfCostume":{"width":null,"height":null},"positionOfCostume":{"x":null,"y":null},"is_costume":false,"costumeImage":null},"_id":"611ebdf2d17c293f009d0900"}]},"date_created":"2021-08-19T20:24:18.503Z","user_id":"60b4eaa230dab411dcbe1f2d","s_id":61014}
+
+
+    {
+    "_id": "61241a517ab3797f14df6070",
+    "isCart": false,
+    "isWish": false,
+    "isClean": true,
+    "images": {
+        "frontImage": {
+            "image": "https://images.pexels.com/photos/3662357/pexels-photo-3662357.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+            "width": 250,
+            "height": 400,
+            "x": 20,
+            "y": 10
+        },
+        "backImage": {
+            "image": "https://images.pexels.com/photos/7319032/pexels-photo-7319032.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+            "width": 250,
+            "height": 400,
+            "x": 20,
+            "y": 10
+        }
+    },
+    "sideToDesign": "front",
+    "color": "#111315",
+    "size": "S",
+    "price": 105,
+    "product_s_id": 276164,
+    "product_name": "New V Shirt",
+    "category_s_id": 90,
+    "category_name": "Polo Shirts",
+    "shirtDesigns": {
+        "front": [
+            {
+                "design": {
+                    "sizeOfDesign": {
+                        "width": 100,
+                        "height": 100
+                    },
+                    "positionOfDesign": {
+                        "x": 94,
+                        "y": 114,
+                        "rotation": 0
+                    },
+                    "design_price": 0,
+                    "is_design": true,
+                    "design_s_id": 667018,
+                    "designImage": "http://localhost:3005/designs_images/667018.jpeg?1629755963052"
+                },
+                "costume": {
+                    "sizeOfCostume": {
+                        "width": 100,
+                        "height": 100
+                    },
+                    "positionOfCostume": {
+                        "x": 94,
+                        "y": 8,
+                        "rotation": 0
+                    },
+                    "is_costume": true,
+                    "costumeImage": "blob:http://localhost:3000/3e756c33-198f-4629-b4d8-74be630dfcbc"
+                },
+                "_id":"61241a517ab3797f14df6071"
+            },
+            {
+                "design": {
+                    "sizeOfDesign": {
+                        "width": 100,
+                        "height": 100
+                    },
+                    "positionOfDesign": {
+                        "x": 70,
+                        "y": 252,
+                        "rotation": 0
+                    },
+                    "design_price": 0,
+                    "is_design": true,
+                    "design_s_id": 700868,
+                    "designImage": "https://cdn.pixabay.com/photo/2015/07/02/10/44/roses-828945_1280.jpg"
+                },
+                "_id": "61241a517ab3797f14df6072"
+            },
+            {
+                "design": {
+                    "design_price": 0
+                },
+                "costume": {
+                    "sizeOfCostume": {
+                        "width": 100,
+                        "height": 100
+                    },
+                    "positionOfCostume": {
+                        "x": 8,
+                        "y": 92,
+                        "rotation": 0
+                    },
+                    "is_costume": true,
+                    "costumeImage": "blob:http://localhost:3000/43397aff-27c0-49b8-a70c-b12eb3380e0a"
+                },
+                "_id": "61241a517ab3797f14df6073"
+                
+            }
+        ],
+        "back": []
+    },
+    "date_created": "2021-08-23T21:59:45.209Z",
+    "user_id": "60b4eaa230dab411dcbe1f2d",
+    "s_id": 915660
+}

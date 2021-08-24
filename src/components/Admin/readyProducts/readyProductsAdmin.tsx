@@ -71,7 +71,7 @@ const ReadyProductsAdmin: React.FC<ReadyProductsAdminProps> = (props) => {
                 <>
                 <tr className="align-items-center" /*onClick={() => moreInfo(item.s_id)} */ key={item?._id}>
                   <td className="number fw-bold">{i + 1}</td>
-                  <td>{item?.name}</td>
+                  <td>{item?.product_name}</td>
                   <td>{item?.price}</td>
                   <td>{item?.size}</td>
                   <td>{item?.color}</td>

@@ -26,7 +26,7 @@ interface SecondStepWorkspaceProps {
     unregister?: any;
 };
 
-const MainImgDiv = styled.div`
+export const MainImgDiv = styled.div`
 border: 1px solid red;
 background-position:center top;
 width: 500px;
@@ -34,14 +34,14 @@ height: 500px;
 padding-top: 100px;
 `;
 
-const SecondImgDiv = styled.div`
+export const SecondImgDiv = styled.div`
 width:150px;
 height:150px;
 border:1px solid black;
 margin-left: 6px;
 `;
 
-const SecondImgImg = styled.img`
+export const SecondImgImg = styled.img`
 width:100%;
 height:100%;
 `;
@@ -51,13 +51,20 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
     let stageRef = React.useRef<any>();
     let [bothSidesStep, setBothSidesStep] = React.useState<number>(1);
     const [selectedDesign, setSelectDesign] = React.useState<any>();
-    let [designWidth, setDesignWidth] = React.useState<number>();
-    let [designHeight, setDesignHeight] = React.useState<number>();
-    let [designX, setDesignX] = React.useState<number>();
-    let [designY, setDesignY] = React.useState<number>();
-    let [designRotation, setDesignRotation] = React.useState<number>();
 
     React.useEffect(() => {
+                // Front
+                setValue("images.frontImage.image", propertiesData[indexPicked]?.frontImg);
+                setValue("images.frontImage.width", propertiesData[indexPicked]?.sizeOfCanvasFront.width)
+                setValue("images.frontImage.height", propertiesData[indexPicked]?.sizeOfCanvasFront.height)
+                setValue("images.frontImage.x", propertiesData[indexPicked]?.positionOfCanvasFront.x)
+                setValue("images.frontImage.y", propertiesData[indexPicked]?.positionOfCanvasFront.y)
+                // Back
+                setValue("images.backImage.image", propertiesData[indexPicked]?.backImg);
+                setValue("images.backImage.width", propertiesData[indexPicked]?.sizeOfCanvasBack.width)
+                setValue("images.backImage.height", propertiesData[indexPicked]?.sizeOfCanvasBack.height)
+                setValue("images.backImage.x", propertiesData[indexPicked]?.positionOfCanvasBack.x)
+                setValue("images.backImage.y", propertiesData[indexPicked]?.positionOfCanvasBack.y)
         if (chosenSide != "back") {
             setIsFrontMain(true);
         } else {

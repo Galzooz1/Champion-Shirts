@@ -1,6 +1,7 @@
 import React from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import CartItem from './cartItem';
 import './css/cart.css';
 
@@ -10,12 +11,21 @@ interface CartSideProps {
 };
 
 const CartSide: React.FC<CartSideProps> = () => {
+  let history = useHistory();
   let dispatch = useDispatch();
   let [animClassCss, setAnimCss] = React.useState<string>("");
   let total = 0;
 
   let showCart = useSelector<RootStateOrAny, any[]>((myStore: any) => myStore.showCart);
   let carts_ar = useSelector<RootStateOrAny, any[]>((myStore: any) => myStore.carts_ar);
+
+  const goToCheckout = () => { 
+    if(!localStorage["token"]){
+      toast.error("Please Login before buying!");
+    }else{
+      history.push("/checkout");
+    }
+  }
 
   React.useEffect(() => {
     console.log("show")
@@ -35,20 +45,23 @@ const CartSide: React.FC<CartSideProps> = () => {
           <button onClick={() => {
             dispatch({ type: "SHOW_HIDE_CART", flag: false })
           }} className="btn btn-danger float-end">X</button>
-          <h2>Cart:</h2>
+          <h2 className="p-3">Cart:</h2>
+          <hr />
           <div className="cart_items">
             {carts_ar.map(item => {
-              console.log("item:" , item)
+              // console.log("item:" , item)
               if (item.count > 0) {
-                total += item.price * item.count;
+                total += item.price;
                 return (
                   <CartItem key={item._id} item={item} />
                 )
               }
             })}
           </div>
+          <hr />
           <div className="d-flex justify-content-between mt-2 align-items-center">
-            <h4 className="mt-2">Total: {total.toFixed(2)} Nis</h4>
+            <button onClick={goToCheckout} className="btn btn-success">Checkout</button>
+            <h4 className="mt-2 mx-auto">Total: {total.toFixed(2)} $</h4>
             {/* {(localStorage["token"]) ?
                             <Link to="/checkout" className="btn btn-outline-success me-2">Checkout</Link>
                             :

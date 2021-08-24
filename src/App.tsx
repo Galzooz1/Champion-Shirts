@@ -18,6 +18,7 @@ import { projectReducer } from './components/reducers/projectReducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import Checkout from './components/Client/checkout';
 
 let myStore = createStore(projectReducer, composeWithDevTools());
 
@@ -37,6 +38,7 @@ function App() {
             <Route exact path={`/product/clean/:s_id`} component={SingleProductDesign} />
             <Route exact path={`/product/:s_id`} component={SingleProduct} />
             <Route exact path={`/search/`} component={SearchPage} />
+            <Route exact path={`/checkout`} component={Checkout} />
           </Switch>
           <ToastContainer
             position="bottom-right"

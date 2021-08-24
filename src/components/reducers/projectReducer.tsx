@@ -1,5 +1,8 @@
+import { IReadyproducts } from "../Admin/interfaces/readyproducts";
+
 export interface cartState {
-  carts_ar: any[];
+  carts_ar: IReadyproducts[];
+  wish_ar: any[];
   showCart: boolean;
 }
 
@@ -48,10 +51,11 @@ export const projectReducer = (state: cartState = initState, action: any) => {
     console.log("Action: ", action)
     let prodFound = false;
     let temp_ar = [...state.carts_ar]
-    temp_ar.map((data , i) => {
-      if(data.s_id === action.data.s_id){
+    temp_ar.map((item , i) => {
+      console.log("ActionDATAAAA: ", item);
+      if(item.s_id === action.data.s_id){
         // בדוק במלאי כדי לעדכן
-        data.count = action.data.count;   
+        item.count = action.data.count;   
         prodFound = true;
         // אם הקאונט שווה 0 נמחוק את הפריט מהמערך של העגלה
         if(action.data.count <= 0){
@@ -94,7 +98,7 @@ export const projectReducer = (state: cartState = initState, action: any) => {
   
   }
   
-  
+
   const saveToLocal = (state: any,stateTOSave: any) => {
     console.log("Saved to local state:", state);
     localStorage.setItem("market", JSON.stringify(stateTOSave));

@@ -6,7 +6,7 @@ import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import Slider from 'react-slick';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { IProdItems } from '../Admin/interfaces/prodItems';
+import { IProdItems, Property } from '../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import { SizeInput, SizeLabel, SizeSpan } from './designSteps/firstDesignStep';
@@ -109,13 +109,18 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         let dataCategory = await doApiGet(url_cat);
         console.log(dataCategory);
         data.catName = dataCategory.name;
-        setProductData(data);  
+        setProductData(data); 
     }
 
     
     const onSubmit = (dataBody: any) => {
-        console.log(dataBody)
-        addReadyProduct(dataBody);
+        if(!localStorage["token"]){
+            toast.error("Please Login!");
+        }else{
+            alert("Work")
+            console.log(dataBody)
+            addReadyProduct(dataBody);
+        }
     }
     
     const addReadyProduct = async(dataBody: any) => { 
@@ -148,7 +153,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         setValue("product_name", productData.name);
         setValue("product_s_id", productData.s_id);
         setValue("category_name", productData.catName);
-        setValue("category_s_id", productData.category_s_id);   
+        setValue("category_s_id", productData.category_s_id);
         setIndexPicked(i);
     }
 
@@ -194,7 +199,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                                 <div className="my-2">
                                                     {indexPicked === i ?
                                                         <>
-                                                            <h3>Size:</h3>
+                                                            {/* <h3>Size:</h3> */}
                                                             <div className="d-block">
                                                                 {item?.amount.XS > 0 ?
                                                                     <SizeLabel>
@@ -261,7 +266,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                 Price: {productData.price} $
                             </h3>
                             <div className="d-flex justify-content-between mt-4">
-                            <button type="submit" onClick={() => {setValue("isCart", true);setIsAddToCart(true)}} className="btn btn-info">Add to Cart</button>
+                            <button type="submit" onClick={() => {setValue("isCart", true);setIsAddToCart(true)}} className="btn btn-info me-5">Add to Cart</button>
                             <button type="submit" onClick={() => {setValue("isWish", true);setIsAddToWish(true)}} className="btn btn-danger">Add to Wish</button>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, DropdownButton, Image, Nav, NavItem } from 'react-bootstrap';
 import { NavDropdown } from 'react-bootstrap';
 import { Container, Navbar } from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { ICategories } from '../Admin/interfaces/categoriesArgs';
@@ -14,6 +14,7 @@ import { IUsers } from '../Admin/interfaces/users';
 import UserIcon from '../../assets/user.png';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import CartSide from './cartSide';
+import AuthUser from './authUser';
 // import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
 // import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
@@ -86,8 +87,8 @@ const Header: React.FC<HeaderProps> = () => {
     React.useEffect(() => {
         console.log("Wish: ", wish_ar);
         console.log("Cart: ", carts_ar);
-        dispatch({type:"RESET_CARTS", carts_ar:[]})
-        dispatch({type:"RESET_WISH", wish_ar:[]})
+        // dispatch({type:"RESET_CARTS", carts_ar:[]})
+        // dispatch({type:"RESET_WISH", wish_ar:[]})
         getCategoriesData();
         if (localStorage["token"]) {
             getUserData();
@@ -160,6 +161,7 @@ const Header: React.FC<HeaderProps> = () => {
                             <HeaderH2>Champion</HeaderH2>
                         </div>
                         <CartSide />
+                        <AuthUser />
                         <IconsDiv className="icons">
                             {isSearchBox ?
                                 <div className="container d-flex justify-content-center">
@@ -179,7 +181,7 @@ const Header: React.FC<HeaderProps> = () => {
                                 :
                                 <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
                             }
-                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-3 my-2 my-lg-0">
+                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
                                 <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {toggleCart()}}>
                                     {cartIcon()}
                                     {// רק אם יש מוצרים בעגלה יוצג האייקון 
@@ -295,9 +297,9 @@ const Header: React.FC<HeaderProps> = () => {
 // מחשב כמה מוצרים יש בסהכ בעגלה
 const cartTotal = (carts_ar: any) => {
     let total = 0;
-    carts_ar.map((item: any) => {
-        total += item.count;
-    })
+    // carts_ar.map((item: any) => {
+        total += carts_ar.length;
+    // })
     return total;
 }
 
