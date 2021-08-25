@@ -2,14 +2,16 @@ import { IReadyproducts } from "../Admin/interfaces/readyproducts";
 
 export interface cartState {
   carts_ar: IReadyproducts[];
-  wish_ar: any[];
+  wish_ar: IReadyproducts[];
   showCart: boolean;
+  showWish: boolean;
 }
 
 const initState = {
     carts_ar: [],
     wish_ar: [],
-    showCart: false 
+    showCart: false,
+    showWish: false
 }
 
 export const projectReducer = (state: cartState = initState, action: any) => {

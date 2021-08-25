@@ -87,6 +87,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     let [isAddToWish,setIsAddToWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
+    let [propertiesData, setPropertiesData] = React.useState<Partial<Property>>({});
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
     
     React.useEffect(() => {
@@ -110,6 +111,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         console.log(dataCategory);
         data.catName = dataCategory.name;
         setProductData(data); 
+        setPropertiesData(data.properties);
     }
 
     
@@ -117,7 +119,6 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         if(!localStorage["token"]){
             toast.error("Please Login!");
         }else{
-            alert("Work")
             console.log(dataBody)
             addReadyProduct(dataBody);
         }
@@ -277,7 +278,6 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                             </Slider>
                         </div>
                     </div>
-                    <button type="submit">Send</button>
                 </form>
             }
             </ProdMainDiv>

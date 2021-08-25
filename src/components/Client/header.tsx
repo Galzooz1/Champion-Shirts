@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { Button, DropdownButton, Image, Nav, NavItem } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, Image, Nav, NavItem } from 'react-bootstrap';
 import { NavDropdown } from 'react-bootstrap';
 import { Container, Navbar } from 'react-bootstrap';
 import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
@@ -15,6 +15,7 @@ import UserIcon from '../../assets/user.png';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import CartSide from './cartSide';
 import AuthUser from './authUser';
+import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 // import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
 // import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
@@ -34,7 +35,7 @@ padding: 32px;
 const IconsDiv = styled.div`
 width: 500px;
 display: flex;
-justify-content: center;
+justify-content: flex-end;
 align-items: center;
 /* padding: 8px; */
 `;
@@ -71,14 +72,16 @@ const backdrop = {
 }
 
 const Header: React.FC<HeaderProps> = () => {
-    let carts_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.carts_ar);
-    let wish_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.wish_ar);
+    let carts_ar = useSelector<RootStateOrAny, IReadyproducts[]>(myStore => myStore.carts_ar);
+    let wish_ar = useSelector<RootStateOrAny, IReadyproducts[]>(myStore => myStore.wish_ar);
     let history = useHistory();
     let [categoriesAr, setCategoriesAr] = React.useState<ICategories[]>([]);
     let [userInfo, setUserInfo] = React.useState<IUsers>();
     let [isSearchBox, setIsSearchBox] = React.useState<boolean>(false);
     let searchRef = React.useRef<any>();
     let [isCartOpen, setIsCartOpen] = React.useState<boolean>(false);
+    let [isWishOpen, setIsWishOpen] = React.useState<boolean>(false);
+    let [isAdmin, setIsAdmin] = React.useState<boolean>(false);
     let toggleRef = React.useRef<any>();
     let dispatch = useDispatch()
 
@@ -90,6 +93,7 @@ const Header: React.FC<HeaderProps> = () => {
         // dispatch({type:"RESET_CARTS", carts_ar:[]})
         // dispatch({type:"RESET_WISH", wish_ar:[]})
         getCategoriesData();
+        checkIfAdmin();
         if (localStorage["token"]) {
             getUserData();
         }
@@ -100,6 +104,14 @@ const Header: React.FC<HeaderProps> = () => {
         let data = await doApiGet(url);
         console.log(data);
         setCategoriesAr(data);
+    }
+
+    const checkIfAdmin = async () => {
+        let url = URL_API + "/users/checkAdmin";
+        let data = await doApiMethod(url, "POST", {});
+        if (data.auth === "success") {
+            setIsAdmin(true);
+        }
     }
 
     const onLogOut = () => {
@@ -138,123 +150,170 @@ const Header: React.FC<HeaderProps> = () => {
         }
     }
 
-    // const CustomDropDownToggle = React.forwardRef(({ children }, ref) => (
-    //     <a
-    //       href=""
-    //       ref={toggleRef}
-    //     //   onClick={e => {
-    //     //     e.preventDefault();
-    //     //     onClick(e);
-    //     //   }}
-    //     >
-    //       {/* Render custom icon here */}
-    //       &#x25bc;
-    //       {userInfo?.avatar_img}
-    //     </a>
-    //   ));
+    const toggleHeart = () => {
+        setIsWishOpen(wasWishOpen => !wasWishOpen);
+        if (!isWishOpen) {
+            dispatch({ type: "SHOW_HIDE_WISH", flag: true })
+        } else {
+            dispatch({ type: "SHOW_HIDE_WISH", flag: false })
+        }
+    }
+
+    const delFromWish = (item: IReadyproducts) => {
+        if (window.confirm("Are you sure you want to delete " + item.product_name + "?")) {
+            item.count = 0;
+            dispatch({ type: "UPDATE_THE_WISH", data: item })
+            deleteFromDB(item.s_id);
+        }
+    }
+
+    const deleteFromDB = async (s_id: number) => {
+        let url = URL_API + "/readyProducts/" + s_id;
+        await doApiMethod(url, "DELETE", {});
+    }
+
     return (
         <>
             <HeaderDiv className="bg-dark container-fluid text-white py-2">
                 <div>
-                    <div className="d-flex justify-content-around">
-                        <div onClick={() => history.push("/home")} className="logo">
+                    <div className="d-flex justify-content-between col-lg-12">
+                        <div onClick={() => history.push("/home")} className="logo col-lg-3">
                             <HeaderH2>Champion</HeaderH2>
                         </div>
                         <CartSide />
                         <AuthUser />
-                        <IconsDiv className="icons">
+                        <IconsDiv className="icons w-75">
                             {isSearchBox ?
-                                <div className="container d-flex justify-content-center">
+                                <div className="d-flex justify-content-center col-lg-3 me-4 mt-3">
                                     <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="input-group col-sm-7 input-group-lg">
-                                        <SearchInput transition={{ duration: 0.7, delay: 0.2 }} initial={{ x: -300 }} animate={{ x: 0 }} onKeyDown={(evt) => {
+                                        <SearchInput placeholder="Enter to Search..." transition={{ duration: 0.7, delay: 0.2 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} onKeyDown={(evt) => {
                                             if (evt.key === "Enter") {
                                                 onSearchClick()
                                             }
-                                        }} ref={searchRef} style={{ borderRadius: "40px 0 0 40px" }} type="text" className="form-control h-75" />
+                                        }} ref={searchRef} style={{ borderRadius: "40px 0 0 40px", fontSize: "16px" }} type="text" className="form-control h-75" />
                                         <div style={{ marginRight: "2px" }} className="input-group-append">
                                             <span onClick={handleSearchBox} style={{ borderRadius: "0 40px 40px 0", cursor: "pointer", border: "1px solid #fa316796" }} className="h-75 input-group-text">
-                                                {searchIcon()}
+                                                <i className="fa fa-times-circle" style={{ color: "#7c1833c3" }} aria-hidden="true"></i>
                                             </span>
                                         </div>
                                     </motion.div>
                                 </div>
                                 :
-                                <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="p-1 rounded-circle" style={{ cursor: "pointer", border: "1px dashed rgb(250, 49, 101)" }} whileHover={{ border: "1px solid rgb(250, 49, 101)", scale: 1.1 }} onClick={handleSearchBox}>{searchIcon()}</motion.div>
+                                <motion.div data-tip="Search for Anything" transition={{ duration: 0.3 }} variants={backdrop} animate="visible" initial="hidden" className="p-1 mt-1 me-4 rounded-circle" style={{ cursor: "pointer" }} whileHover={{ color: "#fa316796", scale: 1.1 }} onClick={handleSearchBox}>
+                                    {searchIcon()}
+                                </motion.div>
                             }
-                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
-                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {toggleCart()}}>
-                                    {cartIcon()}
-                                    {// רק אם יש מוצרים בעגלה יוצג האייקון 
-                                        (carts_ar.length > 0) &&
-                                        <div className="badge bg-danger" style={{ fontSize: "0.5em" }}>
+                            <motion.div whileHover={{ scale: 1.1 }} className="mx-2 d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
+                                {(carts_ar.length > 0) ?
+                                    <h3 className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer" }} onClick={() => { toggleCart() }}>
+                                        {cartIcon()}
+                                        <div className="badge bg-danger" style={{ fontSize: "0.45em" }}>
                                             {cartTotal(carts_ar)}
                                         </div>
-                                    }
-                                </h3>
-                            </div>
-                            <div className="d-flex justify-content-center justify-content-lg-end align-items-center ms-3 my-2 my-lg-0">
-                                <h3 data-tip="Open the cart" className="cart_header_icon me-2 text-success" style={{ cursor: "pointer" }} onClick={() => {toggleCart()}}>
-                                    {heartIcon()}
-                                    {// רק אם יש מוצרים בעגלה יוצג האייקון 
-                                        (wish_ar.length > 0) &&
-                                        <div className="badge bg-danger" style={{ fontSize: "0.5em" }}>
-                                            {cartTotal(wish_ar)}
-                                        </div>
-                                    }
-                                </h3>
-                            </div>
-                            {/* <input type="text" classNameName="form-control" /> */}
-                            {/* // <div onClick={handleSearchBox}>aaa</div> */}
-                            {(!localStorage["token"]) ?
-                                <Login />
-                                :
-                                <button onClick={onLogOut} className="btn btn-outline-danger mx-4">
-                                    LogOut
-                                </button>
+                                    </h3>
+                                    :
+                                    <div style={{ cursor: "pointer" }} className="text-warning" data-tip="Your Cart Is Empty">
+                                        {cartIcon()}
+                                    </div>
+                                }
+                            </motion.div>
+                            <>
+                                {wish_ar.length > 0 ?
+                                    <Dropdown className="mb-1 mx-5">
+                                        <Dropdown.Toggle className="rounded-circle bg-dark px-1 border-0" variant="light" id="dropdown-basic">
+                                            <motion.div whileHover={{ scale: 1.1 }} onClick={toggleHeart} style={{ position: "relative" }}>
+                                                <div className="badge bg-danger" style={{ fontSize: "0.7em", position: "absolute", top: "18px", left: "-10px" }}>
+                                                    {cartTotal(wish_ar)}
+                                                </div>
+                                                {heartIcon()}
+                                            </motion.div>
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {wish_ar.map((item, i) => {
+                                                return (
+                                                    <>
+                                                        <tbody className="d-flex justify-content-between">
+                                                            <Dropdown.Item disabled>
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <div style={{ fontSize: "1.2em" }} className="fw-bold text-dark me-3">
+                                                                        {item.product_name}
+                                                                    </div>
+                                                                    <button data-tip={`${item.color}`} disabled style={{ backgroundColor: `${item.color}`, width: "20px", height: "20px" }} className="border rounded-circle shadow mt-1">
+                                                                    </button>
+                                                                    <div className="mx-4 text-dark fw-bold">{item.size}</div>
+                                                                    <div className="fw-bold text-dark">{item.price.toFixed(2)}$</div>
+                                                                    {/* <img src={item.images.frontImage.image} alt={item.product_name} width="20" /> */}
+                                                                </div>
+                                                            </Dropdown.Item>
+                                                            <Dropdown.Item style={{width:"15%"}} className="d-flex justify-content-end">
+                                                                <button onClick={() => { delFromWish(item) }} className="btn btn-danger">
+                                                                    <i className="fa fa-trash" aria-hidden="true"></i>
+                                                                </button>
+                                                            </Dropdown.Item>
+                                                        </tbody>
+                                                            {(wish_ar.length > 0 && (i != wish_ar.length-1)) &&
+                                                                <Dropdown.Divider />
+                                                            }
+                                                    </>
+                                                )
+                                            })}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    :
+                                    <motion.div className="mx-5 me-4" data-tip="Add Some Favourites" whileHover={{ scale: 1.1 }} onClick={toggleHeart} style={{ position: "relative", cursor: "pointer" }}>
+                                        {heartIcon()}
+                                    </motion.div>
+                                }
+                            </>
+                            {(!localStorage["token"]) &&
+                                <div className="mt-1">
+                                    <Login />
+                                </div>
                             }
-                            {/* <Navbar>
-                                <Nav>
-                                    <DropdownMenu
-                                    >
-                                        <DropdownItem eventKey='1'><i className="fa fa-envelope fa-fw"></i> User Profile</DropdownItem>
-                                        <DropdownItem eventKey='2'><i className="fa fa-gear fa-fw"></i> Settings</DropdownItem>
-                                        <DropdownItem divider />
-                                        <DropdownItem eventKey='3'><i className="fa fa-sign-out fa-fw"></i> Logout</DropdownItem>
-                                    </DropdownMenu>
-                                </Nav>
-                            </Navbar> */}
-                            {/* <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                <img src={UserIcon} alt="user" width="37px" height="37px" />
+                            {localStorage["token"] &&
+                                <Dropdown className="mt-1">
+                                    <Dropdown.Toggle className="rounded-circle bg-dark px-1 py-1 mx-2 me-5" variant="light" id="dropdown-basic">
+                                        <motion.div whileHover={{ scale: 1.1 }}>
+                                            {userInfo?.avatar_img ?
+                                                <img src={userInfo?.avatar_img.includes("http") ? userInfo?.avatar_img : URL_API + userInfo?.avatar_img + "?" + Date.now()} alt={userInfo?.firstName} width="37px" height="37px" className="rounded-circle" />
+                                                :
+                                                <img src={UserIcon} alt="user" width="37px" height="37px" />
+                                            }
+                                        </motion.div>
+                                    </Dropdown.Toggle>
 
-                                </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item href="#/action-1">My Info</Dropdown.Item>
+                                        <Dropdown.Item href="#/action-2">My Designed Products</Dropdown.Item>
+                                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                        <Dropdown.Divider />
 
-                                <Dropdown.Menu>
-                                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown> */}
-                            {userInfo?.avatar_img ?
-                                // <div className="dropdown">
-                                //     </button>
-                                //     <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                //         <li><Link className="dropdown-item" to="/admin">Admin</Link></li>
-                                //     </ul>
-
-                                <div className="p-1 border rounded-circle">
-                                    <img src={userInfo?.avatar_img.includes("http") ? userInfo?.avatar_img : URL_API + userInfo?.avatar_img + "?" + Date.now()} alt={userInfo?.firstName} width="37px" height="37px" className="rounded-circle" />
-                                </div>
-                                :
-                                <div className="p-1 border rounded-circle">
-                                    <img src={UserIcon} alt="user" width="37px" height="37px" />
-                                </div>
+                                        <Dropdown.Item onClick={onLogOut}>
+                                            <button onClick={onLogOut} className="btn btn-outline-danger btn-sm">
+                                                LogOut
+                                            </button>
+                                        </Dropdown.Item>
+                                        {isAdmin &&
+                                            <>
+                                                <Dropdown.Divider />
+                                                <Dropdown.Item href="/admin">
+                                                    <div className="d-flex justify-content-between align-items-center">
+                                                        <Link to="/admin" className="btn btn-warning btn-sm">
+                                                            Admin Panel
+                                                        </Link>
+                                                        <i className="fas fa-crown fa-lg text-warning"></i>
+                                                    </div>
+                                                </Dropdown.Item>
+                                            </>
+                                        }
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             }
                         </IconsDiv>
                     </div>
                 </div>
             </HeaderDiv>
-            <Navbar style={{ position: "sticky", top: 0 }} className="Navbar container-fluid d-flex justify-content-center" fixed="top" variant="light" expand="lg">
+            <Navbar /*style={{ position: "sticky", top: 0 }}*/ className="Navbar container-fluid d-flex justify-content-center" variant="light" expand="lg">
                 <Container className="container-fluid">
                     {/* <Navbar.Brand href="#home"><Link className="text-white text-white text-decoration-none" to="/">Home</Link></Navbar.Brand> */}
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -298,7 +357,7 @@ const Header: React.FC<HeaderProps> = () => {
 const cartTotal = (carts_ar: any) => {
     let total = 0;
     // carts_ar.map((item: any) => {
-        total += carts_ar.length;
+    total += carts_ar.length;
     // })
     return total;
 }

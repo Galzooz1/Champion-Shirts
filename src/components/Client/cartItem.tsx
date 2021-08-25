@@ -2,6 +2,7 @@ import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
+import { doApiMethod, URL_API } from '../services/apiService';
 
 interface CartItemProps {
     item: IReadyproducts;
@@ -18,7 +19,13 @@ const CartItem: React.FC<CartItemProps> = ({ item }, props) => {
         if(window.confirm("Are you sure you want to delete " + item.product_name + "?")){
             item.count = 0;
             dispatch({ type: "UPDATE_THE_CART", data: item })
+            deleteFromDB();
         }
+    }
+
+    const deleteFromDB = async() => { 
+        let url = URL_API + "/readyProducts/" + item.s_id;
+        let data = await doApiMethod(url, "DELETE", {});
     }
 
     const renderTooltip = (props: any, color: any) => (

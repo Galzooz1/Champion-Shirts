@@ -11,6 +11,7 @@ export interface IReadyproducts {
     _id:           string;
     isCart:        boolean;
     isWish:        boolean;
+    info:          string;
     isClean:       boolean;
     images:        Images;
     sideToDesign:  string;

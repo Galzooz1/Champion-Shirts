@@ -4,3 +4,19 @@
     /* top: 87px; */
     background-color:#487686 ;
 }
+
+#dropdown-basic::after{
+    display: none; 
+ }
+
+ .navbar,
+.navbar-default{
+    z-index:0;
+}
+
+.navbar {
+    position: static;
+  }
+  /* .navbar .nav > li {
+    z-index: 1001;
+  } */

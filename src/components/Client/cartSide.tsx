@@ -62,14 +62,6 @@ const CartSide: React.FC<CartSideProps> = () => {
           <div className="d-flex justify-content-between mt-2 align-items-center">
             <button onClick={goToCheckout} className="btn btn-success">Checkout</button>
             <h4 className="mt-2 mx-auto">Total: {total.toFixed(2)} $</h4>
-            {/* {(localStorage["token"]) ?
-                            <Link to="/checkout" className="btn btn-outline-success me-2">Checkout</Link>
-                            :
-
-                            <Link to="/login" className="btn btn-outline-danger">
-                                Login for checkout
-                            </Link>
-                        } */}
           </div>
         </div>
       }
