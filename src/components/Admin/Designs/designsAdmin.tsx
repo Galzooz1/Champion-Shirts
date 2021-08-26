@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useEffect } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { doApiGet, URL_API } from '../../services/apiService';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { doApiGet, doApiMethod, URL_API } from '../../services/apiService';
 import { IDesigns } from '../interfaces/designs';
 import AddDesign from './addDesign';
 import DesignsPages from './designsPages';
@@ -14,6 +15,7 @@ type DesignsAdminParams = {
 type DesignsAdminProps = RouteComponentProps<DesignsAdminParams>
 
 const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
+    let history = useHistory();
     let [designsAr, setDesignsAr] = React.useState<IDesigns[]>([]);
     let [isModalVisible, setisModalVisible] = React.useState<boolean>(false);
 
@@ -36,6 +38,21 @@ const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
         console.log(data);
         setDesignsAr(data);
     }
+
+    const DeleteDesign = async(s_id: number, name: string) => { 
+        if (window.confirm("Are you sure you want to delete " + name + " ?")) {
+        let url = URL_API + "/designs/" + s_id;
+        let data = await doApiMethod(url, "DELETE", {});
+        if (data.n === 1) {
+            toast.success(name + " Deleted Successfuly!");
+            // window.location.reload()
+            history.push("/admin/designs");
+        } else {
+            console.log(data);
+            toast.error("Error occuired, time to check the code.");
+        }
+    }
+}
 
     return (
         <div>
@@ -67,6 +84,7 @@ const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
                         <th>Date created</th>
                         <th>Design ID</th>
                         <th>Image</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 {/* TODO: add pagenation */}
@@ -86,6 +104,7 @@ const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
                                     :
                                     <img src={URL_API + item.image + "?" + Date.now()} height="100" alt={item.name} />
                                 }
+                                <td><button onClick={() => DeleteDesign(item.s_id, item.name)} className="btn btn-danger btn-sm">Delete</button></td>
                             </tr>
                         )
                     })}

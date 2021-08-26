@@ -20,6 +20,7 @@ export interface IUsers {
     phone:                 string;
     address:               string;
     avatar_img:            string;
+    password:              string;
     date_created:          string;
     confirmationCode:      string;
 }

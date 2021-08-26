@@ -81,21 +81,23 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     let history = useHistory();
     let dispatch = useDispatch();
     let carts_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.carts_ar);
-    let [countCartItems,setCountCartItems] = React.useState<number>(0);
-    let [countWishItems,setCountWishItems] = React.useState<number>(0);
-    let [isAddToCart,setIsAddToCart] = React.useState<boolean>(false);
-    let [isAddToWish,setIsAddToWish] = React.useState<boolean>(false);
+    let isCart = useSelector<RootStateOrAny, boolean>(myStore => myStore.isCart);
+    let isWish = useSelector<RootStateOrAny, boolean>(myStore => myStore.isWish);
+    let [countCartItems, setCountCartItems] = React.useState<number>(0);
+    let [countWishItems, setCountWishItems] = React.useState<number>(0);
+    let [isAddToCart, setIsAddToCart] = React.useState<boolean>(false);
+    let [isAddToWish, setIsAddToWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
     let [propertiesData, setPropertiesData] = React.useState<Partial<Property>>({});
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
-    
+
     React.useEffect(() => {
         getSingleProdData();
-        console.log("useEffect singleProduct: ", carts_ar);  
+        console.log("useEffect singleProduct: ", carts_ar);
         carts_ar.map(prodItem => {
-            console.log("map: " , prodItem);
-            if(prodItem._id){
+            console.log("map: ", prodItem);
+            if (prodItem._id) {
                 setCountCartItems(prodItem.count);
             }
         })
@@ -110,45 +112,50 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         let dataCategory = await doApiGet(url_cat);
         console.log(dataCategory);
         data.catName = dataCategory.name;
-        setProductData(data); 
+        setProductData(data);
         setPropertiesData(data.properties);
     }
 
-    
+
     const onSubmit = (dataBody: any) => {
-        if(!localStorage["token"]){
+        if (!localStorage["token"]) {
             toast.error("Please Login!");
-        }else{
+        } else {
             console.log(dataBody)
             addReadyProduct(dataBody);
         }
     }
-    
-    const addReadyProduct = async(dataBody: any) => { 
-        console.log("dataBody: " , dataBody);
+
+    const addReadyProduct = async (dataBody: any) => {
+        console.log("dataBody: ", dataBody);
         let url = URL_API + "/readyProducts"
         let data = await doApiMethod(url, "POST", dataBody);
         data.count = 0;
-        console.log("data: " , data);
-        if(isAddToCart){
-            setCountCartItems(countCartItems+1);
-            data.count = countCartItems+1;
-            dispatch({type:"UPDATE_THE_CART", data:data})
-            console.log("data2: " , data);
+        console.log("data: ", data);
+        if (isAddToCart) {
+            setCountCartItems(countCartItems + 1);
+            data.count = countCartItems + 1;
+            dispatch({ type: "UPDATE_THE_CART", data: data })
+            console.log("data2: ", data);
             toast.success(productData.name + " Added to Cart!")
             setIsAddToCart(false);
         }
-        if(isAddToWish){
-            setCountWishItems(countWishItems+1);
-            data.count = countWishItems+1;
-            dispatch({type:"UPDATE_THE_WISH", data:data})
-            console.log("data2: " , data);
-            toast.success(productData.name + " Added to Wish!")
-            setIsAddToWish(false);
+        else if (isAddToWish) {
+            if(!isWish){
+                setCountWishItems(countWishItems + 1);
+                data.count = countWishItems + 1;
+                dispatch({type:"UPDATE_IS_WISH", flag: true})
+                dispatch({ type: "UPDATE_THE_WISH", data: data })
+                console.log("data2: ", data);
+                toast.success(productData.name + " Added to Wish!")
+                setIsAddToWish(false);
+            }else{
+                toast.error(productData.name + " is Already On Wish List!")
+            }
         }
     }
-    
-    const setValuesFunc = (i: any) => { 
+
+    const setValuesFunc = (i: any) => {
         setValue("isClean", false);
         setValue("price", productData.price);
         setValue("product_name", productData.name);
@@ -176,110 +183,121 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                 </H2HR>
             </ProdHeaderDiv>
             <ProdMainDiv className="container mx-auto">
-            {isLoading ? <Loading /> :
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* <input {...register("isClean")} className="d-none" />
+                {isLoading ? <Loading /> :
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        {/* <input {...register("isClean")} className="d-none" />
                     <input {...register("price")} id="price" className="d-none" />
                     <input {...register("product_name")} id="product_name" className="d-none" />
                     <input {...register("product_s_id")} id="product_s_id" className="d-none" />
                     <input {...register("category_name")} id="category_name" className="d-none" />
                     <input {...register("category_s_id")} id="category_s_id" className="d-none" /> */}
-                    <div style={{ height: "600px" }} className="d-lg-flex justify-content-around border shadow p-4">
-                        <div>
-                            <h2>{productData?.name}</h2>
-                            <h4>{productData?.info}</h4>
-                            <div className="d-flex justify-content-center">
-                                <h4>Colors:</h4>
-                                {productData.properties?.map((item, i) => {
-                                    return (
-                                        <React.Fragment key={i}>
-                                            <div style={{ width: "66.63px" }}>
-                                                <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
-                                                    name="color" id="properties.color" onInput={() => { setValuesFunc(i) }}
-                                                    className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} />
-                                                <div className="my-2">
-                                                    {indexPicked === i ?
-                                                        <>
-                                                            {/* <h3>Size:</h3> */}
-                                                            <div className="d-block">
-                                                                {item?.amount.XS > 0 ?
-                                                                    <SizeLabel>
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
-                                                                        <SizeSpan>XS</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.S > 0 ?
-                                                                    <SizeLabel>
+                        <div style={{ height: "600px" }} className="d-lg-flex justify-content-around border shadow p-4">
+                            <div>
+                                <h2>{productData?.name}</h2>
+                                <h4>{productData?.info}</h4>
+                                <div className="d-flex justify-content-center">
+                                    <h4>Colors:</h4>
+                                    {productData.properties?.map((item, i) => {
+                                        return (
+                                            <React.Fragment key={i}>
+                                                <div style={{ width: "66.63px" }}>
+                                                    <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
+                                                        name="color" id="properties.color" onInput={() => { setValuesFunc(i) }}
+                                                        className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} />
+                                                    <div className="my-2">
+                                                        {indexPicked === i ?
+                                                            <>
+                                                                {/* <h3>Size:</h3> */}
+                                                                <div className="d-block">
+                                                                    {item?.amount.XS > 0 ?
+                                                                        <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
+                                                                            <SizeSpan>XS</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.S > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
-                                                                        <SizeSpan>S</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.M > 0 ?
-                                                                    <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
+                                                                            <SizeSpan>S</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.M > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
-                                                                        <SizeSpan>M</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.L > 0 ?
-                                                                    <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
+                                                                            <SizeSpan>M</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.L > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
-                                                                        <SizeSpan>L</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.XL > 0 ?
-                                                                    <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
+                                                                            <SizeSpan>L</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.XL > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
-                                                                        <SizeSpan>XL</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.XXL > 0 ?
-                                                                    <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
+                                                                            <SizeSpan>XL</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.XXL > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
-                                                                        <SizeSpan>XXL</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                                {item?.amount.XXXL > 0 ?
-                                                                    <SizeLabel>
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
+                                                                            <SizeSpan>XXL</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                    {item?.amount.XXXL > 0 ?
+                                                                        <SizeLabel>
 
-                                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
-                                                                        <SizeSpan>XXXL</SizeSpan>
-                                                                    </SizeLabel>
-                                                                    : null}
-                                                            </div>
-                                                        </>
-                                                        : null
-                                                    }
+                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
+                                                                            <SizeSpan>XXXL</SizeSpan>
+                                                                        </SizeLabel>
+                                                                        : null}
+                                                                </div>
+                                                            </>
+                                                            : null
+                                                        }
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </React.Fragment>
-                                    )
-                                })}
+                                            </React.Fragment>
+                                        )
+                                    })}
 
+                                </div>
+                                {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
+                                {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
+                                <h3>
+                                    Price: {productData.price} $
+                                </h3>
+                                <div className="d-flex justify-content-between mt-4">
+                                    <button type="submit" onClick={() => { setValue("isCart", true); setIsAddToCart(true) }} className="btn btn-info me-5">Add to Cart</button>
+                                    <button type="submit" onClick={() => { setValue("isWish", true); setIsAddToWish(true) }} className="btn btn-danger">Add to Wish</button>
+                                </div>
                             </div>
-                            {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
-                            {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
-                            <h3>
-                                Price: {productData.price} $
-                            </h3>
-                            <div className="d-flex justify-content-between mt-4">
-                            <button type="submit" onClick={() => {setValue("isCart", true);setIsAddToCart(true)}} className="btn btn-info me-5">Add to Cart</button>
-                            <button type="submit" onClick={() => {setValue("isWish", true);setIsAddToWish(true)}} className="btn btn-danger">Add to Wish</button>
+                            <div style={{ width: "350px" }}>
+                                <Slider {...SliderSettings}>
+                                    {productData?.image?.includes("http") ?
+                                        <img className="border rounded-2 shadow mb-4" src={productData?.image} alt={productData?.name} height="400px" width="100%" />
+                                        :
+                                        <img className="border rounded-2 shadow mb-4" src={URL_API + productData?.image + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
+                                    }
+                                    {productData?.image?.includes("http") ?
+                                        <img className="border rounded-2 shadow mb-4" src={productData?.image} alt={productData?.name} height="400px" width="100%" />
+                                        :
+                                        <img className="border rounded-2 shadow mb-4" src={URL_API + productData?.image + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
+                                    }
+                                    
+                                    {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
+                                    {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
+                                </Slider>
                             </div>
                         </div>
-                        <div style={{ width: "350px" }}>
-                            <Slider {...SliderSettings}>
-                                <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} />
-                                <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} />
-                            </Slider>
-                        </div>
-                    </div>
-                </form>
-            }
+                    </form>
+                }
             </ProdMainDiv>
         </>
     )

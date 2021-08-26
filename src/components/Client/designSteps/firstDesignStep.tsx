@@ -4,13 +4,14 @@ import { IProdItems } from '../../Admin/interfaces/prodItems';
 import Slider from "react-slick";
 import FirstDesignStepCarousel from './firstDesignStepCarousel';
 import { useHistory } from 'react-router-dom';
+import { URL_API } from '../../services/apiService';
 
 interface FirstDesignStepProps {
     errors: any;
     register: any;
     productData: Partial<IProdItems>;
-    indexPickedCallBack:(_value: number) => void;
-    setChosenSide?:any;
+    indexPickedCallBack: (_value: number) => void;
+    setChosenSide?: any;
     chosenSide: string;
     extraPrice: (amount: number) => void;
     extraPriceOfProduct?: number | undefined;
@@ -59,7 +60,7 @@ export const SizeSpan = styled.span`
         }
 `;
 
-const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,extraPrice ,chosenSide ,setChosenSide ,productData, errors, register, indexPickedCallBack }) => {
+const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, extraPrice, chosenSide, setChosenSide, productData, errors, register, indexPickedCallBack }) => {
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let selectSideRef = React.useRef<HTMLSelectElement>(null);
     let history = useHistory();
@@ -70,11 +71,11 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,e
         indexPickedCallBack(i);
     }
 
-    const chooseSide = (e: any) => { 
+    const chooseSide = (e: any) => {
         setChosenSide(e.target.value)
-        if(e.target.value === "both"){
+        if (e.target.value === "both") {
             extraPrice(10);
-        }else{
+        } else {
             extraPrice(0)
         }
     }
@@ -161,7 +162,7 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,e
                     {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
                     {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
-                        <select {...register("sideToDesign", {required: true})} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select" ref={selectSideRef} onChange={chooseSide}>
+                        <select {...register("sideToDesign", { required: true })} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select" ref={selectSideRef} onChange={chooseSide}>
                             <option value="front">Front</option>
                             <option value="back">Back</option>
                             <option disabled value="both">Both (+10$)</option>
@@ -170,15 +171,23 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({extraPriceOfProduct ,e
                     {errors.price && <span className="text-danger m-2 text-center">Please choose side to design!</span>}
                     <div className="mt-4">
                         {chosenSide === "both" ?
-                        <h3>Price: {productData?.price! + extraPriceOfProduct!} $</h3>
-                        :
-                        <h3>Price: {productData?.price} $</h3>
+                            <h3>Price: {productData?.price! + extraPriceOfProduct!} $</h3>
+                            :
+                            <h3>Price: {productData?.price} $</h3>
                         }
                     </div>
                 </div>
                 <div>
                     {indexPicked === 555 ?
-                        <img className="border rounded-2 shadow mb-4" width="300px" src={productData.image} alt={productData?.name} />
+                        <div>
+
+                            {productData?.image?.includes("http") ?
+                                <img src={productData?.image} alt={productData?.name} height="350px" width="300px" />
+                                :
+                                <img src={URL_API + productData?.image + "?" + Date.now()} height="350px" width="300px" alt={productData?.name} />
+                            }
+                        </div>
+                        // <img className="border rounded-2 shadow mb-4" width="300px" src={productData.image} alt={productData?.name} />
                         :
                         <FirstDesignStepCarousel productData={productData} indexPicked={indexPicked} />
                     }

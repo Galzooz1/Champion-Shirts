@@ -15,6 +15,7 @@ import ThirdDesignStep from './designSteps/thirdDesignStep';
 import Header from './header';
 import Loading from './loading';
 import _ from 'lodash';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 
 interface SingleProductDesignParams {
     s_id: string;
@@ -30,6 +31,11 @@ border-radius: 10px;
 font-weight: bolder;
 `;
 
+let isAddToCart: boolean;
+let isAddToWish: boolean;
+let isFirstContinue: boolean;
+let backFlag: boolean;
+
 const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     let history = useHistory();
     const { register, handleSubmit, formState: { errors, isValid }, setValue, reset, unregister } = useForm<Partial<IReadyproducts>>({
@@ -39,17 +45,30 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         },
         mode: 'all'
     });
+    let dispatch = useDispatch();
+    // let isCart = useSelector<RootStateOrAny, boolean>(myStore => myStore.isCart);
+    // let isWish = useSelector<RootStateOrAny, boolean>(myStore => myStore.isWish);
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
     let [readyProductData, setReadyProductData] = React.useState<Partial<IReadyproducts>>({});
     // let [readyProductData, setReadyProductData] = React.useState<Partial<IReadyproducts>>({});
     let [propertiesData, setPropertiesData] = React.useState<Property[]>([]);
+    let [countCartItems, setCountCartItems] = React.useState<number>(0);
+    let [countWishItems, setCountWishItems] = React.useState<number>(0);
     let [formStep, setFormStep] = React.useState<number>(0);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
-    let [isFormStepThree, setIsFormStepThree] = React.useState<boolean>(false);
+    // let [isAddToCart, setIsAddToCart] = React.useState<boolean>(false);
+    // let [isAddToWish, setIsAddToWish] = React.useState<boolean>(false);
+    // let [isFormStepThree, setIsFormStepThree] = React.useState<boolean>(false);
+    let [isCart, setIsCart] = React.useState<boolean>(false);
+    let [isWish, setIsWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(0);
     let [chosenSide, setChosenSide] = React.useState<string>("front");
     let [extraPriceOfProduct, setExtraPriceOfProduct] = React.useState<number | undefined>(0);
     let sum: number;
+    let isFormStepThree: boolean = false;
+
+    // let isAddToWish: boolean = false;
+
 
 
     React.useEffect(() => {
@@ -63,13 +82,26 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     }
 
     const nextFormStep = () => {
+        console.log("NEXTFORM=addtocart ", isAddToCart)
+        console.log("NEXTFORM=addtowish ", isAddToWish)
+        console.log("NEXTFORM=formstep ", formStep);
+        console.log("NEXTFORM=isFormThree ", isFormStepThree);
         setFormStep(cur => cur + 1);
     }
     const backFormStep = () => {
         if (formStep === 1) {
             if (window.confirm("Your Data will be lost, Are you sure?")) {
                 console.log(readyProductData);
-                if(readyProductData){
+                if (readyProductData) {
+                    readyProductData.count = 0;
+                    if (isCart) {
+                        dispatch({ type: "UPDATE_IS_CART", flag: false })
+                        dispatch({ type: "UPDATE_THE_CART", data: readyProductData })
+                    }
+                    if (isWish) {
+                        dispatch({ type: "UPDATE_IS_WISH", flag: false })
+                        dispatch({ type: "UPDATE_THE_WISH", data: readyProductData })
+                    }
                     deleteReadyProductFromDb(readyProductData?.s_id!);
                 }
                 reset({ shirtDesigns: {} });
@@ -82,19 +114,114 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     }
 
     const addReadyProductDesign = async (dataBody: any) => {
-        // if(formStep >= 1){
-        //     setIsFormStepThree(true);
-        // }
-        // if(!isFormStepThree){
-        // }
-        // לטפל במקרי קצה של השליחה של הרדי פרודקטס!!!
+        console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
+        console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
+        console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
+        console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        if (isFirstContinue) {
+            isAddToCart = false;
+            isAddToWish = false;
+        }
+        if (!isAddToCart && !isAddToWish && !backFlag) {
+            isFirstContinue = true;
+        }
+        if (backFlag) {
+            isAddToCart = false;
+            isAddToWish = false;
+        }
+        console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
+        console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
+        console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
+        console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        if (isFirstContinue && !isAddToCart && !isAddToWish) {
             let url = URL_API + "/readyProducts"
             let data = await doApiMethod(url, "POST", dataBody);
             console.log(data);
             setReadyProductData(data);
+            // isAddToCart = false;
+        }
+        // isAddToCart = true;
+        // isFirstContinue = false;
+        // console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
+        // console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
+        if (isAddToCart && !isFirstContinue && !isAddToWish) {
+            let url = URL_API + "/readyProducts"
+            let data = await doApiMethod(url, "POST", dataBody);
+            console.log(data);
+            setReadyProductData(data);
+            setCountCartItems(countCartItems + 1);
+            data.count = countCartItems + 1;
+            dispatch({ type: "UPDATE_THE_CART", data: data })
+            console.log("data2: ", data);
+            toast.success(productData.name + " Added to Cart!");
+            // setIsAddToCart(false);
+            // isAddToCart = false
+        }
+        if (isAddToWish && !isFirstContinue && !isAddToCart) {
+            if(!isWish){
+                let url = URL_API + "/readyProducts"
+                let data = await doApiMethod(url, "POST", dataBody);
+                console.log(data);
+                setReadyProductData(data);
+                setCountWishItems(countWishItems + 1);
+                data.count = countWishItems + 1;
+                dispatch({ type: "UPDATE_THE_WISH", data: data })
+                console.log("data2: ", data);
+                toast.success(productData.name + " Added to Wish List!");
+                setIsWish(true);
+            }else{
+                toast.error(productData.name + " is Already On Wish List!")
+            }
+            // setIsAddToCart(false);
+            // isAddToCart = false
+        }
+        backFlag = false;
+        isFirstContinue = false;
+        isAddToCart = true;
+        isAddToWish = true;
+        console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
+        console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
+        console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
+        console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        // isAddToCart = true;
+        // if (isFormStepThree && isAddToCart) {
+        //     isFormStepThree = false;
+        // }
+        // if (!isFormStepThree && isAddToCart) {
+        //     let url = URL_API + "/readyProducts"
+        //     let data = await doApiMethod(url, "POST", dataBody);
+        //     console.log(data);
+        //     setReadyProductData(data);
+        //     // if(!isFormStepThree && isAddToCart){
+        //     isAddToCart = false
+        //     // }
+        //     if (isAddToCart) {
+        //         setCountCartItems(countCartItems + 1);
+        //         data.count = countCartItems + 1;
+        //         dispatch({ type: "UPDATE_THE_CART", data: data })
+        //         console.log("data2: ", data);
+        //         toast.success(productData.name + " Added to Cart!")
+        //         // setIsAddToCart(false);
+        //         isAddToCart = false
+        //     }
+        //     else if (isAddToWish) {
+        //         if (!isWish) {
+        //             setCountWishItems(countWishItems + 1);
+        //             data.count = countWishItems + 1;
+        //             // dispatch({type:"UPDATE_IS_WISH", flag: true})
+        //             dispatch({ type: "UPDATE_THE_WISH", data: data })
+        //             console.log("data2: ", data);
+        //             toast.success(productData.name + " Added to Wish!")
+        //             setIsWish(true);
+        //             setIsAddToWish(false);
+        //         } else {
+        //             toast.error(productData.name + " is Already On Wish List!")
+        //         }
+        //     }
+        // }
     }
 
-    const deleteReadyProductFromDb = async(s_id: number) => { 
+    const deleteReadyProductFromDb = async (s_id: number) => {
         let url = URL_API + "/readyProducts/" + s_id
         let data = await doApiMethod(url, "DELETE", {});
     }
@@ -112,7 +239,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         setPropertiesData(data.properties);
     }
 
+
+
     const onSubmit = (dataBody: any) => {
+        // if (formStep >= 1 || !isFirstContinue) {
+        //     isAddToCart = true;
+        //     isFirstContinue = false;
+        //     // setIsFormStepThree(true);
+        //     console.log("ONSUBMIT=isAddToCart ", isAddToCart);
+        //     console.log("ONSUBMIT=isFirstContinue ", isFirstContinue);
+        //     console.log("isFormStepThree = ", isFormStepThree);
+        // }
         if (!localStorage["token"]) {
             toast.error("Please Login!");
         } else {
@@ -239,8 +376,8 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                                 <FirstDesignStep extraPriceOfProduct={extraPriceOfProduct} extraPrice={extraPrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
-                                        <button disabled={!isValid} onClick={isValid ? () => { setSideAndPriceValues(); nextFormStep(); } : () => console.log("Not Valid!")} type="button" className="btn btn-outline-primary mx-4">Continue</button>
-                                    
+                                    <button disabled={!isValid} onClick={isValid ? () => { setSideAndPriceValues(); nextFormStep(); } : () => console.log("Not Valid!")} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+
                                 </div>
                             </section>
                         )}
@@ -249,15 +386,19 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                                 <SecondStepApp unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
-                                    <button onClick={localStorage["token"] && nextFormStep} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
+                                    <button onClick={() => {localStorage["token"] && nextFormStep(); }} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
                                 </div>
                             </section>
                         )}
                         {formStep >= 2 && (
                             <section className={formStep === 2 ? "d-block" : "d-none"}>
-                                <ThirdDesignStep productData={productData} chosenSide={chosenSide} readyProductData={readyProductData} />
+                                <ThirdDesignStep isWish={isWish} isCart={isCart} setIsWish={setIsWish} setIsCart={setIsCart} productData={productData} chosenSide={chosenSide} readyProductData={readyProductData} />
+                                <div className="d-flex">
+                                    <button type="submit" onClick={() => {isAddToCart = true; isAddToWish = false; console.log("onClickAddToCart ", isAddToCart, isAddToWish)}} className="btn btn-info me-4">Add to Cart</button>
+                                    <button type="submit" onClick={() => {isAddToCart = false; isAddToWish = true; console.log("onClickAddToWish ", isAddToWish, isAddToCart)}} className="btn btn-danger">Add to Wish</button>
+                                </div>
                                 <div className="d-flex justify-content-center align-items-end m-3">
-                                    <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
+                                    <button type="button" onClick={() => { backFlag = true; isFirstContinue = false; isAddToCart = false; isAddToWish = false; backFormStep(); }} className="btn btn-outline-danger mx-4">Back</button>
                                 </div>
                             </section>
                         )}

@@ -16,6 +16,7 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import CartSide from './cartSide';
 import AuthUser from './authUser';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
+import { ReactComponent as MoonSVG } from '../../assets/moon.svg';
 // import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
 // import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
@@ -92,6 +93,7 @@ const Header: React.FC<HeaderProps> = () => {
         console.log("Cart: ", carts_ar);
         // dispatch({type:"RESET_CARTS", carts_ar:[]})
         // dispatch({type:"RESET_WISH", wish_ar:[]})
+        // dispatch({type:"UPDATE_IS_WISH", flag: false})
         getCategoriesData();
         checkIfAdmin();
         if (localStorage["token"]) {
@@ -203,6 +205,9 @@ const Header: React.FC<HeaderProps> = () => {
                                     {searchIcon()}
                                 </motion.div>
                             }
+                            <div>
+                                <MoonSVG fill="black" stroke="red" width="100" height="100" />
+                            </div>
                             <motion.div whileHover={{ scale: 1.1 }} className="mx-2 d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
                                 {(carts_ar.length > 0) ?
                                     <h3 className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer" }} onClick={() => { toggleCart() }}>
@@ -277,14 +282,14 @@ const Header: React.FC<HeaderProps> = () => {
                                             {userInfo?.avatar_img ?
                                                 <img src={userInfo?.avatar_img.includes("http") ? userInfo?.avatar_img : URL_API + userInfo?.avatar_img + "?" + Date.now()} alt={userInfo?.firstName} width="37px" height="37px" className="rounded-circle" />
                                                 :
-                                                <img src={UserIcon} alt="user" width="37px" height="37px" />
+                                                <img src="https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png" className="bg-light rounded-circle border" alt="user" width="37px" height="37px" />
                                             }
                                         </motion.div>
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
-                                        <Dropdown.Item href="#/action-1">My Info</Dropdown.Item>
-                                        <Dropdown.Item href="#/action-2">My Designed Products</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {history.push("/user/" + userInfo?._id)}}>My Info</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {history.push("/selfdesigns/" + userInfo?._id)}}>My Designed Products</Dropdown.Item>
                                         <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                                         <Dropdown.Divider />
 

@@ -16,14 +16,15 @@ const CartItem: React.FC<CartItemProps> = ({ item }, props) => {
     // }, [props])
 
     const delFromCart = () => {
-        if(window.confirm("Are you sure you want to delete " + item.product_name + "?")){
+        if (window.confirm("Are you sure you want to delete " + item.product_name + "?")) {
             item.count = 0;
+            // dispatch({ type: "UPDATE_IS_CART", flag: false })
             dispatch({ type: "UPDATE_THE_CART", data: item })
             deleteFromDB();
         }
     }
 
-    const deleteFromDB = async() => { 
+    const deleteFromDB = async () => {
         let url = URL_API + "/readyProducts/" + item.s_id;
         let data = await doApiMethod(url, "DELETE", {});
     }
@@ -48,7 +49,11 @@ const CartItem: React.FC<CartItemProps> = ({ item }, props) => {
                     <h5>
                         {item.price.toFixed(2)} $
                     </h5>
-                <span onClick={delFromCart} style={{cursor:"pointer"}} className="float-end text-danger">x</span>
+                    <div className="ms-4">
+                    <button onClick={delFromCart} style={{ cursor: "pointer" }} className="float-end btn btn-danger btn-sm text-danger">
+                        <i className="fa fa-trash text-white" aria-hidden="true"></i>
+                    </button>
+                    </div>
                 </div>
             </div>
         </div>

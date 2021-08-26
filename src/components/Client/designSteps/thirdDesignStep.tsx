@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../../Admin/interfaces/readyproducts';
@@ -9,26 +9,20 @@ interface ThirdDesignStepProps {
     readyProductData: Partial<IReadyproducts>;
     chosenSide: string;
     productData: Partial<IProdItems>;
+    isWish:boolean;
+    isCart:boolean;
+    setIsWish?:any;
+    setIsCart?:any;
+    // setIsAddToCart?:any;
+    setIsAddToWish?:any;
 };
 
-const ThirdDesignStep: React.FC<ThirdDesignStepProps> = ({ readyProductData, chosenSide, productData }) => {
+const ThirdDesignStep: React.FC<ThirdDesignStepProps> = ({ setIsAddToWish ,setIsCart ,setIsWish ,isCart ,isWish ,readyProductData, chosenSide, productData }) => {
     let dispatch = useDispatch();
-    let [countCartItems,setCountCartItems] = React.useState<number>(0);
-    let [countWishItems,setCountWishItems] = React.useState<number>(0);
+    // let isCart = useSelector<RootStateOrAny, boolean>(myStore => myStore.isCart);
+    // let isWish = useSelector<RootStateOrAny, boolean>(myStore => myStore.isWish);
 
-// לסדר נזילה מהרדי פרודקטס!!!!!
-    const addToCart = () => { 
-        setCountCartItems(countCartItems+1);
-        readyProductData.count = countCartItems+1;
-        dispatch({type:"UPDATE_THE_CART", data:readyProductData})
-        toast.success(productData.name + " Added to Cart!")
-   }
-    const addToWish = () => { 
-        setCountWishItems(countWishItems+1);
-        readyProductData.count = countWishItems+1;
-        dispatch({type:"UPDATE_THE_WISH", data:readyProductData})
-        toast.success(productData.name + " Added to Wish List!")
-   }
+
     return (
         <div style={{ height: "600px" }} className="d-flex justify-content-around shadow p-3">
             <div className="col-lg-6">
@@ -44,10 +38,6 @@ const ThirdDesignStep: React.FC<ThirdDesignStepProps> = ({ readyProductData, cho
                         <button disabled className="shadow text-dark" style={{width:"30px", height:"30px"}}>{readyProductData.size}</button>
                     </div>
                     <h4 className="my-3">{readyProductData.price?.toFixed(2)} $</h4>
-                    <div className="d-flex">
-                    <button onClick={addToCart} className="btn btn-info me-4">Add to Cart</button>
-                    <button onClick={addToWish} className="btn btn-danger">Add to Wish</button>
-                    </div>
                 </div>
             </div>
             <div className="col-lg-6">

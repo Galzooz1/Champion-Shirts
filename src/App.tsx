@@ -19,6 +19,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import Checkout from './components/Client/checkout';
+import UserPanel from './components/Client/userPanel';
+import UserDesigns from './components/Client/userDesigns';
 
 let myStore = createStore(projectReducer, composeWithDevTools());
 
@@ -39,6 +41,8 @@ function App() {
             <Route exact path={`/product/:s_id`} component={SingleProduct} />
             <Route exact path={`/search/`} component={SearchPage} />
             <Route exact path={`/checkout`} component={Checkout} />
+            <Route exact path={`/user/:id`} component={UserPanel} />
+            <Route exact path={`/selfdesigns/:id`} component={UserDesigns} />
           </Switch>
           <ToastContainer
             position="bottom-right"

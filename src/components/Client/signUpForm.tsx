@@ -17,7 +17,7 @@ interface SignUpFormProps {
     toggleSignUp: () => void;
 };
 
-interface SignUpArgs {
+export interface SignUpArgs {
     firstName: string;
     lastName: string;
     email: string;

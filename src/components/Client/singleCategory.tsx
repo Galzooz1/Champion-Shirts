@@ -91,7 +91,12 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                 <>
                                     {item?.isClean &&
                                         <CleanWrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/clean/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
-                                            <img src={item?.image} alt={item?.name} style={{ maxHeight: "350px" }} />
+                                            {item?.image?.includes("http") ?
+                                                <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                                                :
+                                                <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
+                                            }
+                                            {/* <img src={item?.image} alt={item?.name} style={{ maxHeight: "350px" }} /> */}
                                             <div className="m-5" style={{ maxHeight: "350px" }}>
                                                 <h2>{item?.name}</h2>
                                                 <h3>{item?.price} $</h3>
@@ -103,9 +108,9 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                         <>
                                                             <motion.div className="border p-2 text-start d-flex flex-wrap justify-content-around">
                                                                 <div className="w-100 d-flex justify-content-center">
-                                                                <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
-                                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                                </OverlayTrigger>
+                                                                    <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
+                                                                        <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                                    </OverlayTrigger>
                                                                 </div>
 
                                                                 {prop?.amount.XS > 0 ?
@@ -148,14 +153,19 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                     )
                                                 })}
                                             </div>
-                                            <div className="bg-dark d-flex justify-content-center align-items-center" style={{width:"100%"}}>
+                                            <div className="bg-dark d-flex justify-content-center align-items-center" style={{ width: "100%" }}>
                                                 <h1 className="text-white">Design Now!</h1>
                                             </div>
                                         </CleanWrapperDiv>
                                     }
                                     {!item?.isClean &&
                                         <WrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
-                                            <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                                            {item?.image?.includes("http") ?
+                                                <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                                                :
+                                                <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
+                                            }
+                                            {/* <img src={item?.image} alt={item?.name} width="100" height="100" /> */}
                                             <h2>{item?.name}</h2>
                                             <h3>{item?.price} $</h3>
                                             {/* <div className="text-info border p-3">

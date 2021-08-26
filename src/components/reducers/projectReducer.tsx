@@ -3,6 +3,8 @@ import { IReadyproducts } from "../Admin/interfaces/readyproducts";
 export interface cartState {
   carts_ar: IReadyproducts[];
   wish_ar: IReadyproducts[];
+  isCart: boolean;
+  isWish: boolean;
   showCart: boolean;
   showWish: boolean;
 }
@@ -10,6 +12,8 @@ export interface cartState {
 const initState = {
     carts_ar: [],
     wish_ar: [],
+    isCart:false,
+    isWish:false,
     showCart: false,
     showWish: false
 }
@@ -24,9 +28,17 @@ export const projectReducer = (state: cartState = initState, action: any) => {
         // return {...state, carts_ar:[...state.carts_ar, action.data]}
         return saveToLocal(state, updateCart(state, action));
       break;
+      case "UPDATE_IS_CART":
+        // return {...state, carts_ar:[...state.carts_ar, action.data]}
+        return saveToLocal(state,{...state, isCart:action.flag});
+      break;
       case "UPDATE_THE_WISH":
         // return {...state, carts_ar:[...state.carts_ar, action.data]}
         return saveToLocal(state, updateWish(state, action));
+      break;
+      case "UPDATE_IS_WISH":
+        // return {...state, carts_ar:[...state.carts_ar, action.data]}
+        return saveToLocal(state,{...state, isWish:action.flag});
       break;
     case "RESET_CARTS":
       // return {...state, carts_ar:[...state.carts_ar, action.item]}
@@ -54,7 +66,7 @@ export const projectReducer = (state: cartState = initState, action: any) => {
     let prodFound = false;
     let temp_ar = [...state.carts_ar]
     temp_ar.map((item , i) => {
-      console.log("ActionDATAAAA: ", item);
+      // console.log("ActionDATAAAA: ", item);
       if(item.s_id === action.data.s_id){
         // בדוק במלאי כדי לעדכן
         item.count = action.data.count;   
