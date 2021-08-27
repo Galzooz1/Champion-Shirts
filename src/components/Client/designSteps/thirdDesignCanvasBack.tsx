@@ -8,13 +8,12 @@ import ThirdDesignCanvasImage from './thirdDesignCanvasImage';
 
 interface ThirdDesignCanvasBackProps {
     readyProductData: Partial<IReadyproducts>;
-    chosenSide: string;
-    productData: Partial<IProdItems>;
+    chosenSide?: string;
     imagesDesignsAr: Partial<INewImagesDesign[]>;
     imagesCostumesAr: Partial<INewImagesDesign[]>;
 };
 
-const ThirdDesignCanvasBack: React.FC<ThirdDesignCanvasBackProps> = ({ imagesCostumesAr, imagesDesignsAr, readyProductData, chosenSide, productData }) => {
+const ThirdDesignCanvasBack: React.FC<ThirdDesignCanvasBackProps> = ({ imagesCostumesAr, imagesDesignsAr, readyProductData, chosenSide }) => {
     return (
         <MainImgDiv id="mainImgDiv" style={{ backgroundImage: `url(${readyProductData.images?.backImage.image})` }}>
             <div className="d-flex justify-content-center">

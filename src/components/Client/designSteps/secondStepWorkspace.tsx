@@ -24,11 +24,13 @@ interface SecondStepWorkspaceProps {
     chosenSide?: string;
     reset?: any;
     unregister?: any;
+    backFlag?: boolean;
 };
 
 export const MainImgDiv = styled.div`
 border: 1px solid red;
 background-position:center top;
+background-size:cover;
 width: 500px;
 height: 500px;
 padding-top: 100px;
@@ -46,7 +48,7 @@ width:100%;
 height:100%;
 `;
 
-const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, reset, chosenSide, setValue, errors, register, isImageFileClicked, filesAr, setFilesAr, designsAr, setDesignAr, productData, propertiesData, indexPicked, designsData, isDesignClicked }) => {
+const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unregister, reset, chosenSide, setValue, errors, register, isImageFileClicked, filesAr, setFilesAr, designsAr, setDesignAr, productData, propertiesData, indexPicked, designsData, isDesignClicked }) => {
     let [isFrontMain, setIsFrontMain] = React.useState<boolean>();
     let stageRef = React.useRef<any>();
     let [bothSidesStep, setBothSidesStep] = React.useState<number>(1);
@@ -200,7 +202,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ unregister, r
                             ref={stageRef}
                         >
                             <Layer>
-                                {isDesignClicked ?
+                                {(isDesignClicked || backFlag) ?
                                     <>
                                         {designsAr.map((item: any, key: any) => {
                                             let isDesign: boolean | undefined = true;

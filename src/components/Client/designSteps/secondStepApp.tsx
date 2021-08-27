@@ -16,6 +16,9 @@ interface SecondStepAppProps {
     chosenSide?:string;
     reset?:any;
     unregister?:any;
+    setIsDesignClicked?:any;
+    isDesignClicked?:any;
+    backFlag:boolean;
 };
 
 export interface IDesignsArr {
@@ -39,9 +42,9 @@ const newUploadedImage = (_image: any) => ({
     height: 100,
 })
 
-const SecondStepApp: React.FC<SecondStepAppProps> = ({ unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
+const SecondStepApp: React.FC<SecondStepAppProps> = ({backFlag ,isDesignClicked, setIsDesignClicked, unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
-    let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
+    // let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
     let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
     let [designsAr, setDesignsAr] = React.useState<any[]>([{}]);
     let [filesAr, setFilesAr] = React.useState<any[]>([{}]);
@@ -102,7 +105,7 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({ unregister ,reset ,chosen
                 <SecondStepPanel handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
             </div>
             <div className="col-lg-8">
-                <SecondStepWorkspace unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
+                <SecondStepWorkspace backFlag={backFlag} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
             </div>
         </div>
     )

@@ -7,8 +7,7 @@ import ThirdDesignCanvasFront from './thirdDesignCanvasFront';
 
 interface ThirdDesignCanvasProps {
     readyProductData: Partial<IReadyproducts>;
-    chosenSide: string;
-    productData: Partial<IProdItems>;
+    chosenSide?: string;
 };
 
 export interface INewImagesDesign {
@@ -30,7 +29,7 @@ const newImage = (_image: any, _width: any, _height: any, _x: any, _y: any, _rot
 })
 
 
-const ThirdDesignCanvas: React.FC<ThirdDesignCanvasProps> = ({ readyProductData, chosenSide, productData }) => {
+const ThirdDesignCanvas: React.FC<ThirdDesignCanvasProps> = ({ readyProductData, chosenSide }) => {
     let [isFrontMain, setIsFrontMain] = React.useState<boolean>();
     let [imagesDesignsAr, setImagesDesignsAr] = React.useState<Partial<INewImagesDesign[]>>([]);
     let [imagesCostumesAr, setImagesCostumesAr] = React.useState<Partial<INewImagesDesign[]>>([]);
@@ -98,11 +97,11 @@ const ThirdDesignCanvas: React.FC<ThirdDesignCanvasProps> = ({ readyProductData,
         <div className="d-flex justify-content-center">
             {isFrontMain ?
                 <>
-                <ThirdDesignCanvasFront imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} productData={productData} chosenSide={chosenSide} />
+                <ThirdDesignCanvasFront imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} chosenSide={chosenSide} />
                 </>
                 :
                 <>
-                <ThirdDesignCanvasBack imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} productData={productData} chosenSide={chosenSide} />
+                <ThirdDesignCanvasBack imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} chosenSide={chosenSide} />
                 </>
             }
         </div>

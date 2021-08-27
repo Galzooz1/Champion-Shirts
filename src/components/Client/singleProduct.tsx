@@ -77,7 +77,7 @@ margin:8px;
 `;
 
 const SingleProduct: React.FC<SingleProductProps> = (props) => {
-    const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<Partial<IReadyproducts>>({ mode: 'all' });
+    const { register, handleSubmit, formState: { errors, isValid }, setValue } = useForm<IReadyproducts>({ mode: 'all' });
     let history = useHistory();
     let dispatch = useDispatch();
     let carts_ar = useSelector<RootStateOrAny, any[]>(myStore => myStore.carts_ar);
@@ -89,7 +89,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     let [isAddToWish, setIsAddToWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let [productData, setProductData] = React.useState<Partial<IProdItems>>({});
-    let [propertiesData, setPropertiesData] = React.useState<Partial<Property>>({});
+    let [propertiesData, setPropertiesData] = React.useState<any[]>([]);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
 
     React.useEffect(() => {
@@ -141,27 +141,40 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
             setIsAddToCart(false);
         }
         else if (isAddToWish) {
-            if(!isWish){
-                setCountWishItems(countWishItems + 1);
-                data.count = countWishItems + 1;
-                dispatch({type:"UPDATE_IS_WISH", flag: true})
-                dispatch({ type: "UPDATE_THE_WISH", data: data })
-                console.log("data2: ", data);
-                toast.success(productData.name + " Added to Wish!")
-                setIsAddToWish(false);
-            }else{
-                toast.error(productData.name + " is Already On Wish List!")
-            }
+            // if(!isWish){
+            setCountWishItems(countWishItems + 1);
+            data.count = countWishItems + 1;
+            dispatch({ type: "UPDATE_IS_WISH", flag: true })
+            dispatch({ type: "UPDATE_THE_WISH", data: data })
+            console.log("data2: ", data);
+            toast.success(productData.name + " Added to Wish!")
+            setIsAddToWish(false);
+            // }else{
+            //     toast.error(productData.name + " is Already On Wish List!")
+            // }
         }
     }
 
     const setValuesFunc = (i: any) => {
+        console.log(propertiesData[i])
         setValue("isClean", false);
-        setValue("price", productData.price);
-        setValue("product_name", productData.name);
-        setValue("product_s_id", productData.s_id);
-        setValue("category_name", productData.catName);
-        setValue("category_s_id", productData.category_s_id);
+        setValue("price", productData?.price!);
+        setValue("product_name", productData?.name!);
+        setValue("product_s_id", productData?.s_id!);
+        setValue("category_name", productData?.catName!);
+        setValue("category_s_id", productData?.category_s_id!);
+        // Front
+        setValue("images.frontImage.image", propertiesData[i].frontImg);
+        setValue("images.frontImage.width", 0)
+        setValue("images.frontImage.height", 0)
+        setValue("images.frontImage.x", 0)
+        setValue("images.frontImage.y", 0)
+        // Back
+        setValue("images.backImage.image", propertiesData[i]?.backImg!);
+        setValue("images.backImage.width", 0)
+        setValue("images.backImage.height", 0)
+        setValue("images.backImage.x", 0)
+        setValue("images.backImage.y", 0)
         setIndexPicked(i);
     }
 
@@ -290,7 +303,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                         :
                                         <img className="border rounded-2 shadow mb-4" src={URL_API + productData?.image + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
                                     }
-                                    
+
                                     {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
                                     {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
                                 </Slider>

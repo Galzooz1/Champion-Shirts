@@ -205,9 +205,9 @@ const Header: React.FC<HeaderProps> = () => {
                                     {searchIcon()}
                                 </motion.div>
                             }
-                            <div>
+                            {/* <div>
                                 <MoonSVG fill="black" stroke="red" width="100" height="100" />
-                            </div>
+                            </div> */}
                             <motion.div whileHover={{ scale: 1.1 }} className="mx-2 d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
                                 {(carts_ar.length > 0) ?
                                     <h3 className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer" }} onClick={() => { toggleCart() }}>
@@ -238,7 +238,9 @@ const Header: React.FC<HeaderProps> = () => {
                                                 return (
                                                     <>
                                                         <tbody className="d-flex justify-content-between">
-                                                            <Dropdown.Item disabled>
+                                                            <Dropdown.Item onClick={() => {
+                                                                history.push("/selfdesigns/" + userInfo?._id);
+                                                            }}>
                                                                 <div className="d-flex justify-content-between align-items-center">
                                                                     <div style={{ fontSize: "1.2em" }} className="fw-bold text-dark me-3">
                                                                         {item.product_name}
@@ -246,7 +248,7 @@ const Header: React.FC<HeaderProps> = () => {
                                                                     <button data-tip={`${item.color}`} disabled style={{ backgroundColor: `${item.color}`, width: "20px", height: "20px" }} className="border rounded-circle shadow mt-1">
                                                                     </button>
                                                                     <div className="mx-4 text-dark fw-bold">{item.size}</div>
-                                                                    <div className="fw-bold text-dark">{item.price.toFixed(2)}$</div>
+                                                                    <div className="fw-bold text-dark">{item?.price?.toFixed(2)}$</div>
                                                                     {/* <img src={item.images.frontImage.image} alt={item.product_name} width="20" /> */}
                                                                 </div>
                                                             </Dropdown.Item>
@@ -383,7 +385,7 @@ const cartIcon = () => {
     )
 }
 
-const heartIcon = () => {
+export const heartIcon = () => {
     return (
         <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="red" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181" /></svg>
     )

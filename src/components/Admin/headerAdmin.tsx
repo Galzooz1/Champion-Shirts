@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { useHistory } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { toast } from 'react-toastify';
 import NavBar from '../../assets/menubaradmin.png';
 
@@ -28,9 +28,10 @@ const HeaderAdmin: React.FC<HeaderAdminProps> = ({ showHideNav }) => {
             <h2 className="text-center">Admin Panel</h2>
           </div>
           <div className="col-lg-3 me-5">
+          <Link to="/home" className="btn btn-success me-4">Home</Link>
             {localStorage["token"] ?
               <React.Fragment>
-                <motion.button whileHover={{scale: 1.1}} onClick={logOut} className="btn btn-danger">Log out</motion.button>
+                <motion.button whileHover={{ scale: 1.1 }} onClick={logOut} className="btn btn-danger">Log out</motion.button>
               </React.Fragment>
               : ""
             }

@@ -32,12 +32,14 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                 return (
                     <fieldset name={fieldName} key={fieldName}>
                         <div className="mb-3">
-                            <div>
-                                <LabelContainer className="text-warning">Front</LabelContainer>
+                            {/* <div>
+                                <LabelContainer className="text-warning">Front Image</LabelContainer>
                                 <InputContainer>
                                     <input {...register(`properties[${index}].frontImg`, { required: false })} type="text" name={`properties[${index}].direction`} id={`properties[${index}].direction`} className="form-control" />
                                 </InputContainer>
-                            </div>
+                            </div> */}
+                            <LabelContainer className="text-warning">Front Image</LabelContainer>
+                            <br/>
                             <LabelContainer style={{ textDecoration: 'underline' }}>Size Of Canvas</LabelContainer>
                             <div className="d-flex">
                                 <div>
@@ -53,7 +55,7 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                                     </InputContainer>
                                 </div>
                             </div>
-                                <LabelContainer style={{ textDecoration: 'underline' }}>Position Of Canvas</LabelContainer>
+                            <LabelContainer style={{ textDecoration: 'underline' }}>Position Of Canvas</LabelContainer>
                             <div className="d-flex">
                                 <div>
                                     <LabelContainer className="text-warning">X</LabelContainer>
@@ -69,14 +71,16 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                                 </div>
                             </div>
                         </div>
-                        <hr className="bg-light"/>
+                        <hr className="bg-light" />
                         <div className="mb-3">
-                            <div>
-                                <LabelContainer className="text-warning">Back</LabelContainer>
+                            {/* <div>
+                                <LabelContainer className="text-warning">Back Image</LabelContainer>
                                 <InputContainer>
                                     <input {...register(`properties[${index}].backImg`, { required: false })} type="text" name={`properties[${index}].direction`} id={`properties[${index}].direction`} className="form-control" />
                                 </InputContainer>
-                            </div>
+                            </div> */}
+                                <LabelContainer className="text-warning">Back Image</LabelContainer>
+                                <br/>
                             <LabelContainer style={{ textDecoration: 'underline' }}>Size Of Canvas</LabelContainer>
                             <div className="d-flex">
                                 <div>
@@ -93,21 +97,21 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                                 </div>
                             </div>
 
-                                <LabelContainer style={{ textDecoration: 'underline' }}>Position Of Canvas</LabelContainer>
-                                <div className="d-flex">
-                                    <div>
-                                        <LabelContainer className="text-warning">X</LabelContainer>
-                                        <InputContainer>
-                                            <input {...register(`properties[${index}].positionOfCanvasBack.x`, { required: false })} type="number" min="0" name={`properties[${index}].positionOfCanvas.x`} id={`properties[${index}].positionOfCanvas.x`} className="form-control" />
-                                        </InputContainer>
-                                    </div>
-                                    <div>
-                                        <LabelContainer className="text-warning">Y</LabelContainer>
-                                        <InputContainer>
-                                            <input {...register(`properties[${index}].positionOfCanvasBack.y`, { required: false })} type="number" min="0" name={`properties[${index}].positionOfCanvas.y`} id={`properties[${index}].positionOfCanvas.y`} className="form-control" />
-                                        </InputContainer>
-                                    </div>
+                            <LabelContainer style={{ textDecoration: 'underline' }}>Position Of Canvas</LabelContainer>
+                            <div className="d-flex">
+                                <div>
+                                    <LabelContainer className="text-warning">X</LabelContainer>
+                                    <InputContainer>
+                                        <input {...register(`properties[${index}].positionOfCanvasBack.x`, { required: false })} type="number" min="0" name={`properties[${index}].positionOfCanvas.x`} id={`properties[${index}].positionOfCanvas.x`} className="form-control" />
+                                    </InputContainer>
                                 </div>
+                                <div>
+                                    <LabelContainer className="text-warning">Y</LabelContainer>
+                                    <InputContainer>
+                                        <input {...register(`properties[${index}].positionOfCanvasBack.y`, { required: false })} type="number" min="0" name={`properties[${index}].positionOfCanvas.y`} id={`properties[${index}].positionOfCanvas.y`} className="form-control" />
+                                    </InputContainer>
+                                </div>
+                            </div>
                         </div>
                         <button type="button" className="btn btn-danger" onClick={removeDirection(index)}>
                             Remove
@@ -115,7 +119,7 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                     </fieldset>
                 )
             })}
-            <button disabled={disable} type="button" className="btn btn-warning" onClick={() => {addDirection(); setDisable(true)}}>
+            <button disabled={disable} type="button" className="btn btn-warning" onClick={() => { addDirection(); setDisable(true) }}>
                 Add Directions
             </button>
         </div>

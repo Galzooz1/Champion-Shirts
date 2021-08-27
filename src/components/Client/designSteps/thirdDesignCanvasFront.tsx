@@ -9,13 +9,12 @@ import ThirdDesignCanvasImage from './thirdDesignCanvasImage';
 
 interface ThirdDesignCanvasFrontProps {
     readyProductData: Partial<IReadyproducts>;
-    chosenSide: string;
-    productData: Partial<IProdItems>;
+    chosenSide?: string;
     imagesDesignsAr: Partial<INewImagesDesign[]>;
     imagesCostumesAr: Partial<INewImagesDesign[]>;
 };
 
-const ThirdDesignCanvasFront: React.FC<ThirdDesignCanvasFrontProps> = ({ imagesCostumesAr, imagesDesignsAr, readyProductData, chosenSide, productData }) => {
+const ThirdDesignCanvasFront: React.FC<ThirdDesignCanvasFrontProps> = ({ imagesCostumesAr, imagesDesignsAr, readyProductData, chosenSide }) => {
 
     // React.useEffect( () => { 
     //     // const interval = setInterval(() => {

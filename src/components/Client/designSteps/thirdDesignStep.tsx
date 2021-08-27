@@ -41,7 +41,7 @@ const ThirdDesignStep: React.FC<ThirdDesignStepProps> = ({ setIsAddToWish ,setIs
                 </div>
             </div>
             <div className="col-lg-6">
-                <ThirdDesignCanvas readyProductData={readyProductData} productData={productData} chosenSide={chosenSide} />
+                <ThirdDesignCanvas readyProductData={readyProductData} chosenSide={chosenSide} />
             </div>
         </div>
     )

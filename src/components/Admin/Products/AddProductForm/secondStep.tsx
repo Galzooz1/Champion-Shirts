@@ -1,5 +1,8 @@
+import axios from 'axios';
 import React from 'react';
+import { toast } from 'react-toastify';
 import { InputContainer, LabelContainer } from '../../../Client/LoginModal/InputWithIcon';
+import { URL_API } from '../../../services/apiService';
 
 interface SecondStepProps {
     errors: any;
@@ -9,6 +12,13 @@ interface SecondStepProps {
 const SecondStep: React.FC<SecondStepProps> = ({ errors, register }) => {
     const [indexes, setIndexes] = React.useState<any[]>([]);
     const [counter, setCounter] = React.useState<number>(0);
+    let fileRef = React.useRef<any>();
+
+    const uploadFile = async () => {
+        console.log(fileRef.current.files[0]);
+        const myData = new FormData();
+        myData.append("fileSend", fileRef.current.files[0]);
+    }
 
     const addColor = () => {
         setIndexes(prevIndexes => [...prevIndexes, counter]);
@@ -31,19 +41,37 @@ const SecondStep: React.FC<SecondStepProps> = ({ errors, register }) => {
                 return (
                     <fieldset name={fieldName} key={fieldName}>
                         <div className="mb-3">
-                            <LabelContainer className="text-warning">Color {index+1}</LabelContainer>
+                            <LabelContainer className="text-warning">Color {index + 1}</LabelContainer>
                             <InputContainer>
                                 {/* {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>} */}
                                 <input {...register(`properties[${index}].color`, { required: false })} type="text" name={`properties[${index}].color`} id="properties.color" className="form-control" />
                             </InputContainer>
-                            <LabelContainer style={{textDecoration:'underline'}}>Amount Of</LabelContainer>
+                            <div className="mb-3">
+                                <LabelContainer className="text-warning">Front Image {index + 1}</LabelContainer>
+                                <InputContainer>
+                                    <input onChange={uploadFile} ref={fileRef} type="file" ng-multiple="allowMultiple" accept="image/*" style={{ display: "block" }} />
+
+                                            <input {...register(`properties[${index}].frontImg`, { required: false })} type="text" name={`properties[${index}].frontImg`} id="properties.frontImg" className="form-control" />
+
+                                </InputContainer>
+                            </div>
+                            <div className="mb-3">
+                                <LabelContainer className="text-warning">Back Image {index + 1}</LabelContainer>
+                                <InputContainer>
+                                    <input onChange={uploadFile} ref={fileRef} type="file" ng-multiple="allowMultiple" accept="image/*" style={{ display: "block" }} />
+
+                                    <input {...register(`properties[${index}].frontImg`, { required: false })} type="text" name={`properties[${index}].frontImg`} id="properties.frontImg" className="form-control" />
+
+                                </InputContainer>
+                            </div>
+                            <LabelContainer style={{ textDecoration: 'underline' }}>Amount Of</LabelContainer>
                             <div className="d-flex">
-                                   <div>
+                                <div>
                                     <LabelContainer className="text-warning">XS</LabelContainer>
                                     <InputContainer>
                                         <input {...register(`properties[${index}].amount.XS`, { required: false })} type="number" min="0" name={`properties[${index}].amount.XS`} id={`properties[${index}].amount.XS`} className="form-control" />
                                     </InputContainer>
-                                   </div>
+                                </div>
                                 <div>
                                     <LabelContainer className="text-warning">S</LabelContainer>
                                     <InputContainer>

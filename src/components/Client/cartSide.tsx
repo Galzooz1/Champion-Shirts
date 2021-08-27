@@ -53,7 +53,11 @@ const CartSide: React.FC<CartSideProps> = () => {
               if (item.count > 0) {
                 total += item.price;
                 return (
-                  <CartItem key={item._id} item={item} />
+                  <>
+                  {item!.isCart &&
+                    <CartItem key={item._id} item={item} />
+                  }
+                    </>
                 )
               }
             })}

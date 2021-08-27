@@ -54,6 +54,8 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     let [propertiesData, setPropertiesData] = React.useState<Property[]>([]);
     let [countCartItems, setCountCartItems] = React.useState<number>(0);
     let [countWishItems, setCountWishItems] = React.useState<number>(0);
+    let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
+    let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
     let [formStep, setFormStep] = React.useState<number>(0);
     let [isLoading, setIsLoading] = React.useState<boolean>(true);
     // let [isAddToCart, setIsAddToCart] = React.useState<boolean>(false);
@@ -118,6 +120,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
         console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
         console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        console.log("ADDTOPRODUCT=DesignClicked ", isDesignClicked);
         if (isFirstContinue) {
             isAddToCart = false;
             isAddToWish = false;
@@ -129,10 +132,17 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
             isAddToCart = false;
             isAddToWish = false;
         }
+        if(isDesignClicked){
+            isFirstContinue = true;
+            isAddToCart = false;
+            isAddToWish = false
+            setIsDesignClicked(false);
+        }
         console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
         console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
         console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
         console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        console.log("ADDTOPRODUCT=DesignClicked ", isDesignClicked);
         if (isFirstContinue && !isAddToCart && !isAddToWish) {
             let url = URL_API + "/readyProducts"
             let data = await doApiMethod(url, "POST", dataBody);
@@ -183,6 +193,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
         console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
         console.log("ADDTOPRODUCT=backFlag ", backFlag)
+        console.log("ADDTOPRODUCT=DesignClicked ", isDesignClicked);
         // isAddToCart = true;
         // if (isFormStepThree && isAddToCart) {
         //     isFormStepThree = false;
@@ -383,7 +394,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                         )}
                         {formStep >= 1 && (
                             <section className={formStep === 1 ? "d-block" : "d-none"}>
-                                <SecondStepApp unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
+                                <SecondStepApp backFlag={backFlag} isDesignClicked={isDesignClicked} setIsDesignClicked={setIsDesignClicked} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
                                     <button onClick={() => {localStorage["token"] && nextFormStep(); }} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
@@ -394,8 +405,8 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                             <section className={formStep === 2 ? "d-block" : "d-none"}>
                                 <ThirdDesignStep isWish={isWish} isCart={isCart} setIsWish={setIsWish} setIsCart={setIsCart} productData={productData} chosenSide={chosenSide} readyProductData={readyProductData} />
                                 <div className="d-flex">
-                                    <button type="submit" onClick={() => {isAddToCart = true; isAddToWish = false; console.log("onClickAddToCart ", isAddToCart, isAddToWish)}} className="btn btn-info me-4">Add to Cart</button>
-                                    <button type="submit" onClick={() => {isAddToCart = false; isAddToWish = true; console.log("onClickAddToWish ", isAddToWish, isAddToCart)}} className="btn btn-danger">Add to Wish</button>
+                                    <button type="submit" onClick={() => {setValue("isCart", true);isAddToCart = true; isAddToWish = false; console.log("onClickAddToCart ", isAddToCart, isAddToWish)}} className="btn btn-info me-4">Add to Cart</button>
+                                    <button type="submit" onClick={() => {setValue("isWish", true);isAddToCart = false; isAddToWish = true; console.log("onClickAddToWish ", isAddToWish, isAddToCart)}} className="btn btn-danger">Add to Wish</button>
                                 </div>
                                 <div className="d-flex justify-content-center align-items-end m-3">
                                     <button type="button" onClick={() => { backFlag = true; isFirstContinue = false; isAddToCart = false; isAddToWish = false; backFormStep(); }} className="btn btn-outline-danger mx-4">Back</button>
