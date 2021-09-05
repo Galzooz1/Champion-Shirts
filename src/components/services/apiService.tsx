@@ -1,4 +1,5 @@
-let myApi:string = "http://localhost:3005";
+// let myApi:string = "http://localhost:3005";
+let myApi:string = "https://final-project-designs-shop.herokuapp.com";
 
 export const URL_API = myApi;
 
