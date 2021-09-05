@@ -4,6 +4,7 @@ import { IDesigns } from '../../Admin/interfaces/designs';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import DesignsPng from '../../../assets/designs.png';
 import UploadsPng from '../../../assets/upload.png';
+import PremiumPng from '../../../assets/diamond.png';
 import { URL_API } from '../../services/apiService';
 import { IDesignsArr } from './secondStepApp';
 
@@ -14,6 +15,7 @@ interface SecondStepPanelProps {
     setSelectedFiles?: any;
     selectedFiles: any[];
     handleFileClicked: (_image: any) => void;
+    premuimExtraPrice:(_price: number, _clicks: number) => void;
 };
 
 const RightSideDiv = styled.div`
@@ -108,16 +110,15 @@ align-items: center;
 height: 60px;
 `;
 
-const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ setSelectedFiles, selectedFiles, productData, designsData, handleDesignClicked, handleFileClicked }) => {
+const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,setSelectedFiles, selectedFiles, productData, designsData, handleDesignClicked, handleFileClicked }) => {
     let [chooseMethod, setChooseMethod] = React.useState<number>(0);
     let [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false);
-    let [files, setFiles] = React.useState<any[]>([]);
+    let [premiumClicks, setPremiumClicks] = React.useState<number>(0);
     const fileRef = React.useRef<any>(null);
     const UploadedImageRef = React.useRef<any>(null);
     // const [ selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
 
     React.useEffect(() => {
-        console.log(files);
         console.log(UploadedImageRef);
 
     }, [selectedFiles]);
@@ -170,7 +171,11 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ setSelectedFiles, sel
             <div style={{ display: "hidden" }} className="d-flex flex-wrap">
                 <RightSideDiv>
                     <MethodsDiv>
-                        <div style={{cursor:"pointer"}} onClick={() => { setChooseMethod(0) }} className="designs my-2 p-3 shadow">
+                        <div style={{ cursor: "pointer" }} onClick={() => { setChooseMethod(1) }} className="premuim my-2 p-3 shadow">
+                            <img src={PremiumPng} alt="premium" width="50" />
+                            <h4 className="mt-2 w-100" style={{ fontSize: "28px" }}>Premium (5$)</h4>
+                        </div>
+                        <div style={{ cursor: "pointer" }} onClick={() => { setChooseMethod(0) }} className="designs my-2 p-3 shadow">
                             <img src={DesignsPng} alt="designs" width="50" />
                             <h4 className="mt-2 w-100" style={{ fontSize: "28px" }}>Designs</h4>
                         </div>
@@ -178,7 +183,7 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ setSelectedFiles, sel
                             <img src={DesignsPng} alt="upload" width="50" />
                             <h4 className="mt-2 w-100" style={{ fontSize: "28px" }}>Upload</h4>
                         </div> */}
-                        <div style={{cursor:"pointer"}} onClick={() => { setChooseMethod(2) }} className="upload p-3 shadow">
+                        <div style={{ cursor: "pointer" }} onClick={() => { setChooseMethod(2) }} className="upload p-3 shadow">
                             <img src={UploadsPng} alt="upload" width="50" />
                             <h4 className="mt-2 w-100" style={{ fontSize: "28px" }}>Uploads</h4>
                         </div>
@@ -189,19 +194,45 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ setSelectedFiles, sel
                     <ArrowDiv>
                         <i className="fa fa-angle-up fa-5x" aria-hidden="true"></i>
                     </ArrowDiv>
+                    {chooseMethod === 1 &&
+                        <>
+                            <DesignsDiv>
+                                {designsData.map((item, i) => {
+                                    return (
+                                        <>
+                                            {item!.price > 0 &&
+                                                <DesignBox key={i} onClick={() => {setPremiumClicks(++premiumClicks);handleDesignClicked(item?.image, item?.height, item?.width, item?.name, item?.s_id); premuimExtraPrice(item!.price, premiumClicks)}}>
+                                                    {item?.image?.includes("http") ?
+                                                        <img src={item?.image} alt={item?.name} width="100" height="100" />
+                                                        :
+                                                        <img src={URL_API + item?.image + "?" + Date.now()} height="100" width="100" alt={item?.name} />
+                                                    }
+                                                </DesignBox>
+                                            }
+                                        </>
+                                    )
+                                })}
+                            </DesignsDiv>
+                        </>
+                    }
                     {chooseMethod === 0 &&
                         <>
                             <DesignsDiv>
                                 {designsData.map((item, i) => {
                                     return (
-                                        <DesignBox key={i} onClick={() => handleDesignClicked(item?.image, item?.height, item?.width, item?.name, item?.s_id)}>
-                                            {item?.image?.includes("http") ?
-                                                <img src={item?.image} alt={item?.name} width="100" height="100" />
-                                                :
-                                                <img src={URL_API + item?.image + "?" + Date.now()} height="100" width="100" alt={item?.name} />
+                                        <>
+                                            {
+                                                item!.price === 0 || item?.price === null &&
+                                                <DesignBox key={i} onClick={() => handleDesignClicked(item?.image, item?.height, item?.width, item?.name, item?.s_id)}>
+                                                    {item?.image?.includes("http") ?
+                                                        <img src={item?.image} alt={item?.name} width="100" height="100" />
+                                                        :
+                                                        <img src={URL_API + item?.image + "?" + Date.now()} height="100" width="100" alt={item?.name} />
+                                                    }
+                                                    {/* <img src={item?.image} alt="design" width="100" height="100" /> */}
+                                                </DesignBox>
                                             }
-                                            {/* <img src={item?.image} alt="design" width="100" height="100" /> */}
-                                        </DesignBox>
+                                        </>
                                     )
                                 })}
                             </DesignsDiv>

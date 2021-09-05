@@ -6,9 +6,11 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { ICategories } from '../Admin/interfaces/categoriesArgs';
 import { doApiGet, URL_API } from '../services/apiService';
+import Footer from './footer';
 import Header from './header';
 import Loading from './loading';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
+import { DesignedH2, DesignedLine } from './userPanel';
 
 interface CategoriesProps {
 
@@ -23,7 +25,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 margin:16px;
-border-radius: 20px;
+padding:4px;
+/* border-radius: 20px; */
 /* border:2px solid purple; */
 color:white;
 cursor:pointer;
@@ -31,7 +34,7 @@ cursor:pointer;
 `;
 
 const categoriesImgs = [
-    "/images/underShirt.png",
+    "/images/underShirt.jpg",
     "/images/Vshirt.png",
     "/images/buttoned.png",
     "/images/hoodies.png",
@@ -60,7 +63,8 @@ const Categories: React.FC<CategoriesProps> = () => {
                 <Header />
                 : null
             }
-            <div className="container mt-5">
+            <div className="container-fluid mt-5 p-5">
+                <div className="w-75 mx-auto">
                 {location.pathname === "/" || location.pathname === "/home" ?
                     null
                     :
@@ -69,36 +73,40 @@ const Categories: React.FC<CategoriesProps> = () => {
                         <Breadcrumb.Item active>Categories</Breadcrumb.Item>
                     </Breadcrumb>
                 }
-                <HR />
-                <H2HR>
-                    <SpanH2>
-                        Categories
-                    </SpanH2>
-                </H2HR>
-                {catList.length === 0 &&
-                    <Loading />}
-                <div className="col-12 d-flex justify-content-around align-items-center flex-wrap">
-                    {catList.map((item, i) => {
-                        return (
-                            <>
-                                <ImgDiv className="shadow" onClick={() => { history.push("/categories/single/" + item.s_id) }} transition={{ duration: 0.5 }} whileHover={{ scale: 1.03 }} style={{ backgroundImage: `url(${categoriesImgs[i]})` }}>
+                <DesignedH2>Categories</DesignedH2>
+                <DesignedLine></DesignedLine>
+                </div>
+                <div className="container">
 
-                                    {i % 2 === 0 ?
-                                        <h4 className="text-dark">
-                                            {item.name}
-                                        </h4>
-                                        :
-                                        <h4>
-                                            {item.name}
-                                        </h4>
-                                    }
-                                </ImgDiv>
-                            </>
-                        )
-                    })}
+                    {catList.length === 0 &&
+                        <Loading />}
+                    <div className="col-12 d-flex justify-content-around align-items-center flex-wrap mb-5">
+                        {catList.map((item, i) => {
+                            return (
+                                <>
+                                    <ImgDiv className="shadow" onClick={() => { history.push("/categories/single/" + item.s_id) }} transition={{ duration: 0.5 }} whileHover={{ scale: 1.03 }} style={{ backgroundImage: `url(${categoriesImgs[i]})` }}>
+                                        {i % 2 === 0 ?
+                                            <h4 className="text-dark">
+                                                {item.name}
+                                            </h4>
+                                            :
+                                            <h4>
+                                                {item.name}
+                                            </h4>
+                                        }
+                                    </ImgDiv>
+                                </>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
             <ReactTooltip />
+            {location.pathname === "/categories" || location.pathname === "/categories/"
+                ?
+                <Footer />
+                : null
+            }
         </>
     )
 }

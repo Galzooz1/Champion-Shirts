@@ -9,6 +9,7 @@ import Header from './header';
 import Loading from './loading';
 import { WrapperDiv } from './singleCategory';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
+import Footer from './footer';
 
 interface SearchPageProps {
 location?: any;
@@ -137,6 +138,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                     })}
                 </div>
             </div>
+            <Footer />
         </>
     )
 }

@@ -1,8 +1,10 @@
+import { relative } from 'path';
 import React from 'react';
 import { Layer, Stage } from 'react-konva';
 import styled from 'styled-components';
 import { IDesigns } from '../../Admin/interfaces/designs';
 import { IProdItems, Property } from '../../Admin/interfaces/prodItems';
+import { URL_API } from '../../services/apiService';
 // import { IDesignsArr } from './secondStepApp';
 import SecondStepImage from './secondStepImage';
 
@@ -25,10 +27,11 @@ interface SecondStepWorkspaceProps {
     reset?: any;
     unregister?: any;
     backFlag?: boolean;
+    premuimExtraPrice: (_price: number, _clicks: number) => void;
 };
 
 export const MainImgDiv = styled.div`
-border: 1px solid red;
+/* border: 1px solid red; */
 background-position:center top;
 background-size:cover;
 width: 500px;
@@ -48,25 +51,27 @@ width:100%;
 height:100%;
 `;
 
-const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unregister, reset, chosenSide, setValue, errors, register, isImageFileClicked, filesAr, setFilesAr, designsAr, setDesignAr, productData, propertiesData, indexPicked, designsData, isDesignClicked }) => {
+const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraPrice, backFlag, unregister, reset, chosenSide, setValue, errors, register, isImageFileClicked, filesAr, setFilesAr, designsAr, setDesignAr, productData, propertiesData, indexPicked, designsData, isDesignClicked }) => {
     let [isFrontMain, setIsFrontMain] = React.useState<boolean>();
     let stageRef = React.useRef<any>();
     let [bothSidesStep, setBothSidesStep] = React.useState<number>(1);
     const [selectedDesign, setSelectDesign] = React.useState<any>();
+    let [premiumClicks, setPremiumClicks] = React.useState<number>(0);
+
 
     React.useEffect(() => {
-                // Front
-                setValue("images.frontImage.image", propertiesData[indexPicked]?.frontImg);
-                setValue("images.frontImage.width", propertiesData[indexPicked]?.sizeOfCanvasFront.width)
-                setValue("images.frontImage.height", propertiesData[indexPicked]?.sizeOfCanvasFront.height)
-                setValue("images.frontImage.x", propertiesData[indexPicked]?.positionOfCanvasFront.x)
-                setValue("images.frontImage.y", propertiesData[indexPicked]?.positionOfCanvasFront.y)
-                // Back
-                setValue("images.backImage.image", propertiesData[indexPicked]?.backImg);
-                setValue("images.backImage.width", propertiesData[indexPicked]?.sizeOfCanvasBack.width)
-                setValue("images.backImage.height", propertiesData[indexPicked]?.sizeOfCanvasBack.height)
-                setValue("images.backImage.x", propertiesData[indexPicked]?.positionOfCanvasBack.x)
-                setValue("images.backImage.y", propertiesData[indexPicked]?.positionOfCanvasBack.y)
+        // Front
+        setValue("images.frontImage.image", propertiesData[indexPicked]?.frontImg);
+        setValue("images.frontImage.width", propertiesData[indexPicked]?.sizeOfCanvasFront.width)
+        setValue("images.frontImage.height", propertiesData[indexPicked]?.sizeOfCanvasFront.height)
+        setValue("images.frontImage.x", propertiesData[indexPicked]?.positionOfCanvasFront.x)
+        setValue("images.frontImage.y", propertiesData[indexPicked]?.positionOfCanvasFront.y)
+        // Back
+        setValue("images.backImage.image", propertiesData[indexPicked]?.backImg);
+        setValue("images.backImage.width", propertiesData[indexPicked]?.sizeOfCanvasBack.width)
+        setValue("images.backImage.height", propertiesData[indexPicked]?.sizeOfCanvasBack.height)
+        setValue("images.backImage.x", propertiesData[indexPicked]?.positionOfCanvasBack.x)
+        setValue("images.backImage.y", propertiesData[indexPicked]?.positionOfCanvasBack.y)
         if (chosenSide != "back") {
             setIsFrontMain(true);
         } else {
@@ -181,27 +186,59 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
         setBothSidesStep(2);
     }
 
-    // const setValuesAndContinue = () => {
-    //     setValue("")
-    // }
+    const premuimExtraPriceFunc = () => {
+        setPremiumClicks(++premiumClicks);
+        // alert(premiumClicks)
+        premuimExtraPrice(-5, premiumClicks);
+    }
 
-    // const renderRegisterForm = () => {
-    //     console.log("work")
-    // }
     return (
         <>
             <div className="d-flex justify-content-center">
-                <MainImgDiv id="mainImgDiv" style={{ backgroundImage: isFrontMain ? `url(${propertiesData[indexPicked]?.frontImg})` : `url(${propertiesData[indexPicked]?.backImg})` }}>
+                <MainImgDiv id="mainImgDiv" style={{
+                    backgroundImage: isFrontMain ?
+                        propertiesData[indexPicked]?.frontImg.includes("http") ?
+                            `url(${propertiesData[indexPicked]?.frontImg})`
+                            :
+                            `url(${URL_API + propertiesData[indexPicked]?.frontImg + "?"})`
+                        :
+                        propertiesData[indexPicked]?.backImg.includes("http") ?
+                            `url(${propertiesData[indexPicked]?.backImg})`
+                            :
+                            `url(${URL_API + propertiesData[indexPicked]?.backImg + "?"})`
+                }}>
                     <div className="d-flex justify-content-center">
                         <Stage
-                            style={{ border: "1px solid black" }}
-                            width={propertiesData[indexPicked]?.sizeOfCanvasFront.width}
-                            height={propertiesData[indexPicked]?.sizeOfCanvasFront.height}
+                            style={{ border: "1px solid black", position:"relative", left: isFrontMain ? 
+                            propertiesData[indexPicked]?.positionOfCanvasFront.x
+                            :
+                            propertiesData[indexPicked]?.positionOfCanvasBack.x,
+                            top: isFrontMain ?
+                            propertiesData[indexPicked]?.positionOfCanvasFront.y
+                            :
+                            propertiesData[indexPicked]?.positionOfCanvasBack.y
+                            }}
+                            // width={propertiesData[indexPicked]?.sizeOfCanvasFront.width}
+                            width={
+                                isFrontMain ?
+                                propertiesData[indexPicked]?.sizeOfCanvasFront.width
+                                :
+                                propertiesData[indexPicked]?.sizeOfCanvasBack.width
+                            }
+                            height={
+                                isFrontMain ?
+                                propertiesData[indexPicked]?.sizeOfCanvasFront.height
+                                :
+                                propertiesData[indexPicked]?.sizeOfCanvasBack.height
+                            }
+                            // height={propertiesData[indexPicked]?.sizeOfCanvasFront.height}
+
                             onMouseDown={checkDeselect}
                             onTouchStart={checkDeselect}
                             ref={stageRef}
                         >
-                            <Layer>
+                            <Layer
+                            >
                                 {(isDesignClicked || backFlag) ?
                                     <>
                                         {designsAr.map((item: any, key: any) => {
@@ -210,6 +247,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                                 <>
                                                     <SecondStepImage
                                                         key={key}
+                                                        premuimExtraPriceFunc={premuimExtraPriceFunc}
                                                         designProps={item}
                                                         isSelected={key === selectedDesign}
                                                         onSelect={() => {
@@ -230,13 +268,13 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                                     {chosenSide === "front" || chosenSide === "both" &&
                                                         <>
                                                             <input {...register(`shirtDesigns.front.${key}.design.is_design`, { required: true })} className="d-none" id="id_design" />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.design_s_id`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.designImage`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.width`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.height`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.x`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.y`, { required: true })} className="d-none"  />
-                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.rotation`, { required: true })} className="d-none"  />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.design_s_id`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.designImage`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.width`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.sizeOfDesign.height`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.x`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.y`, { required: true })} className="d-none" />
+                                                            <input {...register(`shirtDesigns.front.${key}.design.positionOfDesign.rotation`, { required: true })} className="d-none" />
                                                         </>
                                                     }
                                                     {chosenSide === "back" || chosenSide === "both" &&
@@ -256,7 +294,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                         })}
                                     </>
                                     : null}
-                                {isImageFileClicked ?
+                                {(isImageFileClicked || backFlag) ?
                                     <>
                                         {filesAr.map((item: any, i: any) => {
                                             let isCostume: boolean | undefined = true;
@@ -265,6 +303,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                                     <SecondStepImage
                                                         key={i + 100}
                                                         designProps={item}
+                                                        premuimExtraPriceFunc={premuimExtraPriceFunc}
                                                         isSelected={i + 100 === selectedDesign}
                                                         onSelect={() => {
                                                             setSelectDesign(i + 100)
@@ -318,6 +357,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                                     <>
                                                         <SecondStepImage
                                                             key={key}
+                                                            premuimExtraPriceFunc={premuimExtraPriceFunc}
                                                             designProps={item}
                                                             isSelected={key === selectedDesign}
                                                             onSelect={() => {
@@ -347,6 +387,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                                                     <React.Fragment key={i + 100}>
                                                         <SecondStepImage
                                                             key={i + 100}
+                                                            premuimExtraPriceFunc={premuimExtraPriceFunc}
                                                             designProps={item}
                                                             isSelected={i + 100 === selectedDesign}
                                                             onSelect={() => {
@@ -374,7 +415,17 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ backFlag ,unr
                     </div>
                 </MainImgDiv>
                 <SecondImgDiv /*onClick={chosenSide === "both" ? changeMainImg : () => null}*/>
-                    <SecondImgImg src={isFrontMain ? propertiesData[indexPicked]?.backImg : propertiesData[indexPicked]?.frontImg} alt={propertiesData[indexPicked]?._id} />
+                    <SecondImgImg src={isFrontMain ?
+                        propertiesData[indexPicked]?.backImg.includes("http") ?
+                            propertiesData[indexPicked]?.backImg
+                            :
+                            URL_API + propertiesData[indexPicked]?.backImg
+                        :
+                        propertiesData[indexPicked]?.frontImg.includes("http") ?
+                            propertiesData[indexPicked]?.frontImg
+                            :
+                            URL_API + propertiesData[indexPicked]?.frontImg
+                    } alt={propertiesData[indexPicked]?._id} />
                 </SecondImgDiv>
             </div>
             <div className="d-flex justify-content-center align-items-center">

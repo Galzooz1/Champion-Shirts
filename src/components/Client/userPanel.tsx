@@ -12,6 +12,7 @@ import { IUsers } from '../Admin/interfaces/users';
 import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Footer from './footer';
 
 
 interface UserPanelParams {
@@ -20,7 +21,7 @@ interface UserPanelParams {
 
 type UserPanelProps = RouteComponentProps<UserPanelParams>
 
-export const DesignedH1 = styled.h1`
+export const DesignedH2 = styled.h2`
 text-align: start;
 margin-left: 40px;
 margin-top:26px;
@@ -124,7 +125,7 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                     <Breadcrumb.Item active>User Panel</Breadcrumb.Item>
                     <Breadcrumb.Item active>My Info</Breadcrumb.Item>
                 </Breadcrumb>
-                <DesignedH1>User Panel</DesignedH1>
+                <DesignedH2>User Panel</DesignedH2>
                 <DesignedLine>
                 </DesignedLine>
                 <div className="d-flex justify-content-center mt-3 m-4">
@@ -163,14 +164,14 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Email</LabelContainer>
                                 <InputContainer>
-                                    {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>}
+                                    {/* {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput defaultValue={userInfo?.email} disabled={true} type="text" name="email" id="email" className="form-control" />
                                 </InputContainer>
                             </div>
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Password</LabelContainer>
                                 <InputContainer>
-                                    {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>}
+                                    {/* {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput onFocus={(e) => {
                                         e.target.value = "";
                                     }} type="password" defaultValue={userInfo?._id} disabled={editPassword ? false : true} {...register("password", { required: false, minLength: 6 })} name="password" id="password" className="form-control" />
@@ -185,7 +186,7 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Phone</LabelContainer>
                                 <InputContainer>
-                                    {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>}
+                                    {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
 
                                     <ModalInput defaultValue={userInfo?.phone} disabled={editPhone ? false : true} {...register("phone", { required: false, minLength: 2 })} type="text" name="phone" id="phone" className="form-control" />
 
@@ -200,7 +201,7 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Address</LabelContainer>
                                 <InputContainer>
-                                    {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>}
+                                    {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput defaultValue={userInfo?.address} disabled={editAddress ? false : true} {...register("address", { required: false, minLength: 2 })} type="text" name="address" id="address" className="form-control" />
 
                                     {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
@@ -273,7 +274,7 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                                 <div className="mb-3">
                                     <LabelContainer className="text-dark">Status</LabelContainer>
                                     <InputContainer className={userInfo?.status === "Active" ? "border border-success" : "border border-danger"}>
-                                        {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>}
+                                        {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                         <ModalInput defaultValue={userInfo?.status} disabled type="text" name="status" id="status" className="form-control" />
                                     </InputContainer>
                                 </div>
@@ -283,6 +284,7 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                     </form>
                 </div>
             </div>
+            <Footer />
         </>
     )
 }

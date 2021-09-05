@@ -10,8 +10,10 @@ import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { IUsers } from '../Admin/interfaces/users';
 import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import ThirdDesignCanvas from './designSteps/thirdDesignCanvas';
+import Footer from './footer';
 import Header, { heartIcon } from './header';
-import { DesignedH1, DesignedLine } from './userPanel';
+import Loading from './loading';
+import { DesignedH2, DesignedLine } from './userPanel';
 
 interface UserDesignsParams {
     _id: string;
@@ -19,11 +21,11 @@ interface UserDesignsParams {
 
 type UserDesignsProps = RouteComponentProps<UserDesignsParams>
 
-const ImageWrapper = styled.div`
+export const ImageWrapper = styled.div`
 position:relative;
 `;
 
-const ImageHover = styled.img`
+export const ImageHover = styled.img`
 width: fit-content;
 height: fit-content;
   position: absolute;
@@ -100,8 +102,10 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
 
     const delFromWish = (item: IReadyproducts) => {
         if (window.confirm("Are you sure you want to delete " + item.product_name + "?")) {
-            item.count = 0;
-            dispatch({ type: "UPDATE_THE_WISH", data: item })
+            if(item.isWish){
+                item.count = 0;
+                dispatch({ type: "UPDATE_THE_WISH", data: item })
+            }
             deleteFromDB(item.s_id);
         }
     }
@@ -139,9 +143,12 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                     <Breadcrumb.Item active>User Panel</Breadcrumb.Item>
                     <Breadcrumb.Item active>My Designs</Breadcrumb.Item>
                 </Breadcrumb>
-                <DesignedH1>My Designs</DesignedH1>
+                <DesignedH2>My Designs</DesignedH2>
                 <DesignedLine>
                 </DesignedLine>
+                {/* {wishProductData.length === 0 && wishCleanProductData.length === 0 &&
+                <Loading />} */}
+               
                 {wishProductData.length > 0 &&
                     <>
                         <div className="text-center mt-3 display-6">My Wish Products</div>
@@ -250,7 +257,7 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                                                         </div>
                                                         <div className="d-flex justify-content-center my-3">
                                                             <div className="me-2">Size:</div>
-                                                            <button disabled className="shadow text-dark" style={{ width: "30px", height: "30px" }}>{item?.size}</button>
+                                                            <button disabled className="shadow text-dark" style={{ minWidth: "30px", height: "30px" }}>{item?.size}</button>
                                                         </div>
                                                         <div className="my-3">Category: {item.category_name}</div>
                                                         <div className="my-3">
@@ -287,9 +294,10 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                 }
                 {
                     (wishCleanProductData.length <= 0 && wishProductData.length <= 0) &&
-                    <h3>Time To Add Some Products...</h3>
+                    <h3 className="p-5 m-5">Time To Add Some Products...</h3>
                 }
             </div>
+            <Footer />
         </>
     )
 }

@@ -1,7 +1,10 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
+import { URL_API } from '../../services/apiService';
 import Loading from '../loading';
+import '../css/singleProductDesign.css';
+
 
 interface FirstDesignStepCarouselProps {
     productData: Partial<IProdItems>;
@@ -69,11 +72,23 @@ const FirstDesignStepCarousel: React.FC<FirstDesignStepCarouselProps> = ({ produ
                             <>
                                 {indexPicked === i ?
                                     <>
-                                        <div style={{ width: "350px" }}>
+                                        <div style={{ width: "350px", height:"550px" }}>
                                             <Slider {...SliderSettings}>
+                                                {item.frontImg?.includes("http") ?
                                                 <img className="border rounded-2 shadow mb-4" src={item.frontImg} alt={productData?.name} />
+                                                :
+                                                <img className="border rounded-2 shadow mb-4" src={URL_API + item.frontImg + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
+                                                }
+                                                {item.backImg?.includes("http") ?
                                                 <img className="border rounded-2 shadow mb-4" src={item.backImg} alt={productData?.name} />
+                                                :
+                                                <img className="border rounded-2 shadow mb-4" src={URL_API + item.backImg + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
+                                                }
+                                                {productData?.image?.includes("http") ?
                                                 <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} />
+                                                :
+                                                <img className="border rounded-2 shadow mb-4" src={URL_API + productData.image + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
+                                                }
                                             </Slider>
                                         </div>
                                     </>

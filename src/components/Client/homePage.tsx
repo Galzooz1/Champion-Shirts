@@ -4,6 +4,7 @@ import HowItWorks from './howItWorks';
 import Categories from './categories';
 import Strip from './strip';
 import CartSide from './cartSide';
+import Footer from './footer';
 
 interface HomePageProps {
     
@@ -16,6 +17,7 @@ const HomePage: React.FC<HomePageProps> = () => {
         <Strip/>
         <HowItWorks />
         <Categories />
+        <Footer />
         </>
     )
 }

@@ -15,7 +15,12 @@ import ThirdDesignStep from './designSteps/thirdDesignStep';
 import Header from './header';
 import Loading from './loading';
 import _ from 'lodash';
+import ArrowStepIcon from '../../assets/arrowsteps.svg'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { DesignedLine } from './userPanel';
+import Footer from './footer';
+import './css/singleProductDesign.css';
+
 
 interface SingleProductDesignParams {
     s_id: string;
@@ -24,11 +29,38 @@ interface SingleProductDesignParams {
 type SingleProductDesignProps = RouteComponentProps<SingleProductDesignParams>
 
 const StepsDiv = styled.div`
+/* width:20%; */
+/* background-color: blanchedalmond; */
+background-size: 100%;
 width:20%;
-background-color: blanchedalmond;
-min-height: 25px;
-border-radius: 10px;
+background-repeat: no-repeat;
+background-position: center;
+min-height: 60px;
+font-family: "Alata";
+font-size: 17px;
+padding-left:10px;
+background-color: #C4C4C4;
+clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+/* width:20%; */
+/* min-height: 25px; */
+
+/* border-radius: 10px; */
 font-weight: bolder;
+`;
+
+const StepsHeader = styled.h2`
+/* word-spacing: 24px; */
+letter-spacing: 0.3em;
+font-size: 32px;
+line-height: 32px;
+font-weight: 800;
+font-family: "Alata";
+position: relative;
+top:15px;
+display: flex;
+justify-content: flex-start;
+align-items: flex-end;
+/* z-index:1; */
 `;
 
 let isAddToCart: boolean;
@@ -107,13 +139,35 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                     deleteReadyProductFromDb(readyProductData?.s_id!);
                 }
                 reset({ shirtDesigns: {} });
+                reset({ size: undefined }, {
+                    keepErrors: true,
+                    keepDirty: true,
+                    keepValues: false
+                });
+                reset({ color: undefined }, {
+                    keepErrors: true,
+                    keepDirty: true,
+                    keepValues: false
+                });
+                reset({ sideToDesign: undefined }, {
+                    keepErrors: true,
+                    keepDirty: true,
+                    keepValues: false
+                });
                 setFormStep(cur => cur - 1);
+                // history.push("/product/clean/"+ productData.s_id);
                 window.location.reload();
+                // window.location.hash = "reload";
+                // window.onload = reloadUsingLocationHash();
             }
-        } else {
+        }
+        else {
+            // reset({ shirtDesigns: {} });
             setFormStep(cur => cur - 1);
         }
     }
+
+
 
     const addReadyProductDesign = async (dataBody: any) => {
         console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
@@ -128,21 +182,43 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         if (!isAddToCart && !isAddToWish && !backFlag) {
             isFirstContinue = true;
         }
-        if (backFlag) {
-            isAddToCart = false;
-            isAddToWish = false;
-        }
-        if(isDesignClicked){
+        // if (backFlag) {
+        //     isAddToCart = false;
+        //     isAddToWish = false;
+        //     // isFirstContinue = true;
+        // }
+        if (isDesignClicked && !backFlag) {
             isFirstContinue = true;
             isAddToCart = false;
             isAddToWish = false
             setIsDesignClicked(false);
         }
+        if (isImageFileClicked && !backFlag) {
+            isFirstContinue = true;
+            isAddToCart = false;
+            isAddToWish = false
+            setIsImageFileClicked(false);
+        }
+        // if(!isDesignClicked && !isImageFileClicked){
+        //     isFirstContinue = true;
+        // }
         console.log("ADDTOPRODUCT=AddToCart ", isAddToCart)
         console.log("ADDTOPRODUCT=isAddToWish ", isAddToWish)
         console.log("ADDTOPRODUCT=isFirstContinue ", isFirstContinue)
         console.log("ADDTOPRODUCT=backFlag ", backFlag)
         console.log("ADDTOPRODUCT=DesignClicked ", isDesignClicked);
+
+
+        if (!isFirstContinue && !isAddToCart && !isAddToWish && backFlag) {
+            alert(readyProductData?.s_id);
+            console.log("PUT: ", dataBody);
+            let url = URL_API + "/readyProducts/" + readyProductData?.s_id;
+            let data = await doApiMethod(url, "PUT", dataBody);
+            console.log("PUT: ", data);
+            let url2 = URL_API + "/readyProducts/single/" + readyProductData?.s_id;
+            let data2 = await doApiMethod(url2, "GET");
+            setReadyProductData(data2);
+        }
         if (isFirstContinue && !isAddToCart && !isAddToWish) {
             let url = URL_API + "/readyProducts"
             let data = await doApiMethod(url, "POST", dataBody);
@@ -168,7 +244,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
             // isAddToCart = false
         }
         if (isAddToWish && !isFirstContinue && !isAddToCart) {
-            if(!isWish){
+            if (!isWish) {
                 let url = URL_API + "/readyProducts"
                 let data = await doApiMethod(url, "POST", dataBody);
                 console.log(data);
@@ -179,7 +255,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                 console.log("data2: ", data);
                 toast.success(productData.name + " Added to Wish List!");
                 setIsWish(true);
-            }else{
+            } else {
                 toast.error(productData.name + " is Already On Wish List!")
             }
             // setIsAddToCart(false);
@@ -343,7 +419,7 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
     }
 
     const setSideAndPriceValues = () => {
-        console.log(productData?.price! + extraPriceOfProduct!);
+        console.log("Price: ", productData?.price! + extraPriceOfProduct!);
         setValue("price", productData?.price! + extraPriceOfProduct!);
         setValue("product_s_id", productData.s_id);
         setValue("product_name", productData.name);
@@ -352,30 +428,71 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
         setValue("info", productData.info);
     }
 
+    const buyNow = (item: Partial<IReadyproducts>) => {
+        if (!item?.isCart) {
+            item!.count = 1;
+            dispatch({ type: "UPDATE_THE_CART", data: item })
+        }
+        history.push("/checkout")
+    }
+
     return (
         <>
             <Header />
-            <div style={{ width: "90%", height: "90%" }} className="mx-auto mt-5">
+            <div style={{ width: "80%", height: "90%" }} className="mx-auto mt-5">
                 <Breadcrumb>
                     <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
                     <Breadcrumb.Item><Link to={"/categories/single/" + productData?.category_s_id}>{productData?.catName}</Link></Breadcrumb.Item>
                     <Breadcrumb.Item active>{productData?.name}</Breadcrumb.Item>
                 </Breadcrumb>
-                <div className="d-flex justify-content-around m-5">
+                <StepsHeader>
+                    The way to your special shirt
+                </StepsHeader>
+                <DesignedLine style={{ position: "relative", top: "5px" }}></DesignedLine>
+                <div className="d-flex justify-content-evenly m-5">
                     {formStep === 0 ?
-                        <StepsDiv className="bg-info">Step 1: Choose Your Product</StepsDiv>
-                        : <StepsDiv>Step 1: Choose Your Product</StepsDiv>
+                        <>
+                            <StepsDiv className="d-flex justify-content-center align-items-center" style={{ backgroundColor: "#FA3165" }}>
+                                Step 1:<br /> Choose Your Product
+                            </StepsDiv>
+                            <div className="d-flex align-items-center justify-content-center">
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                            </div>
+
+                        </>
+                        :
+                        <>
+                            <StepsDiv className="d-flex justify-content-center align-items-center">Step 1:<br />Choose Your Product</StepsDiv>
+                            <div className="d-flex align-items-center justify-content-center">
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                            </div>
+                        </>
                     }
                     <hr />
                     {formStep === 1 ?
-                        <StepsDiv className="bg-info">Step 2: Design Your Shirt</StepsDiv>
-                        : <StepsDiv>Step 2: Design Your Shirt</StepsDiv>
+                        <>
+                            <StepsDiv className="d-flex justify-content-center align-items-center" style={{ backgroundColor: "#FA3165" }}>Step 2:<br /> Design Your Shirt</StepsDiv>
+                            <div className="d-flex align-items-center justify-content-center">
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                            </div>
+                        </>
+                        :
+                        <>
+                            <StepsDiv className="d-flex justify-content-center align-items-center">Step 2:<br /> Design Your Shirt</StepsDiv>
+                            <div className="d-flex align-items-center justify-content-center">
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                                <i className="fa fa-angle-right fa-2x" aria-hidden="true"></i>
+                            </div>
+                        </>
                     }
                     <hr />
                     {formStep === 2 ?
-                        <StepsDiv className="bg-info">Step 3: Buy Your Masterpiece</StepsDiv>
-                        : <StepsDiv>Step 3: Buy Your Masterpiece</StepsDiv>
+                        <StepsDiv className="d-flex justify-content-center align-items-center" style={{ backgroundColor: "#FA3165" }} >Step 3:<br /> Buy Your Masterpiece</StepsDiv>
+                        : <StepsDiv className="d-flex justify-content-center align-items-center">Step 3:<br /> Order Summary</StepsDiv>
                     }
                 </div>
                 {isLoading ? <Loading />
@@ -385,37 +502,39 @@ const SingleProductDesign: React.FC<SingleProductDesignProps> = (props) => {
                         {formStep >= 0 && (
                             <section className={formStep === 0 ? "d-block" : "d-none"}>
                                 <FirstDesignStep extraPriceOfProduct={extraPriceOfProduct} extraPrice={extraPrice} chosenSide={chosenSide} setChosenSide={setChosenSide} indexPickedCallBack={indexPickedCallBack} errors={errors} register={register} productData={productData} />
-                                <div className="d-flex justify-content-center align-items-end m-3">
-                                    <button type="button" onClick={() => history.goBack()} className="btn btn-outline-danger mx-4">Back</button>
-                                    <button disabled={!isValid} onClick={isValid ? () => { setSideAndPriceValues(); nextFormStep(); } : () => console.log("Not Valid!")} type="button" className="btn btn-outline-primary mx-4">Continue</button>
+                                <div className="d-flex justify-content-evenly align-items-end m-3">
+                                    <button type="button" onClick={() => history.goBack()} style={{ borderRadius: "19px", backgroundColor: "#998C8F", width: "223px", height: "63px", border: "none", color: "white" }}>Back</button>
+                                    <button disabled={!isValid} onClick={isValid ? () => { setSideAndPriceValues(); nextFormStep(); } : () => console.log("Not Valid!")} type="button" style={{ borderRadius: "19px", backgroundColor: !isValid ? "#998C8F" : "#FA3165", width: "223px", height: "63px", border: "none", color: "white" }}>Continue</button>
 
                                 </div>
                             </section>
                         )}
                         {formStep >= 1 && (
                             <section className={formStep === 1 ? "d-block" : "d-none"}>
-                                <SecondStepApp backFlag={backFlag} isDesignClicked={isDesignClicked} setIsDesignClicked={setIsDesignClicked} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
-                                <div className="d-flex justify-content-center align-items-end m-3">
-                                    <button type="button" onClick={backFormStep} className="btn btn-outline-danger mx-4">Back</button>
-                                    <button onClick={() => {localStorage["token"] && nextFormStep(); }} type="submit" className="btn btn-outline-primary mx-4">Continue</button>
+                                <SecondStepApp isImageFileClicked={isImageFileClicked} setIsImageFileClicked={setIsImageFileClicked} extraPrice={extraPrice} backFlag={backFlag} isDesignClicked={isDesignClicked} setIsDesignClicked={setIsDesignClicked} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} indexPicked={indexPicked} errors={errors} register={register} productData={productData} propertiesData={propertiesData} />
+                                <div className="d-flex justify-content-evenly align-items-end m-3">
+                                    <button type="button" onClick={backFormStep} style={{ borderRadius: "19px", backgroundColor: "#998C8F", width: "223px", height: "63px", border: "none", color: "white" }}>Back</button>
+                                    <button onClick={() => { localStorage["token"] && nextFormStep(); setSideAndPriceValues(); }} type="submit" style={{ borderRadius: "19px", backgroundColor: !isValid ? "#998C8F" : "#FA3165", width: "223px", height: "63px", border: "none", color: "white" }}>Continue</button>
                                 </div>
                             </section>
                         )}
                         {formStep >= 2 && (
                             <section className={formStep === 2 ? "d-block" : "d-none"}>
                                 <ThirdDesignStep isWish={isWish} isCart={isCart} setIsWish={setIsWish} setIsCart={setIsCart} productData={productData} chosenSide={chosenSide} readyProductData={readyProductData} />
-                                <div className="d-flex">
-                                    <button type="submit" onClick={() => {setValue("isCart", true);isAddToCart = true; isAddToWish = false; console.log("onClickAddToCart ", isAddToCart, isAddToWish)}} className="btn btn-info me-4">Add to Cart</button>
-                                    <button type="submit" onClick={() => {setValue("isWish", true);isAddToCart = false; isAddToWish = true; console.log("onClickAddToWish ", isAddToWish, isAddToCart)}} className="btn btn-danger">Add to Wish</button>
+                                <div className="d-flex justify-content-center mt-3">
+                                    <button onClick={() => buyNow(readyProductData)} className="btn btn-success me-4">Buy Now</button>
+                                    <button type="submit" onClick={() => { setValue("isCart", true); isAddToCart = true; isAddToWish = false; console.log("onClickAddToCart ", isAddToCart, isAddToWish) }} className="btn btn-info me-4">Add to Cart</button>
+                                    <button type="submit" onClick={() => { setValue("isWish", true); isAddToCart = false; isAddToWish = true; console.log("onClickAddToWish ", isAddToWish, isAddToCart) }} className="btn btn-danger">Add to Wish</button>
                                 </div>
-                                <div className="d-flex justify-content-center align-items-end m-3">
-                                    <button type="button" onClick={() => { backFlag = true; isFirstContinue = false; isAddToCart = false; isAddToWish = false; backFormStep(); }} className="btn btn-outline-danger mx-4">Back</button>
+                                <div className="d-flex justify-content-start align-items-center m-3">
+                                    <button type="button"  onClick={() => { backFlag = true; isFirstContinue = false; isAddToCart = false; isAddToWish = false; backFormStep(); }}  style={{ borderRadius: "19px", backgroundColor: "#998C8F", width: "223px", height: "63px", border: "none", color: "white" }}>Back</button>
                                 </div>
                             </section>
                         )}
                     </form>
                 }
             </div>
+            <Footer />
         </>
     )
 }

@@ -170,7 +170,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                         </table>
                     </div>
                     <div>
-                        <div className="d-flex justify-content-around">
+                        <div className="d-flex justify-content-around flex-wrap">
                             {productData.image?.includes("http") ?
                                 <img src={productData.image} alt={productData.name} width="300px" className="border border-dark" />
                                 :

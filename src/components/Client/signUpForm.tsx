@@ -23,8 +23,6 @@ export interface SignUpArgs {
     email: string;
     password: string;
     password2: string;
-    // phone:string; -> on CheckOut
-    // address:string; -> on CheckOut
 };
 
 // export type returnedValues = {

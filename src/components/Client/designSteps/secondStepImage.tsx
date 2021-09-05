@@ -14,13 +14,16 @@ interface SecondStepImageProps {
     key?:any;
     setIsDesignValue:() => void;
     unRegister:() => void;
+    premuimExtraPriceFunc:() => void;
 };
 
-const SecondStepImage: React.FC<SecondStepImageProps> = ({unRegister ,setIsDesignValue ,key ,setValue ,SetStatesValues ,designProps, isSelected, onSelect, onChange }, props) => {
+const SecondStepImage: React.FC<SecondStepImageProps> = ({ premuimExtraPriceFunc,unRegister ,setIsDesignValue ,key ,setValue ,SetStatesValues ,designProps, isSelected, onSelect, onChange }, props) => {
     let designRef = React.useRef<any>();
     let trRef = React.useRef<any>();
     let deleteRef = React.useRef<any>();
     let [isDesignShown, setIsDesignShown] = React.useState(true);
+    let [premiumClicks, setPremiumClicks] = React.useState<number>(0);
+    // let premiumClicks: number = 0;
 
     React.useEffect(() => {
         // console.log(key)
@@ -43,16 +46,13 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({unRegister ,setIsDesig
         const container: any = e.target.getStage()?.container();
         container!.style.cursor = "default";
         setIsDesignShown(false)
+        // setPremiumClicks(++premiumClicks);
         unRegister()
+        premuimExtraPriceFunc()
     }
 
     const setValues = (e: any) => { 
         SetStatesValues(e.target.width(), e.target.height(), e.target.x(), e.target.y(), e.target.rotation())
-        // setDesignWidth(e.target.width())
-        // setDesignHeight(e.target.height())
-        // setDesignX(e.target.x())
-        // setDesignY(e.target.y())
-        // setDesignRotation(e.target.rotation())
     }
 
     return (
@@ -63,8 +63,8 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({unRegister ,setIsDesig
                         key={key}
                         ref={designRef}
                         image={img}
-                        x={20}
-                        y={20}
+                        x={designProps.x}
+                        y={designProps.y}
                         width={designProps.width}
                         height={designProps.height}
                         draggable={true}

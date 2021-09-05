@@ -19,6 +19,9 @@ interface SecondStepAppProps {
     setIsDesignClicked?:any;
     isDesignClicked?:any;
     backFlag:boolean;
+    extraPrice: (amount: number) => void;
+    isImageFileClicked?:any;
+    setIsImageFileClicked?:any;
 };
 
 export interface IDesignsArr {
@@ -42,10 +45,10 @@ const newUploadedImage = (_image: any) => ({
     height: 100,
 })
 
-const SecondStepApp: React.FC<SecondStepAppProps> = ({backFlag ,isDesignClicked, setIsDesignClicked, unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
+const SecondStepApp: React.FC<SecondStepAppProps> = ({isImageFileClicked, setIsImageFileClicked ,extraPrice ,backFlag ,isDesignClicked, setIsDesignClicked, unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
     // let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
-    let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
+    // let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
     let [designsAr, setDesignsAr] = React.useState<any[]>([{}]);
     let [filesAr, setFilesAr] = React.useState<any[]>([{}]);
     const [selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
@@ -63,7 +66,7 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({backFlag ,isDesignClicked,
     const getDesignsData = async () => {
         let url = URL_API + "/designs";
         let data = await doApiGet(url);
-        console.log(data);
+        console.log("Designssss",data);
         setDesignsData(data);
     }
     
@@ -76,8 +79,26 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({backFlag ,isDesignClicked,
     }
 
     const handleFileClicked = (_image: any) => { 
+        if(!_image.includes("http")){
+            _image = URL_API + _image + "?" + Date.now();
+        }
         setFilesAr([...filesAr,{...newUploadedImage(_image)}])
         setIsImageFileClicked(true);
+    }
+
+    const premuimExtraPrice = (_price: number, _clicks: number) => {
+        console.log(_clicks)
+        console.log(_price)
+        let sum = _price;
+        if(_clicks > 0){
+            sum *= _clicks
+        }
+        // alert(sum + " " + _clicks)
+        if(_price < 0){
+            // alert(sum + " " + _clicks)
+        } 
+        console.log(sum)
+        extraPrice(sum);
     }
 
     // const fixDesignsData = () => {
@@ -99,13 +120,13 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({backFlag ,isDesignClicked,
     // }
     
     return (    
-        <div style={{ height: "600px" }} className="d-flex justify-content-between shadow p-3">
+        <div style={{ height: "600px" }} className="d-flex justify-content-between p-3">
             {designsData.length === 0 && <Loading />}
             <div className="col-lg-4">
-                <SecondStepPanel handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
+                <SecondStepPanel premuimExtraPrice={premuimExtraPrice} handleFileClicked={handleFileClicked} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} designsData={designsData} productData={productData} handleDesignClicked={handleDesignClicked} />
             </div>
             <div className="col-lg-8">
-                <SecondStepWorkspace backFlag={backFlag} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
+                <SecondStepWorkspace premuimExtraPrice={premuimExtraPrice} backFlag={backFlag} unregister={unregister} reset={reset} chosenSide={chosenSide} setValue={setValue} register={register} errors={errors} filesAr={filesAr} setFilesAr={setFilesAr} setDesignAr={setDesignsAr} designsAr={designsAr} isImageFileClicked={isImageFileClicked} isDesignClicked={isDesignClicked} designsData={designsData} propertiesData={propertiesData} indexPicked={indexPicked} productData={productData} />
             </div>
         </div>
     )

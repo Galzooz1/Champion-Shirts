@@ -3,6 +3,7 @@ import { Image, Layer, Stage } from 'react-konva';
 import useImage from 'use-image';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { Front, IReadyproducts } from '../../Admin/interfaces/readyproducts';
+import { URL_API } from '../../services/apiService';
 import { MainImgDiv } from './secondStepWorkspace';
 import { INewImagesDesign } from './thirdDesignCanvas';
 import ThirdDesignCanvasImage from './thirdDesignCanvasImage';
@@ -43,12 +44,27 @@ const ThirdDesignCanvasFront: React.FC<ThirdDesignCanvasFrontProps> = ({ imagesC
     // },[]);
     return (
         <>
-            <MainImgDiv id="mainImgDiv" style={{ backgroundImage: `url(${readyProductData.images?.frontImage.image})` }}>
+            <MainImgDiv id="mainImgDiv" style={{ backgroundImage:
+            readyProductData.images?.frontImage.image.includes("http") ?
+                 `url(${readyProductData.images?.frontImage.image})` 
+                 :
+                 `url(${URL_API + readyProductData.images?.frontImage.image + "?"})`
+                 }}>
                 <div className="d-flex justify-content-center">
                     <Stage
-                        // style={{ border: "1px solid black" }}
-                        width={readyProductData.images?.frontImage.width}
-                        height={readyProductData.images?.frontImage.height}
+                            style={{position:"relative"
+                            , left:
+                            readyProductData.images?.frontImage.x,
+                            top:
+                            readyProductData.images?.frontImage.y
+                            }}
+                            // width={propertiesData[indexPicked]?.sizeOfCanvasFront.width}
+                            width={
+                                readyProductData.images?.frontImage.width
+                            }
+                            height={
+                                readyProductData.images?.frontImage.height
+                            }
                     >
                         <Layer>
                             {imagesDesignsAr.map((item?: Partial<INewImagesDesign>, i?: number) => {

@@ -36,7 +36,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }, props) => {
     return (
         <div style={{ borderBottom: "2px solid black" }} className="p-1">
             <h4>{item?.product_name}</h4>
-            <div className="w-50 mx-auto">
+            <div>
                 <div className="d-flex justify-content-evenly" style={{ fontSize: "1.3em" }}>
                     Color:
                     <OverlayTrigger placement="left-start" overlay={renderTooltip(props, item?.color)}>

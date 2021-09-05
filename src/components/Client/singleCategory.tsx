@@ -9,9 +9,11 @@ import { ICategories } from '../Admin/interfaces/categoriesArgs';
 import { Amount, IProdItems, Property } from '../Admin/interfaces/prodItems';
 import { doApiGet, URL_API } from '../services/apiService';
 import FilterForm from './filterForm';
+import Footer from './footer';
 import Header from './header';
 import Loading from './loading';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
+import { DesignedH2, DesignedLine } from './userPanel';
 
 interface SingleCategoryParams {
     s_id: string;
@@ -20,21 +22,38 @@ interface SingleCategoryParams {
 type SingleCategoryProps = RouteComponentProps<SingleCategoryParams>
 
 export const WrapperDiv = styled(motion.div)`
-min-height: 600px;
-margin:16px;
+/* margin:16px; */
 border-radius: 5px;
-padding-bottom: 8px;
+/* padding-bottom: 8px; */
 cursor:pointer;
 `;
 
 const CleanWrapperDiv = styled(motion.div)`
-min-height: 300px;
+/* min-height: 300px; */
+height:100%;
 width:90%;
 margin:16px;
 border-radius: 5px;
 padding-bottom: 8px;
 cursor:pointer;
 display: flex;
+justify-content: space-between;
+align-items: center;
+background: linear-gradient(92.21deg, #487686 28.52%, rgba(69, 108, 121, 0) 85.99%);
+`;
+
+const CleanH2 = styled.h2`
+display: flex;
+justify-content: center;
+color:white;
+width:70%;
+font-family: Poppins;
+font-size: 77px;
+font-style: normal;
+font-weight: 300;
+line-height: 116px;
+letter-spacing: 0.05em;
+text-align: left;
 `;
 
 const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
@@ -55,7 +74,7 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     }
 
     const getProductsData = async () => {
-        let url = URL_API + "/products?category=" + props.match.params.s_id + "&page=0&sort=isClean&reverse=yes&perPage=5";
+        let url = URL_API + "/products?category=" + props.match.params.s_id + "&page=0&sort=isClean&reverse=yes&perPage=10";
         let data = await doApiGet(url);
         console.log(data);
         setProductsData(data);
@@ -77,12 +96,9 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                         <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
                         <Breadcrumb.Item active>{categoryData?.name}</Breadcrumb.Item>
                     </Breadcrumb>
-                    <HR />
-                    <H2HR>
-                        <SpanH2>
-                            {categoryData?.name}
-                        </SpanH2>
-                    </H2HR>
+                    <DesignedH2>{categoryData?.name}</DesignedH2>
+                <DesignedLine>
+                </DesignedLine>
                     {productsData.length === 0 &&
                         <Loading />}
                     <div className="d-flex flex-wrap">
@@ -90,84 +106,67 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                             return (
                                 <>
                                     {item?.isClean &&
-                                        <CleanWrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/clean/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
-                                            {item?.image?.includes("http") ?
-                                                <img src={item?.image} alt={item?.name} height="350px" width="100%" />
-                                                :
-                                                <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
-                                            }
-                                            {/* <img src={item?.image} alt={item?.name} style={{ maxHeight: "350px" }} /> */}
-                                            <div className="m-5" style={{ maxHeight: "350px" }}>
-                                                <h2>{item?.name}</h2>
-                                                <h3>{item?.price} $</h3>
-                                            </div>
-                                            <div className="text-dark border p-3 m-3">
-                                                <h3>Available:</h3>
-                                                {item?.properties.map((prop, i) => {
-                                                    return (
-                                                        <>
-                                                            <motion.div className="border p-2 text-start d-flex flex-wrap justify-content-around">
-                                                                <div className="w-100 d-flex justify-content-center">
-                                                                    <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
-                                                                        <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                                    </OverlayTrigger>
-                                                                </div>
-
-                                                                {prop?.amount.XS > 0 ?
-                                                                    <h4>XS</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.S > 0 ?
-                                                                    <h4>S</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.M > 0 ?
-                                                                    <h4>M</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.L > 0 ?
-                                                                    <h4>L</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XL > 0 ?
-                                                                    <h4>XL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XXL > 0 ?
-                                                                    <h4>XXL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XXXL > 0 ?
-                                                                    <h4>XXXL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </motion.div>
-                                                        </>
-                                                    )
-                                                })}
-                                            </div>
-                                            <div className="bg-dark d-flex justify-content-center align-items-center" style={{ width: "100%" }}>
-                                                <h1 className="text-white">Design Now!</h1>
-                                            </div>
-                                        </CleanWrapperDiv>
+                                        <>
+                                            <CleanWrapperDiv onClick={() => { history.push("/product/clean/" + item?.s_id) }} transition={{duration:0.4}} whileHover={{scale:1.01}}>
+                                                <CleanH2>Design <span className="fw-bold ms-4">Now!</span></CleanH2>
+                                                <WrapperDiv style={{position:"relative", top:"-5px"}}>
+                                                    {/* <div className="d-flex align-items-start shadow" style={{ width: "20%", position: "relative", top: "-5px" }}> */}
+                                                    {item?.image?.includes("http") ?
+                                                        <img src={item?.image} alt={item?.name} height="350px" width="100%" />
+                                                        :
+                                                        <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
+                                                    }
+                                                    {/* </div> */}
+                                                    <div className="d-flex justify-content-center align-items-center">
+                                                        <h3 className="me-3">{item?.name}</h3>
+                                                        <h4>{item?.price.toFixed(2)} $</h4>
+                                                    </div>
+                                                    <div className="d-flex justify-content-center">
+                                                        {item?.properties.map((prop, i) => {
+                                                            return (
+                                                                <>
+                                                                    <motion.div className="p-2 text-start d-flex flex-wrap justify-content-around">
+                                                                        <div className="w-100 d-flex justify-content-center">
+                                                                            <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
+                                                                                <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                                            </OverlayTrigger>
+                                                                        </div>
+                                                                    </motion.div>
+                                                                </>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </WrapperDiv>
+                                            </CleanWrapperDiv>
+                                        </>
                                     }
                                     {!item?.isClean &&
-                                        <WrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/" + item?.s_id) }} className="col-lg-3 mx-5 shadow border rounded-1">
+                                        <WrapperDiv transition={{ duration: 0.4 }} onClick={() => { history.push("/product/" + item?.s_id) }} className="col-lg-3 mx-5 border rounded-1 my-5">
                                             {item?.image?.includes("http") ?
                                                 <img src={item?.image} alt={item?.name} height="350px" width="100%" />
                                                 :
                                                 <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
                                             }
                                             {/* <img src={item?.image} alt={item?.name} width="100" height="100" /> */}
-                                            <h2>{item?.name}</h2>
-                                            <h3>{item?.price} $</h3>
+                                            <div className="text-dark d-flex justify-content-center">
+                                                {item?.properties.map((prop, i) => {
+                                                    // const amounts = productAmount.amount;
+                                                    return (
+                                                        <>
+                                                            <motion.div className="p-2 text-start d-flex justify-content-around">
+                                                                <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
+                                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
+                                                                </OverlayTrigger>
+                                                            </motion.div>
+                                                        </>
+                                                    )
+                                                })}
+                                            </div>
+                                            <div className="d-flex justify-content-around align-items-center flex-wrap">
+                                                <h3>{item?.name}</h3>
+
+                                                <h4>{item?.price.toFixed(2)} $</h4>
+                                            </div>
                                             {/* <div className="text-info border p-3">
                                         <h3>Colors Available:</h3>
                                         {item?.properties.map((prop, i) => {
@@ -178,57 +177,7 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                 )
                                             })}
                                         </div> */}
-                                            <div className="text-dark border p-3">
-                                                <h3>Available:</h3>
-                                                {item?.properties.map((prop, i) => {
-                                                    // const amounts = productAmount.amount;
-                                                    return (
-                                                        <>
-                                                            <motion.div className="border p-2 text-start d-flex justify-content-around">
-                                                                <OverlayTrigger delay={{ show: 250, hide: 200 }} placement="left-start" overlay={renderTooltip(props, prop.color)}>
-                                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                                </OverlayTrigger>
 
-                                                                {prop?.amount.XS > 0 ?
-                                                                    <h4>XS</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.S > 0 ?
-                                                                    <h4>S</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.M > 0 ?
-                                                                    <h4>M</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.L > 0 ?
-                                                                    <h4>L</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XL > 0 ?
-                                                                    <h4>XL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XXL > 0 ?
-                                                                    <h4>XXL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                {prop?.amount.XXXL > 0 ?
-                                                                    <h4>XXXL</h4>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </motion.div>
-                                                        </>
-                                                    )
-                                                })}
-                                            </div>
                                         </WrapperDiv>
                                     }
                                 </>
@@ -238,6 +187,7 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                 </div>
             </div>
             <ReactTooltip />
+            <Footer />
         </>
     )
 }

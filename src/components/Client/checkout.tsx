@@ -8,9 +8,11 @@ import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { IUsers } from '../Admin/interfaces/users';
 import { doApiMethod, URL_API } from '../services/apiService';
 import PaypalBtn from './common/paypalBtn';
+import Footer from './footer';
 import Header from './header';
 import { InputContainer, LabelContainer, ModalInput } from './LoginModal/InputWithIcon';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
+import { DesignedH2, DesignedLine } from './userPanel';
 
 interface CheckoutProps {
 
@@ -50,7 +52,7 @@ const Checkout: React.FC<CheckoutProps> = () => {
             console.log(JSON.stringify(data));
             if (data.n == 1) {
                 toast.success("Your order been updated");
-                dispatch({type:"RESET_CARTS", carts_ar:[]});
+                dispatch({ type: "RESET_CARTS", carts_ar: [] });
             }
             else if (data._id) {
                 toast.success("Your order on process we will contact you soon to get your money!")
@@ -79,23 +81,23 @@ const Checkout: React.FC<CheckoutProps> = () => {
         console.log(data);
         setUserInfo(data);
     }
-    
-    const onSubmit = (dataBody: Partial<IUsers>) => { 
+
+    const onSubmit = (dataBody: Partial<IUsers>) => {
         console.log(dataBody);
         editUserInfo(dataBody);
     }
-    
-    const editUserInfo = async(dataBody: Partial<IUsers>) => { 
+
+    const editUserInfo = async (dataBody: Partial<IUsers>) => {
         console.log(userInfo?._id);
         let url = URL_API + "/users/" + userInfo?._id;
         let data = await doApiMethod(url, "PUT", dataBody);
         console.log(data)
-        if(data.n === 1){
+        if (data.n === 1) {
             toast.success("User Information Updated!");
             window.location.reload();
-       }else{
-           toast.error("There's an Error, Please contact the owner!");
-       }
+        } else {
+            toast.error("There's an Error, Please contact the owner!");
+        }
     }
 
     return (
@@ -114,18 +116,14 @@ const Checkout: React.FC<CheckoutProps> = () => {
                             <Breadcrumb.Item><Link to={"/categories"}>Categories</Link></Breadcrumb.Item>
                             <Breadcrumb.Item active>Checkout</Breadcrumb.Item>
                         </Breadcrumb>
-                        <HR />
-                        <H2HR>
-                            <SpanH2>
-                                Checkout
-                            </SpanH2>
-                        </H2HR>
+                        <DesignedH2>Checkout</DesignedH2>
+                        <DesignedLine></DesignedLine>
                     </div>
                     <div className="container mx-auto my-4">
                         <h3>Hello {userInfo?.firstName}, Here's Your Cart:</h3>
                         <div className="row my-4">
                             <div className="col-lg-12 p-2">
-                                <table className="table table-dark table-hover">
+                                <table className="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -137,8 +135,8 @@ const Checkout: React.FC<CheckoutProps> = () => {
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="table table-dark container">
-                                        {carts_ar.map((item, i) => {
+                                    <tbody className="table container">
+                                        {carts_ar.map((item: IReadyproducts, i) => {
                                             totalCart += item.price;
                                             return (
                                                 <tr key={i}>
@@ -147,7 +145,7 @@ const Checkout: React.FC<CheckoutProps> = () => {
                                                     <td><button disabled style={{ backgroundColor: `${item.color}`, width: "20px", height: "20px" }} className="rounded-circle"></button></td>
                                                     <td className="fw-bold">{item.size}</td>
                                                     <td>{(item.price).toFixed(2)} $</td>
-                                                    <td className="w-25"><img src={item.image} alt={item.product_name} /></td>
+                                                    <td className="w-25"><img src={item?.images.frontImage.image} alt={item.product_name} width="100px" /></td>
                                                     <td onClick={() => deleteProductFromCart(item)} className="btn btn-outline-danger btn-sm">Delete</td>
                                                 </tr>
                                             )
@@ -156,54 +154,55 @@ const Checkout: React.FC<CheckoutProps> = () => {
                                 </table>
                             </div>
                         </div>
-                        {userInfo?.address ? 
-                        <div className="col-lg-3 mx-auto border p-2 d-flex justify-content-center align-items-center text-center" style={{ height: "300px" }}>
-                            <div>
-                                <h3>Total price: {totalCart.toFixed(2)} $</h3>
-                                <button onClick={checkoutReal} className="btn btn-outline-info w-100">Commit buy</button>
-                                {/* <PaypalBtn successFunc={checkoutReal} total={totalCart.toFixed(2)} clientId="AbiWx8wSIUBrmPTxcyHs8TTCHi1k6u9vYdGP4VvOsO42snOPp6hQ0WwKDvgr3berBD8LuqrNXhZ9793I" /> */}
-                            </div>
-                        </div>
-                        :
-                        <form className="col-lg-6 mx-auto" onSubmit={handleSubmit(onSubmit)}>
-                            <div className="d-flex justify-content-between">
-                                <div className="me-3">
-                                <LabelContainer className="fw-bold mb-3">Enter First Name</LabelContainer>
-                                <InputContainer>
-                                    <ModalInput {...register("firstName", {required:true, minLength: 2})} defaultValue={userInfo?.firstName} type="text" name="firstName" className="form-control" />
-                                    {errors.firstName && <span className="text-danger m-2 text-center">Please enter firstName!</span>}
-                                </InputContainer>
-                                </div>
-                                <div className="me-3">
-                                <LabelContainer className="fw-bold mb-3">Enter Last Name</LabelContainer>
-                                <InputContainer>
-                                    <ModalInput {...register("lastName", {required:true, minLength: 2})} defaultValue={userInfo?.lastName} type="text" name="lastName" className="form-control" />
-                                    {errors.lastName && <span className="text-danger m-2 text-center">Please enter lastName!</span>}
-                                </InputContainer>
+                        {userInfo?.address ?
+                            <div className="col-lg-3 mx-auto p-2 d-flex justify-content-center align-items-start text-center" style={{ height: "300px" }}>
+                                <div>
+                                    <h3 className="mb-4">Total price: {totalCart.toFixed(2)} $</h3>
+                                    {/* <button onClick={checkoutReal} className="btn btn-outline-info w-100">Commit buy</button> */}
+                                    <PaypalBtn successFunc={checkoutReal} total={totalCart.toFixed(2)} clientId="AbiWx8wSIUBrmPTxcyHs8TTCHi1k6u9vYdGP4VvOsO42snOPp6hQ0WwKDvgr3berBD8LuqrNXhZ9793I" />
                                 </div>
                             </div>
+                            :
+                            <form className="col-lg-6 mx-auto" onSubmit={handleSubmit(onSubmit)}>
+                                <div className="d-flex justify-content-between">
+                                    <div className="me-3">
+                                        <LabelContainer className="fw-bold mb-3">Enter First Name</LabelContainer>
+                                        <InputContainer>
+                                            <ModalInput {...register("firstName", { required: true, minLength: 2 })} defaultValue={userInfo?.firstName} type="text" name="firstName" className="form-control" />
+                                            {errors.firstName && <span className="text-danger m-2 text-center">Please enter firstName!</span>}
+                                        </InputContainer>
+                                    </div>
+                                    <div className="me-3">
+                                        <LabelContainer className="fw-bold mb-3">Enter Last Name</LabelContainer>
+                                        <InputContainer>
+                                            <ModalInput {...register("lastName", { required: true, minLength: 2 })} defaultValue={userInfo?.lastName} type="text" name="lastName" className="form-control" />
+                                            {errors.lastName && <span className="text-danger m-2 text-center">Please enter lastName!</span>}
+                                        </InputContainer>
+                                    </div>
+                                </div>
                                 <div className="mb-3">
-                                <LabelContainer className="fw-bold mb-3">Enter Phone</LabelContainer>
-                                <InputContainer>
-                                    <ModalInput {...register("phone", {required:true, minLength: 2})} defaultValue={userInfo?.phone} type="text" name="phone" className="form-control" />
-                                    {errors.phone && <span className="text-danger m-2 text-center">Please enter phone!</span>}
-                                </InputContainer>
-                            </div>
+                                    <LabelContainer className="fw-bold mb-3">Enter Phone</LabelContainer>
+                                    <InputContainer>
+                                        <ModalInput {...register("phone", { required: true, minLength: 2 })} defaultValue={userInfo?.phone} type="text" name="phone" className="form-control" />
+                                        {errors.phone && <span className="text-danger m-2 text-center">Please enter phone!</span>}
+                                    </InputContainer>
+                                </div>
                                 <div className="mb-3">
-                                <LabelContainer className="fw-bold mb-3">Enter Address</LabelContainer>
-                                <InputContainer>
-                                    <ModalInput {...register("address", {required:true, minLength: 2})} type="text" name="address" className="form-control" />
-                                    {errors.address && <span className="text-danger m-2 text-center">Please enter Address!</span>}
-                                </InputContainer>
-                            </div>
-                            <div>
-                            <button type="submit" className="btn btn-primary">Update Address</button>
-                            </div>
-                        </form>
+                                    <LabelContainer className="fw-bold mb-3">Enter Address</LabelContainer>
+                                    <InputContainer>
+                                        <ModalInput {...register("address", { required: true, minLength: 2 })} type="text" name="address" className="form-control" />
+                                        {errors.address && <span className="text-danger m-2 text-center">Please enter Address!</span>}
+                                    </InputContainer>
+                                </div>
+                                <div>
+                                    <button type="submit" className="btn btn-primary">Update Address</button>
+                                </div>
+                            </form>
                         }
                     </div>
                 </>
             }
+            <Footer />
         </>
     )
 }

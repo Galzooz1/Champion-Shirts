@@ -46,7 +46,11 @@ font-family:"Black Emerald";
 font-weight: 900;
 font-size: 72px;
 z-index:999;
+line-height: 81.36px;
 transition:0.6s ease-in-out;
+position: relative;
+color: #FA3165;
+top:30px;
 cursor:pointer;
 &:hover{
     transform: scale(1.03);
@@ -176,15 +180,15 @@ const Header: React.FC<HeaderProps> = () => {
 
     return (
         <>
-            <HeaderDiv className="bg-dark container-fluid text-white py-2">
+            <HeaderDiv className="bg-dark container-fluid text-white py-2 flex-wrap">
                 <div>
-                    <div className="d-flex justify-content-between col-lg-12">
+                    <div className="container d-flex justify-content-between col-lg-12">
                         <div onClick={() => history.push("/home")} className="logo col-lg-3">
                             <HeaderH2>Champion</HeaderH2>
                         </div>
                         <CartSide />
                         <AuthUser />
-                        <IconsDiv className="icons w-75">
+                        <IconsDiv className="icons flex-wrap col-md-12">
                             {isSearchBox ?
                                 <div className="d-flex justify-content-center col-lg-3 me-4 mt-3">
                                     <motion.div transition={{ duration: 0.5, delay: 0.2 }} variants={backdrop} animate="visible" initial="hidden" className="input-group col-sm-7 input-group-lg">
@@ -210,12 +214,12 @@ const Header: React.FC<HeaderProps> = () => {
                             </div> */}
                             <motion.div whileHover={{ scale: 1.1 }} className="mx-2 d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
                                 {(carts_ar.length > 0) ?
-                                    <h3 className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer" }} onClick={() => { toggleCart() }}>
+                                    <motion.h3 whileHover={{color:"#6cabc0"}} className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer", color:"white" }} onClick={() => { toggleCart() }}>
                                         {cartIcon()}
                                         <div className="badge bg-danger" style={{ fontSize: "0.45em" }}>
                                             {cartTotal(carts_ar)}
                                         </div>
-                                    </h3>
+                                    </motion.h3>
                                     :
                                     <div style={{ cursor: "pointer" }} className="text-warning" data-tip="Your Cart Is Empty">
                                         {cartIcon()}
@@ -320,8 +324,8 @@ const Header: React.FC<HeaderProps> = () => {
                     </div>
                 </div>
             </HeaderDiv>
-            <Navbar /*style={{ position: "sticky", top: 0 }}*/ className="Navbar container-fluid d-flex justify-content-center" variant="light" expand="lg">
-                <Container className="container-fluid">
+            <Navbar /*style={{ position: "sticky", top: 0 }}*/ className="Navbar container-fluid d-flex justify-content-center" style={{backgroundColor:"#487686"}} variant="light" expand="lg">
+                <Container className="justify-content-start">
                     {/* <Navbar.Brand href="#home"><Link className="text-white text-white text-decoration-none" to="/">Home</Link></Navbar.Brand> */}
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
@@ -377,7 +381,7 @@ const searchIcon = () => {
     )
 }
 
-const cartIcon = () => {
+export const cartIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-cart4" viewBox="0 0 16 16">
             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />

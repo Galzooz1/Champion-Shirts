@@ -82,12 +82,20 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, 
 
     return (
         <>
-            <div style={{ height: "600px" }} className="d-lg-flex justify-content-around border shadow p-4">
-                <div>
-                    <h2>{productData?.name}</h2>
-                    <h4>{productData?.info}</h4>
-                    <div className="d-flex justify-content-center">
-                        <h4>Colors:</h4>
+            <div style={{ height: "600px",fontFamily:"Alata"}} className="d-lg-flex align-items-start justify-content-around p-4 container">
+                <div className="col-lg-6 p-5">
+                    <h2 className="text-start fw-bolder">{productData?.name}</h2>
+                    <div className="text-start fw-bold">{productData?.info}
+                        <br />
+                        Machine Wash
+                        <br />
+                        100% Cotton
+                        <br />
+                        Imported
+                    </div>
+                    <div className="text-start">
+                        <div style={{ fontSize: "1.2em" }} className="fw-bold mt-3 text-decoration-underline">Colors:</div>
+                        <div className="d-flex mt-1">
                         {productData.properties?.map((item, i) => {
                             return (
                                 <React.Fragment key={i}>
@@ -95,81 +103,88 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, 
                                         <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
                                             name="color" id="properties.color" onInput={() => handleChange(i)}
                                             className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} data-tip={`${item?.color}`} />
-                                        <div className="ms-2">
-                                            {indexPicked === i ?
-                                                <>
-                                                    {/* <h3>Size:</h3> */}
-                                                    <div className="d-block">
-                                                        {item?.amount.XS > 0 ?
-                                                            <SizeLabel>
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
-                                                                <SizeSpan>XS</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.S > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
-                                                                <SizeSpan>S</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.M > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
-                                                                <SizeSpan>M</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.L > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
-                                                                <SizeSpan>L</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.XL > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
-                                                                <SizeSpan>XL</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.XXL > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
-                                                                <SizeSpan>XXL</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                        {item?.amount.XXXL > 0 ?
-                                                            <SizeLabel>
-
-                                                                <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
-                                                                <SizeSpan>XXXL</SizeSpan>
-                                                            </SizeLabel>
-                                                            : null}
-                                                    </div>
-                                                </>
-                                                : null
-                                            }
-                                        </div>
                                     </div>
                                 </React.Fragment>
                             )
                         })}
+                        </div>
+                        <div style={{ fontSize: "1.2em" }} className="fw-bold mt-3 text-decoration-underline">Size:</div>
+                        {productData.properties?.map((item, i) => {
+                            return (
+                                <div className="ms-2">
+                                    {indexPicked === i ?
+                                        <>
+                                            {/* <h3>Size:</h3> */}
+                                            <div className="d-flex">
+                                                {item?.amount.XS > 0 ?
+                                                    <SizeLabel>
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
+                                                        <SizeSpan>XS</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.S > 0 ?
+                                                    <SizeLabel>
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
+                                                        <SizeSpan>S</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.M > 0 ?
+                                                    <SizeLabel>
+
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
+                                                        <SizeSpan>M</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.L > 0 ?
+                                                    <SizeLabel>
+
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
+                                                        <SizeSpan>L</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.XL > 0 ?
+                                                    <SizeLabel>
+
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
+                                                        <SizeSpan>XL</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.XXL > 0 ?
+                                                    <SizeLabel>
+
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
+                                                        <SizeSpan>XXL</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                                {item?.amount.XXXL > 0 ?
+                                                    <SizeLabel>
+
+                                                        <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
+                                                        <SizeSpan>XXXL</SizeSpan>
+                                                    </SizeLabel>
+                                                    : null}
+                                            </div>
+                                        </>
+                                        : null
+                                    }
+                                </div>
+                            )
+                        })}
+
+
 
                     </div>
                     {errors.color && <span className="text-danger m-2 text-center">Please Choose Color</span>}
                     {errors.size && <span className="text-danger m-2 text-center">Please Choose Size</span>}
                     <div>
-                        <select {...register("sideToDesign", { required: true })} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select" ref={selectSideRef} onChange={chooseSide}>
+                        <select {...register("sideToDesign", { required: true })} value={chosenSide} name="sideToDesign" id="sideToDesign" className="form-select w-50 mt-3" ref={selectSideRef} onChange={chooseSide}>
                             <option value="front">Front</option>
                             <option value="back">Back</option>
                             <option disabled value="both">Both (+10$)</option>
                         </select>
                     </div>
                     {errors.price && <span className="text-danger m-2 text-center">Please choose side to design!</span>}
-                    <div className="mt-4">
+                    <div className="mt-5 text-start">
                         {chosenSide === "both" ?
                             <h3>Price: {productData?.price! + extraPriceOfProduct!} $</h3>
                             :
@@ -177,7 +192,7 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, 
                         }
                     </div>
                 </div>
-                <div>
+                <div className="col-lg-6">
                     {indexPicked === 555 ?
                         <div>
 

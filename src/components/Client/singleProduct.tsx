@@ -10,9 +10,11 @@ import { IProdItems, Property } from '../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import { SizeInput, SizeLabel, SizeSpan } from './designSteps/firstDesignStep';
+import Footer from './footer';
 import Header from './header';
 import Loading from './loading';
 import { H2HR, HR, SpanH2 } from './styles/headerCategory';
+import { DesignedH2, DesignedLine } from './userPanel';
 
 interface SingleProductParams {
     s_id: string;
@@ -85,6 +87,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     let isWish = useSelector<RootStateOrAny, boolean>(myStore => myStore.isWish);
     let [countCartItems, setCountCartItems] = React.useState<number>(0);
     let [countWishItems, setCountWishItems] = React.useState<number>(0);
+    let [readyProductData, setReadyProductData] = React.useState<Partial<IReadyproducts>>({});
     let [isAddToCart, setIsAddToCart] = React.useState<boolean>(false);
     let [isAddToWish, setIsAddToWish] = React.useState<boolean>(false);
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
@@ -131,6 +134,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         let url = URL_API + "/readyProducts"
         let data = await doApiMethod(url, "POST", dataBody);
         data.count = 0;
+        setReadyProductData(data);
         console.log("data: ", data);
         if (isAddToCart) {
             setCountCartItems(countCartItems + 1);
@@ -178,6 +182,14 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         setIndexPicked(i);
     }
 
+    const buyNow = (item: Partial<IReadyproducts>) => {
+        if (!item?.isCart) {
+            item!.count = 1;
+            dispatch({ type: "UPDATE_THE_CART", data: item })
+        }
+        history.push("/checkout")
+    }
+
     return (
         <>
             <Header />
@@ -188,94 +200,99 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                     <Breadcrumb.Item><Link to={"/categories/single/" + productData?.category_s_id}>{productData?.catName}</Link></Breadcrumb.Item>
                     <Breadcrumb.Item active>{productData?.name}</Breadcrumb.Item>
                 </Breadcrumb>
-                <HR />
-                <H2HR>
-                    <SpanH2>
-                        {productData?.name}
-                    </SpanH2>
-                </H2HR>
+                <DesignedH2>{productData?.name}</DesignedH2>
+                <DesignedLine>
+                </DesignedLine>
             </ProdHeaderDiv>
             <ProdMainDiv className="container mx-auto">
                 {isLoading ? <Loading /> :
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        {/* <input {...register("isClean")} className="d-none" />
-                    <input {...register("price")} id="price" className="d-none" />
-                    <input {...register("product_name")} id="product_name" className="d-none" />
-                    <input {...register("product_s_id")} id="product_s_id" className="d-none" />
-                    <input {...register("category_name")} id="category_name" className="d-none" />
-                    <input {...register("category_s_id")} id="category_s_id" className="d-none" /> */}
-                        <div style={{ height: "600px" }} className="d-lg-flex justify-content-around border shadow p-4">
+                        <div style={{ height: "600px" }} className="d-lg-flex justify-content-around p-4">
                             <div>
-                                <h2>{productData?.name}</h2>
-                                <h4>{productData?.info}</h4>
-                                <div className="d-flex justify-content-center">
-                                    <h4>Colors:</h4>
+                                <h2 className="text-start fw-bolder">{productData?.name}</h2>
+                                <div className="text-start fw-bold">{productData?.info}
+                                    <br />
+                                    Machine Wash
+                                    <br />
+                                    100% Cotton
+                                    <br />
+                                    Imported
+                                </div>
+                                <div className="text-start">
+                                    <div style={{ fontSize: "1.2em" }} className="fw-bold mt-3 text-decoration-underline">Colors:</div>
+                                    <div className="d-flex mt-1">
+                                        {productData.properties?.map((item, i) => {
+                                            return (
+                                                <React.Fragment key={i}>
+                                                    <div style={{ width: "66.63px" }}>
+                                                        <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
+                                                            name="color" id="properties.color" onInput={() => setValuesFunc(i)}
+                                                            className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} data-tip={`${item?.color}`} />
+                                                    </div>
+                                                </React.Fragment>
+                                            )
+                                        })}
+                                    </div>
+                                    <div style={{ fontSize: "1.2em" }} className="fw-bold mt-3 text-decoration-underline">Size:</div>
                                     {productData.properties?.map((item, i) => {
                                         return (
                                             <React.Fragment key={i}>
-                                                <div style={{ width: "66.63px" }}>
-                                                    <input {...register("color", { required: true })} type="radio" value={`${item.color}`}
-                                                        name="color" id="properties.color" onInput={() => { setValuesFunc(i) }}
-                                                        className="form-check-input border border-dark rounded-circle m-1" style={{ backgroundColor: `${item?.color}`, width: "30px", height: "30px" }} />
-                                                    <div className="my-2">
-                                                        {indexPicked === i ?
-                                                            <>
-                                                                {/* <h3>Size:</h3> */}
-                                                                <div className="d-block">
-                                                                    {item?.amount.XS > 0 ?
-                                                                        <SizeLabel>
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
-                                                                            <SizeSpan>XS</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.S > 0 ?
-                                                                        <SizeLabel>
+                                                {indexPicked === i ?
+                                                    <>
+                                                        {/* <h3>Size:</h3> */}
+                                                        <div style={{ width: "600px" }} className="d-flex">
+                                                            {item?.amount.XS > 0 ?
+                                                                <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XS"} />
+                                                                    <SizeSpan>XS</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.S > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
-                                                                            <SizeSpan>S</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.M > 0 ?
-                                                                        <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"S"} />
+                                                                    <SizeSpan>S</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.M > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
-                                                                            <SizeSpan>M</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.L > 0 ?
-                                                                        <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"M"} />
+                                                                    <SizeSpan>M</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.L > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
-                                                                            <SizeSpan>L</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.XL > 0 ?
-                                                                        <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"L"} />
+                                                                    <SizeSpan>L</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.XL > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
-                                                                            <SizeSpan>XL</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.XXL > 0 ?
-                                                                        <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XL"} />
+                                                                    <SizeSpan>XL</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.XXL > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
-                                                                            <SizeSpan>XXL</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                    {item?.amount.XXXL > 0 ?
-                                                                        <SizeLabel>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXL"} />
+                                                                    <SizeSpan>XXL</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                            {item?.amount.XXXL > 0 ?
+                                                                <SizeLabel>
 
-                                                                            <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
-                                                                            <SizeSpan>XXXL</SizeSpan>
-                                                                        </SizeLabel>
-                                                                        : null}
-                                                                </div>
-                                                            </>
-                                                            : null
-                                                        }
-                                                    </div>
-                                                </div>
+                                                                    <SizeInput {...register("size", { required: true })} name="size" type="radio" value={"XXXL"} />
+                                                                    <SizeSpan>XXXL</SizeSpan>
+                                                                </SizeLabel>
+                                                                : null}
+                                                        </div>
+                                                    </>
+                                                    : null
+                                                }
                                             </React.Fragment>
                                         )
                                     })}
@@ -287,7 +304,8 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                     Price: {productData.price} $
                                 </h3>
                                 <div className="d-flex justify-content-between mt-4">
-                                    <button type="submit" onClick={() => { setValue("isCart", true); setIsAddToCart(true) }} className="btn btn-info me-5">Add to Cart</button>
+                                    {/* <button onClick={() => buyNow(readyProductData)} className="btn btn-success me-4">Buy Now</button> */}
+                                    <button type="submit" onClick={() => { setValue("isCart", true); setIsAddToCart(true) }} className="btn btn-info mx-5">Add to Cart</button>
                                     <button type="submit" onClick={() => { setValue("isWish", true); setIsAddToWish(true) }} className="btn btn-danger">Add to Wish</button>
                                 </div>
                             </div>
@@ -312,6 +330,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                     </form>
                 }
             </ProdMainDiv>
+            <Footer />
         </>
     )
 }

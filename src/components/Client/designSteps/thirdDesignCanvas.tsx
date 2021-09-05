@@ -1,6 +1,8 @@
 import React from 'react';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { Front, IReadyproducts } from '../../Admin/interfaces/readyproducts';
+import { URL_API } from '../../services/apiService';
+import { ImageHover, ImageWrapper } from '../userDesigns';
 import { MainImgDiv } from './secondStepWorkspace';
 import ThirdDesignCanvasBack from './thirdDesignCanvasBack';
 import ThirdDesignCanvasFront from './thirdDesignCanvasFront';
@@ -37,7 +39,7 @@ const ThirdDesignCanvas: React.FC<ThirdDesignCanvasProps> = ({ readyProductData,
     let costumesLength: number = 0;
     React.useEffect(() => {
         console.log(readyProductData)
-        if (chosenSide != "back") {
+        if (chosenSide !== "back") {
             //determine the length of design or costume
             readyProductData.shirtDesigns?.front.map((item: Partial<Front>, i: number) => {
                 if (item.design?.designImage) {
@@ -95,15 +97,31 @@ const ThirdDesignCanvas: React.FC<ThirdDesignCanvasProps> = ({ readyProductData,
     if(!imagesDesignsAr || !imagesCostumesAr) return null;
     return (
         <div className="d-flex justify-content-center">
+            <ImageWrapper>
             {isFrontMain ?
                 <>
                 <ThirdDesignCanvasFront imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} chosenSide={chosenSide} />
+                
+                <ImageHover 
+                src={readyProductData?.images?.backImage.image.includes("http") ?
+                 readyProductData?.images?.backImage.image
+                 :
+                 URL_API + readyProductData?.images?.backImage.image + "?" + Date.now()
+                } style={{ height: 500, width: 500 }} />
                 </>
                 :
                 <>
                 <ThirdDesignCanvasBack imagesCostumesAr={imagesCostumesAr} imagesDesignsAr={imagesDesignsAr} readyProductData={readyProductData} chosenSide={chosenSide} />
+                <ImageHover
+                 src={readyProductData?.images?.frontImage.image.includes("http") ?
+                 readyProductData?.images?.frontImage.image
+                 :
+                 URL_API + readyProductData?.images?.frontImage.image + "?" + Date.now()
+                }
+                  style={{ height: 500, width: 500 }} />
                 </>
             }
+            </ImageWrapper>
         </div>
     )
 }

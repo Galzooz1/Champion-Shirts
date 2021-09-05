@@ -2,6 +2,7 @@ import React from 'react';
 import { Layer, Stage } from 'react-konva';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../../Admin/interfaces/readyproducts';
+import { URL_API } from '../../services/apiService';
 import { MainImgDiv } from './secondStepWorkspace';
 import { INewImagesDesign } from './thirdDesignCanvas';
 import ThirdDesignCanvasImage from './thirdDesignCanvasImage';
@@ -15,12 +16,24 @@ interface ThirdDesignCanvasBackProps {
 
 const ThirdDesignCanvasBack: React.FC<ThirdDesignCanvasBackProps> = ({ imagesCostumesAr, imagesDesignsAr, readyProductData, chosenSide }) => {
     return (
-        <MainImgDiv id="mainImgDiv" style={{ backgroundImage: `url(${readyProductData.images?.backImage.image})` }}>
+        <MainImgDiv id="mainImgDiv" style={{
+            backgroundImage:
+                readyProductData.images?.backImage.image.includes("http") ?
+                    `url(${readyProductData.images?.backImage.image})`
+                    :
+                    `url(${URL_API + readyProductData.images?.backImage.image + "?"})`
+        }}>
             <div className="d-flex justify-content-center">
                 <Stage
-                    // style={{ border: "1px solid black" }}
-                    width={readyProductData.images?.backImage.width}
-                    height={readyProductData.images?.backImage.height}
+                    style={{
+                    position: "relative", left:
+                            readyProductData.images?.backImage.x,
+                        top: readyProductData.images?.backImage.y
+                    }}
+                    width={readyProductData.images?.backImage.width
+                    }
+                    height={readyProductData.images?.backImage.height
+                    }
                 >
                     <Layer>
                         {imagesDesignsAr.map((item?: Partial<INewImagesDesign>, i?: number) => {
