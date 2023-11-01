@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import StripImg from "../../../public/images/strip3.jpeg";
+import useMediaQuery from '../services/useMediaQuery';
 
 interface StripProps {
 
@@ -43,7 +43,7 @@ color:#000000;
 font-style: italic;
 font-family: 'Allison', sans-serif;
 /* font-family: 'streamster-regular', sans-serif; */
-font-size: 270px;
+font-size: 200px;
 line-height: 252px;
 letter-spacing: 5%;
 transition: all 0.4s ease-in;
@@ -69,18 +69,21 @@ const StripTopDiv = styled.div`
 `;
 
 const Strip: React.FC<StripProps> = () => {
+    const isDesktop = useMediaQuery('(min-width:900px)');
     return (
         <StripDiv>
             <StripTopDiv>
 
-            <StripH1>
-                <H1>Design Your Style</H1>
-            </StripH1>
-            <StripBtn>
-                <Link to="/categories" style={{borderRadius:"32px", fontSize:"1.5em", padding:"16px 100px", border:"2px solid #FA3165"}} className="fw-bold btn btn-outline-light">
-                    Start Now!
-                </Link>
-            </StripBtn>
+                <StripH1>
+                    <H1>Design Your Style</H1>
+                </StripH1>
+                {isDesktop &&
+                    <StripBtn>
+                        <Link to="/categories" style={{ borderRadius: "32px", fontSize: "1.5em", padding: "16px 100px", border: "2px solid #FA3165" }} className="fw-bold btn btn-outline-light">
+                            Start Now!
+                        </Link>
+                    </StripBtn>
+                }
             </StripTopDiv>
         </StripDiv>
     )

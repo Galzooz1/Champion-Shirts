@@ -63,7 +63,7 @@ const Categories: React.FC<CategoriesProps> = () => {
                 <Header />
                 : null
             }
-            <div className="container-fluid mt-5 p-5">
+            <div className="container-fluid mt-5">
                 <div className="w-75 mx-auto">
                 {location.pathname === "/" || location.pathname === "/home" ?
                     null

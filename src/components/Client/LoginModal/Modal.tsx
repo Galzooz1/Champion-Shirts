@@ -18,6 +18,7 @@ const Overlay = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index:100;
 `
 
 const backdrop = {

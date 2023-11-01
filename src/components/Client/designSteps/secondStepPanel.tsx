@@ -146,7 +146,7 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,se
     const handleImageChange = (e: any) => {
         // console.log(e.target.files[])
         if (e.target.files) {
-            const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            const filesArray = Array.from(e.target.files).map((file: any) => URL.createObjectURL(file));
 
             // console.log("filesArray: ", filesArray);
 
