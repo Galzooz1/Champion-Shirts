@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
-// import AuthAdmin from './authAdmin';
 import CategoriesAdmin from './Categories/categoriesAdmin';
 import EditProduct from './Products/editProduct';
 import HeaderAdmin from './headerAdmin';
@@ -22,7 +21,6 @@ const HomeAdmin: React.FC<HomeAdminProps> = () => {
 
     const showHideNav = () => {
         setIsNavSideShown(wasNavSideShown => !wasNavSideShown);
-        console.log(isNavSideShown);
     }
 
     return (
@@ -30,8 +28,6 @@ const HomeAdmin: React.FC<HomeAdminProps> = () => {
             <Route strict path={`/admin`} component={AuthAdmin} />
             <HeaderAdmin showHideNav={showHideNav} />
             <div className="d-flex">
-                {/* {isNavSideShown ? 
-                <> */}
                 <div className="col-2">
                     <NavSideAdmin isNavSideShown={isNavSideShown} />
                 </div>
@@ -52,18 +48,6 @@ const HomeAdmin: React.FC<HomeAdminProps> = () => {
                         <Route exact path={`/admin/readyProducts/:page`} component={ReadyProductsAdmin} />
                     </Switch>
                 </div>
-                {/* </> */}
-                {/* :
-                <div className="col-12">
-                <Switch>
-                    <Route exact path={`/admin`} component={ProductsAdmin} />
-                    <Route exact path={`/admin/products`} component={ProductsAdmin} />
-                    <Route path="/admin/single/:s_id" component={SingleProduct} />
-                    <Route path="/admin/single/edit/:s_id" component={EditProduct} />
-                    <Route exact path={`/admin/categories`} component={CategoriesAdmin} />
-                </Switch>
-                </div>
-                } */}
             </div>
             <ReactTooltip />
         </>

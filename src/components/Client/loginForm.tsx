@@ -25,14 +25,11 @@ import SignUpForm, { SignUpFunction } from './signUpForm';
 const LoginForm: React.FC<LoginFormProps> = ({ loginError, isModalVisible, onClose, onLoginRequested, onSignUpRequested}, props) => {
 
     const {register, handleSubmit, formState: { errors }} = useForm<LoginArgs>();
-    // let history = useHistory();
-
     let emailRef = register("email",{required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i});
     let passwordRef = register("password",{required: true, minLength:3})
     let [isSignUp, setIsSignUp] = useState<boolean>(false);
 
     const onSubmit = (LoginArgs:any) => { 
-        console.log(LoginArgs);
         onLoginRequested(LoginArgs);
     }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../../Admin/interfaces/readyproducts';
 import ThirdDesignCanvas from './thirdDesignCanvas';
@@ -18,10 +16,6 @@ interface ThirdDesignStepProps {
 };
 
 const ThirdDesignStep: React.FC<ThirdDesignStepProps> = ({ setIsAddToWish ,setIsCart ,setIsWish ,isCart ,isWish ,readyProductData, chosenSide, productData }) => {
-    let dispatch = useDispatch();
-    // let isCart = useSelector<RootStateOrAny, boolean>(myStore => myStore.isCart);
-    // let isWish = useSelector<RootStateOrAny, boolean>(myStore => myStore.isWish);
-
 
     return (
         <div style={{ height: "600px",fontFamily:"Alata" }} className="d-flex justify-content-around p-3 container">

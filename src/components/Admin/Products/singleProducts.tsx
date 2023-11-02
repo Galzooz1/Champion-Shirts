@@ -4,7 +4,7 @@ import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { doApiGet, doApiMethod, URL_API } from '../../services/apiService';
 import EditProduct from './editProduct';
-import { IProdItems, Property, Sale } from '../interfaces/prodItems';
+import { IProdItems, Sale } from '../interfaces/prodItems';
 
 type SingleProductParams = {
     s_id: string;
@@ -15,12 +15,10 @@ type SingleProductProps = RouteComponentProps<SingleProductParams>
 const SingleProduct: React.FC<SingleProductProps> = (props) => {
     let history = useHistory()
     let [productData, setProductData] = useState<Partial<IProdItems>>({});
-    // let [propertyData, setPropertyData] = useState<Partial<Property[]>>([])
     let [isProductOnSale, setIsProductOnSale] = useState<Sale['onSale']>();
     let [isModalVisible, setisModalVisible] = useState<boolean>(false);
 
     const toggleModal = () => {
-        //Just another way of -> isModalVisible ? setisModalVisible(false) : setisModalVisible(true);
         setisModalVisible(wasModalVisible => !wasModalVisible);
     }
 
@@ -40,21 +38,17 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     const getSingleProductData = async () => {
         let url = URL_API + "/products/single/" + props.match.params.s_id;
         let data = await doApiGet(url);
-        console.log(data);
         setProductData(data);
-        // setPropertyData(data.properties);
     }
 
     const deleteProduct = async () => {
         if (window.confirm("Are you sure you want to delete " + productData.name + " ?")) {
             let url = URL_API + "/products/" + props.match.params.s_id;
             let data = await doApiMethod(url, "DELETE", {});
-            console.log(data);
             if (data.n === 1) {
                 toast.success(productData.name + " Deleted Successfuly!");
                 history.push("/admin");
             } else {
-                console.log(data);
                 toast.error("Error occuired, time to check the code.");
             }
         }

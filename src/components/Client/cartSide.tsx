@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
 import React from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 import CartItem from './cartItem';
 import './css/cart.css';
 import { cartIcon } from './header';
@@ -32,7 +31,6 @@ const CartSide: React.FC<CartSideProps> = () => {
   }
 
   React.useEffect(() => {
-    console.log("show")
     if (showCart) {
       setAnimCss("cart_side_start");
     }
@@ -55,7 +53,6 @@ const CartSide: React.FC<CartSideProps> = () => {
           <hr />
           <div className="cart_items">
             {carts_ar.map((item, i) => {
-              // console.log("item:" , item)
               if (item.count > 0) {
                 total += item.price;
                 return (

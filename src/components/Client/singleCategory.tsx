@@ -60,7 +60,6 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     let history = useHistory();
     let [categoryData, setCategoryData] = React.useState<Partial<ICategories>>({});
     let [productsData, setProductsData] = React.useState<Partial<IProdItems[]>>([]);
-    // let [productAmount, setProductAmount] = React.useState<Partial<Property[]>>([])
     React.useEffect(() => {
         getSingleCatData();
         getProductsData();
@@ -69,16 +68,13 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
     const getSingleCatData = async () => {
         let url = URL_API + "/categories/single/" + props.match.params.s_id;
         let data = await doApiGet(url);
-        console.log(data);
         setCategoryData(data);
     }
 
     const getProductsData = async () => {
         let url = URL_API + "/products?category=" + props.match.params.s_id + "&page=0&sort=isClean&reverse=yes&perPage=10";
         let data = await doApiGet(url);
-        console.log(data);
         setProductsData(data);
-        // setProductAmount(data[0].properties);
     }
 
     const renderTooltip = (props: any, color: any) => (
@@ -89,7 +85,6 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
         <>
             <Header />
             <div className="d-flex">
-                {/* <FilterForm productsData={productsData} /> */}
                 <div className="container mt-5">
                     <Breadcrumb>
                         <Breadcrumb.Item><Link to={"/"}>Home</Link></Breadcrumb.Item>
@@ -110,13 +105,11 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                             <CleanWrapperDiv onClick={() => { history.push("/product/clean/" + item?.s_id) }} transition={{duration:0.4}} whileHover={{scale:1.01}}>
                                                 <CleanH2>Design <span className="fw-bold ms-4">Now!</span></CleanH2>
                                                 <WrapperDiv style={{position:"relative", top:"-5px"}}>
-                                                    {/* <div className="d-flex align-items-start shadow" style={{ width: "20%", position: "relative", top: "-5px" }}> */}
                                                     {item?.image?.includes("http") ?
                                                         <img src={item?.image} alt={item?.name} height="350px" width="100%" />
                                                         :
                                                         <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
                                                     }
-                                                    {/* </div> */}
                                                     <div className="d-flex justify-content-center align-items-center">
                                                         <h3 className="me-3">{item?.name}</h3>
                                                         <h4>{item?.price.toFixed(2)} $</h4>
@@ -147,10 +140,8 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
                                                 :
                                                 <img src={URL_API + item?.image + "?" + Date.now()} height="350px" width="100%" alt={item?.name} />
                                             }
-                                            {/* <img src={item?.image} alt={item?.name} width="100" height="100" /> */}
                                             <div className="text-dark d-flex justify-content-center">
                                                 {item?.properties.map((prop, i) => {
-                                                    // const amounts = productAmount.amount;
                                                     return (
                                                         <>
                                                             <motion.div className="p-2 text-start d-flex justify-content-around">
@@ -167,16 +158,6 @@ const SingleCategory: React.FC<SingleCategoryProps> = (props) => {
 
                                                 <h4>{item?.price.toFixed(2)} $</h4>
                                             </div>
-                                            {/* <div className="text-info border p-3">
-                                        <h3>Colors Available:</h3>
-                                        {item?.properties.map((prop, i) => {
-                                            return (
-                                                <>
-                                                <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                </>
-                                                )
-                                            })}
-                                        </div> */}
 
                                         </WrapperDiv>
                                     }

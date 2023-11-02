@@ -1,7 +1,5 @@
 .Navbar{
     z-index: 1;
-    /* position: absolute; */
-    /* top: 87px; */
     background-color:#487686 ;
 }
 
@@ -17,6 +15,3 @@
 .navbar {
     position: static;
   }
-  /* .navbar .nav > li {
-    z-index: 1001;
-  } */

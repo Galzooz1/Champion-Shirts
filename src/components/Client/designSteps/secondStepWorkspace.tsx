@@ -1,11 +1,9 @@
-import { relative } from 'path';
 import React from 'react';
 import { Layer, Stage } from 'react-konva';
 import styled from 'styled-components';
 import { IDesigns } from '../../Admin/interfaces/designs';
 import { IProdItems, Property } from '../../Admin/interfaces/prodItems';
 import { URL_API } from '../../services/apiService';
-// import { IDesignsArr } from './secondStepApp';
 import SecondStepImage from './secondStepImage';
 
 interface SecondStepWorkspaceProps {
@@ -72,7 +70,7 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
         setValue("images.backImage.height", propertiesData[indexPicked]?.sizeOfCanvasBack.height)
         setValue("images.backImage.x", propertiesData[indexPicked]?.positionOfCanvasBack.x)
         setValue("images.backImage.y", propertiesData[indexPicked]?.positionOfCanvasBack.y)
-        if (chosenSide != "back") {
+        if (chosenSide !== "back") {
             setIsFrontMain(true);
         } else {
             setIsFrontMain(false);
@@ -130,14 +128,14 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
     const setValueIsDesignBoolean = (key: any, s_id?: any, image?: any, isDesign?: boolean, isCostume?: boolean) => {
         if (chosenSide === "front" || (chosenSide === "both" && bothSidesStep === 1)) {
             if (isDesign) {
-                if (key != null && s_id != null) {
+                if (key !== null && s_id !== null) {
                     setValue(`shirtDesigns.front[${key}].design.is_design`, true);
                     setValue(`shirtDesigns.front[${key}].design.design_s_id`, s_id);
                     setValue(`shirtDesigns.front[${key}].design.designImage`, image);
                 }
             }
             if (isCostume) {
-                if (key != null) {
+                if (key !== null) {
                     setValue(`shirtDesigns.front[${key}].costume.is_costume`, true);
                     setValue(`shirtDesigns.front[${key}].costume.costumeImage`, image);
                 }
@@ -145,14 +143,14 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
         }
         if (chosenSide === "back" || (chosenSide === "both" && bothSidesStep === 2)) {
             if (isDesign) {
-                if (key != null && s_id != null) {
+                if (key !== null && s_id !== null) {
                     setValue(`shirtDesigns.back[${key}].design.is_design`, true);
                     setValue(`shirtDesigns.back[${key}].design.design_s_id`, s_id);
                     setValue(`shirtDesigns.back[${key}].design.designImage`, image);
                 }
             }
             if (isCostume) {
-                if (key != null) {
+                if (key !== null) {
                     setValue(`shirtDesigns.back[${key}].costume.is_costume`, true);
                     setValue(`shirtDesigns.back[${key}].costume.costumeImage`, image);
                 }
@@ -251,7 +249,6 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
                                                         designProps={item}
                                                         isSelected={key === selectedDesign}
                                                         onSelect={() => {
-                                                            console.log(key);
                                                             setSelectDesign(key)
                                                         }}
                                                         onChange={(newAttrs) => {
@@ -318,28 +315,6 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
                                                         SetStatesValues={(_width, _height, _x, _y, _rotation) => SetCordsValues(_width, _height, _x, _y, _rotation, i, undefined, isCostume)}
                                                         setValue={setValue}
                                                     />
-                                                    {/* {chosenSide === "front" || chosenSide === "both" &&
-                                                        <>
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.is_costume`, { required: true })} className="d-none" name="is_costume" id="id_costume" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.costumeImage`, { required: true })} className="d-none" name="costumeImage" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.sizeOfCostume.width`, { required: true })} className="d-none" name="sizeOfCostume.width" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.sizeOfCostume.height`, { required: true })} className="d-none" name="sizeOfCostume.height" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.positionOfCostume.x`, { required: true })} className="d-none" name="positionOfCostume.x" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.positionOfCostume.y`, { required: true })} className="d-none" name="positionOfCostume.y" />
-                                                            <input {...register(`shirtDesigns.front[${i}].costume.positionOfCostume.rotation`, { required: true })} className="d-none" name="positionOfCostume.rotation" />
-                                                        </>
-                                                    }
-                                                    {chosenSide === "back" || chosenSide === "both" &&
-                                                        <>
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.is_costume`, { required: true })} className="d-none" name="is_costume" id="id_costume" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.costumeImage`, { required: true })} className="d-none" name="costumeImage" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.sizeOfCostume.width`, { required: true })} className="d-none" name="sizeOfCostume.width" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.sizeOfCostume.height`, { required: true })} className="d-none" name="sizeOfCostume.height" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.positionOfCostume.x`, { required: true })} className="d-none" name="positionOfCostume.x" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.positionOfCostume.y`, { required: true })} className="d-none" name="positionOfCostume.y" />
-                                                            <input {...register(`shirtDesigns.back[${i}].costume.positionOfCostume.rotation`, { required: true })} className="d-none" name="positionOfCostume.rotation" />
-                                                        </>
-                                                    } */}
                                                 </React.Fragment>
                                             )
                                         })}
@@ -361,7 +336,6 @@ const SecondStepWorkspace: React.FC<SecondStepWorkspaceProps> = ({ premuimExtraP
                                                             designProps={item}
                                                             isSelected={key === selectedDesign}
                                                             onSelect={() => {
-                                                                console.log(key);
                                                                 setSelectDesign(key)
                                                             }}
                                                             onChange={(newAttrs) => {

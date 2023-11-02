@@ -32,7 +32,6 @@ const UsersAdmin: React.FC<UsersAdminProps> = (props) => {
         let currentPage = props.match.params.page || 0;
         let url = URL_API + `/users?page=${currentPage}&sort=_id&reverse=yes&perPage=5`;
         let data = await doApiMethod(url, "GET");
-        console.log(data);
         setUsersAr(data);
     }
 

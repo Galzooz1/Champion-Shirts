@@ -35,7 +35,6 @@ const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
         let currentPage = props.match.params.page || 0;
         let url = URL_API + `/designs?page=${currentPage}&sort=_id&reverse=yes&perPage=5`;
         let data = await doApiGet(url);
-        console.log(data);
         setDesignsAr(data);
     }
 
@@ -45,10 +44,8 @@ const DesignsAdmin: React.FC<DesignsAdminProps> = (props) => {
         let data = await doApiMethod(url, "DELETE", {});
         if (data.n === 1) {
             toast.success(name + " Deleted Successfuly!");
-            // window.location.reload()
             history.push("/admin/designs");
         } else {
-            console.log(data);
             toast.error("Error occuired, time to check the code.");
         }
     }

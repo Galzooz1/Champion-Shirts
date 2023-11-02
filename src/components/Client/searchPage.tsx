@@ -24,7 +24,6 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
     React.useEffect(() => {
         // בשביל לאסוף קווארי סטרינג בצד לקוח
         let urlParams = new URLSearchParams(window.location.search);
-        //?q=koko
         setLoadingShow(true);
         setSearch(urlParams.get('q'));
         doApiSearch(urlParams.get('q'));
@@ -36,7 +35,6 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
         let data = await doApiGet(url);
         setProdsAr(data);
         setLoadingShow(false);
-        console.log(data);
     }
 
     const renderTooltip = (props: any, color: any) => (
@@ -71,20 +69,9 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                                 <img src={item?.image} alt={item?.name} height="350px" width="100%" />
                                         <h2>{item?.name}</h2>
                                         <h3>{item?.price} $</h3>
-                                        {/* <div className="text-info border p-3">
-                                        <h3>Colors Available:</h3>
-                                        {item?.properties.map((prop, i) => {
-                                            return (
-                                                <>
-                                                    <button className="border border-dark rounded-circle p-3 m-1" style={{ backgroundColor: `${prop?.color}`, width: "30px", height: "30px" }} data-tip={`${prop?.color}`}></button>
-                                                </>
-                                            )
-                                        })}
-                                    </div> */}
                                         <div className="text-info border p-3">
                                             <h3>Available:</h3>
                                             {item?.properties.map((prop, i) => {
-                                                // const amounts = productAmount.amount;
                                                 return (
                                                     <>
                                                         <div className="border border-dark p-2 d-flex justify-content-around">

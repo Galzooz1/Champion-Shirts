@@ -8,8 +8,6 @@ type UserConfirmParams = {
 
 type UserConfirmProps = RouteComponentProps<UserConfirmParams>;
 
-// type Props = UserConfirmProps & UserConfirmed;
-
 const UserConfirm: React.FC<UserConfirmProps> = (props) => {
     let history = useHistory()
     const doUserConfirm = async(code: string) => { 

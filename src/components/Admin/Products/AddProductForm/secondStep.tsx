@@ -1,8 +1,5 @@
-import axios from 'axios';
 import React from 'react';
-import { toast } from 'react-toastify';
 import { InputContainer, LabelContainer } from '../../../Client/LoginModal/InputWithIcon';
-import { URL_API } from '../../../services/apiService';
 
 interface SecondStepProps {
     errors: any;
@@ -15,7 +12,6 @@ const SecondStep: React.FC<SecondStepProps> = ({ errors, register }) => {
     let fileRef = React.useRef<any>();
 
     const uploadFile = async () => {
-        console.log(fileRef.current.files[0]);
         const myData = new FormData();
         myData.append("fileSend", fileRef.current.files[0]);
     }

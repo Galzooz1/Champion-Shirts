@@ -47,26 +47,19 @@ const newUploadedImage = (_image: any) => ({
 
 const SecondStepApp: React.FC<SecondStepAppProps> = ({isImageFileClicked, setIsImageFileClicked ,extraPrice ,backFlag ,isDesignClicked, setIsDesignClicked, unregister ,reset ,chosenSide ,setValue ,productData, propertiesData, indexPicked, errors, register }) => {
     let [designsData, setDesignsData] = React.useState<Partial<IDesigns[]>>([]);
-    // let [isDesignClicked, setIsDesignClicked] = React.useState<any>(false);
-    // let [isImageFileClicked, setIsImageFileClicked] = React.useState<any>(false);
     let [designsAr, setDesignsAr] = React.useState<any[]>([{}]);
     let [filesAr, setFilesAr] = React.useState<any[]>([{}]);
     const [selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
 
-    // let DesignsArr:IDesignsArr[] = [];
     React.useEffect(() => {
         getDesignsData();
-        console.log(selectedFiles);
         
-        // fixDesignsData();
-        // console.log(DesignsArr);
     }, [selectedFiles]);
     
     
     const getDesignsData = async () => {
         let url = URL_API + "/designs";
         let data = await doApiGet(url);
-        console.log("Designssss",data);
         setDesignsData(data);
     }
     
@@ -87,37 +80,13 @@ const SecondStepApp: React.FC<SecondStepAppProps> = ({isImageFileClicked, setIsI
     }
 
     const premuimExtraPrice = (_price: number, _clicks: number) => {
-        console.log(_clicks)
-        console.log(_price)
         let sum = _price;
         if(_clicks > 0){
             sum *= _clicks
         }
-        // alert(sum + " " + _clicks)
-        if(_price < 0){
-            // alert(sum + " " + _clicks)
-        } 
-        console.log(sum)
+
         extraPrice(sum);
     }
-
-    // const fixDesignsData = () => {
-    //     for (let i = 0; i < designsData.length; i++) {
-    //         const newOb = {
-    //             image:designsData[i]?.image,
-    //             width:designsData[i]?.width,
-    //             height:designsData[i]?.height,
-    //             name:designsData[i]?.name
-    //         }
-    //         DesignsArr.push(newOb)
-    //     }
-    //     for (let i = 0; i < DesignsArr.length; i++) {
-    //         if(!DesignsArr[i].image.includes("http")){
-    //             DesignsArr[i].image = URL_API + DesignsArr[i].image + "?" + Date.now();
-    //         }
-    //     }
-    //     console.log('asd - ',DesignsArr)
-    // }
     
     return (    
         <div style={{ height: "600px" }} className="d-flex justify-content-between p-3">

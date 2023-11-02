@@ -16,7 +16,6 @@ const Login: React.FC<LoginProps> = () => {
     let [isModalVisible, setisModalVisible] = useState<boolean>(false);
 
     const toggleModal = () => { 
-        //Just another way of -> isModalVisible ? setisModalVisible(false) : setisModalVisible(true);
         setisModalVisible(wasModalVisible => !wasModalVisible);
     }
 
@@ -27,7 +26,6 @@ const Login: React.FC<LoginProps> = () => {
     const onLoginRequested: LoginFunction = async (LoginArgs: any) => {
         let url:string = URL_API + "/users/login";
         let data = await doApiMethod(url, "POST", LoginArgs);
-        console.log(data);
         if(data.token){
             localStorage.setItem("token", data.token);
             let url2 = URL_API + "/users/myInfo"
@@ -44,11 +42,8 @@ const Login: React.FC<LoginProps> = () => {
     const onSignUpRequested: SignUpFunction = async(SignUpArgs: any):Promise<any[]> => {
         let url = URL_API + "/users/";
         let data = await doApiMethod(url, "POST", SignUpArgs);
-        console.log(data);
         if(data._id){
             toast.success("Signed up successful!")
-            // console.log(data.confirmationCode)
-            // console.log(data._id)
             return [true, data.confirmationCode, data._id];
         }else if(data.code === 11000){
             toast.error("Email already exist!")

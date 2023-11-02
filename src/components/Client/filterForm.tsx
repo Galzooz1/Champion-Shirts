@@ -27,14 +27,12 @@ const FilterForm: React.FC<FilterFormProps> = ({ productsData }) => {
     const { register, handleSubmit, formState: { errors, isValid } } = useForm<Partial<Property>>({ mode: 'all' });
 
     const onSubmit = (dataBody: any) => { 
-        console.log(JSON.stringify(dataBody))
         filterColor(dataBody)
     }
 
     const filterColor = async(dataBody: any) => { 
         let url = URL_API +"/products/filter"
         let data = await doApiMethod(url, "POST", dataBody);
-        console.log(data);
     }
 
     return (

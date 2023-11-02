@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IProdItems } from '../../Admin/interfaces/prodItems';
-import Slider from "react-slick";
 import FirstDesignStepCarousel from './firstDesignStepCarousel';
-import { useHistory } from 'react-router-dom';
 import { URL_API } from '../../services/apiService';
 
 interface FirstDesignStepProps {
@@ -63,7 +61,6 @@ export const SizeSpan = styled.span`
 const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, extraPrice, chosenSide, setChosenSide, productData, errors, register, indexPickedCallBack }) => {
     let [indexPicked, setIndexPicked] = React.useState<number>(555);
     let selectSideRef = React.useRef<HTMLSelectElement>(null);
-    let history = useHistory();
     React.useEffect(() => {
     }, []);
     const handleChange = (i: number) => {
@@ -114,7 +111,6 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, 
                                 <div className="ms-2">
                                     {indexPicked === i ?
                                         <>
-                                            {/* <h3>Size:</h3> */}
                                             <div className="d-flex">
                                                 {item?.amount.XS > 0 ?
                                                     <SizeLabel>
@@ -202,7 +198,6 @@ const FirstDesignStep: React.FC<FirstDesignStepProps> = ({ extraPriceOfProduct, 
                                 <img src={URL_API + productData?.image + "?" + Date.now()} height="350px" width="300px" alt={productData?.name} />
                             }
                         </div>
-                        // <img className="border rounded-2 shadow mb-4" width="300px" src={productData.image} alt={productData?.name} />
                         :
                         <FirstDesignStepCarousel productData={productData} indexPicked={indexPicked} />
                     }

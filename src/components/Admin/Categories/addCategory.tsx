@@ -12,22 +12,19 @@ interface AddCategoryProps {
 };
 
 const AddCategory: React.FC<AddCategoryProps> = ({ isModalVisible, onClose }) => {
-    const { register, handleSubmit, formState: { errors, isValid } } = useForm<Partial<ICategories>>({ mode: 'all' });
+    const { register, handleSubmit, formState: { errors } } = useForm<Partial<ICategories>>({ mode: 'all' });
 
     const onSubmit = (dataBody: any) => {
-        console.log(dataBody);
         AddCategory(dataBody);
     }
 
     const AddCategory = async (dataBody: any) => {
         let url = URL_API + "/categories";
         let data = await doApiMethod(url, "POST", dataBody);
-        console.log(data);
         if (data.s_id) {
             toast.success("Category Added!")
             window.location.reload();
         } else {
-            console.log(dataBody)
             toast.error("There's a problem!")
         }
     }
@@ -46,7 +43,6 @@ const AddCategory: React.FC<AddCategoryProps> = ({ isModalVisible, onClose }) =>
                                 <div>
                                     <LabelContainer className="text-warning">Name</LabelContainer>
                                     <InputContainer>
-                                        {/* {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>} */}
                                         <ModalInput {...register("name", { required: true, minLength: 2 })} type="text" name="name" id="name" className="form-control" />
                                         {errors.name && <span className="text-danger m-2 text-center">Please type Name</span>}
                                     </InputContainer>
@@ -54,7 +50,6 @@ const AddCategory: React.FC<AddCategoryProps> = ({ isModalVisible, onClose }) =>
                                 <div>
                                     <LabelContainer className="text-warning">Info</LabelContainer>
                                     <InputContainer>
-                                        {/* {NameIcon && <IconContainer><img src={NameIcon} width="24px" height="24px" alt="user-icon" /></IconContainer>} */}
                                         <ModalInput {...register("info", { required: true, minLength: 2 })} type="text" name="info" id="info" className="form-control" />
                                         {errors.info && <span className="text-danger m-2 text-center">Please type Info</span>}
                                     </InputContainer>

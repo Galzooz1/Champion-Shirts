@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import TrashPNG from '../../assets/trash.png';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { IUsers } from '../Admin/interfaces/users';
-import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
+import { doApiMethod, URL_API } from '../services/apiService';
 import ThirdDesignCanvas from './designSteps/thirdDesignCanvas';
 import Footer from './footer';
 import Header, { heartIcon } from './header';
@@ -76,7 +76,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
     const getUserData = async () => {
         let url = URL_API + "/users/myInfo";
         let data = await doApiMethod(url, "GET");
-        console.log(data);
         setUserInfo(data);
         getReadyProductsData(data._id);
     }
@@ -84,7 +83,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
     const getReadyProductsData = async (_id: string) => {
         let url = URL_API + "/readyProducts/" + _id;
         let data = await doApiMethod(url, "GET");
-        console.log(data)
         setReadyProductData(data);
         initialStatesReadyProducts(data);
     }
@@ -114,7 +112,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
         let url = URL_API + "/readyProducts/" + s_id;
         await doApiMethod(url, "DELETE", {});
         window.location.reload();
-        // history.push("/selfdesigns/" + userInfo?._id)
     }
 
     const buyNow = (item?: IReadyproducts) => {
@@ -146,8 +143,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                 <DesignedH2>My Designs</DesignedH2>
                 <DesignedLine>
                 </DesignedLine>
-                {/* {wishProductData.length === 0 && wishCleanProductData.length === 0 &&
-                <Loading />} */}
                
                 {wishProductData.length > 0 &&
                     <>
@@ -171,7 +166,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                                                             :
                                                             <ImageHover src={URL_API + item?.images?.backImage.image + "?" + Date.now()} style={{ height: 500, width: 500 }} />
                                                         }
-                                                        {/* <ImageHover src={item?.images?.backImage.image} width="200" height="300" /> */}
                                                     </ImageWrapper>
                                                     <div className="p-3 text-center">
                                                         <h3>{item.product_name}</h3>
@@ -224,7 +218,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                             {wishCleanProductData.map((item?: IReadyproducts, i?: number) => {
                                 return (
                                     <>
-                                    {/* {(item?.s_id !== carts_ar[i!].s_id) ? :null} */}
                                     <>
                                         {(item?.isClean) &&
                                             <div className="col-lg-5 p-3 mt-3 mx-2">
@@ -264,7 +257,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                                                             Catalog Number: {item.s_id}
                                                         </div>
                                                         <h3>{item?.price?.toFixed(2)} $</h3>
-                                                        {/* {item.isWish && */}
                                                         <div className="d-flex justify-content-start align-items-center">
                                                             <IconWrapper>
                                                                 <div style={{ cursor: "pointer" }}>
@@ -275,7 +267,6 @@ const UserDesigns: React.FC<UserDesignsProps> = (props) => {
                                                                 </div>
                                                             </IconWrapper>
                                                         </div>
-                                                        {/* } */}
                                                     </div>
                                                     <button onClick={() => { buyNow(item) }} className="btn btn-success mb-3">Buy Now</button>
                                                 </div>

@@ -49,7 +49,6 @@ const Checkout: React.FC<CheckoutProps> = () => {
         let url = URL_API + "/carts";
         try {
             let data = await doApiMethod(url, "POST", obj)
-            console.log(JSON.stringify(data));
             if (data.n == 1) {
                 toast.success("Your order been updated");
                 dispatch({ type: "RESET_CARTS", carts_ar: [] });
@@ -62,13 +61,11 @@ const Checkout: React.FC<CheckoutProps> = () => {
             }
         }
         catch (err) {
-            console.log(err);
             toast.error("there's a problem")
         }
     }
 
     const deleteProductFromCart = (item: IReadyproducts) => {
-        console.log(item)
         if (window.confirm("Are you sure you want to delete " + item.product_name + "?")) {
             item.count = 0;
             dispatch({ type: "UPDATE_THE_CART", data: item })
@@ -78,20 +75,16 @@ const Checkout: React.FC<CheckoutProps> = () => {
     const getUserData = async () => {
         let url = URL_API + "/users/myInfo";
         let data = await doApiMethod(url, "GET");
-        console.log(data);
         setUserInfo(data);
     }
 
     const onSubmit = (dataBody: Partial<IUsers>) => {
-        console.log(dataBody);
         editUserInfo(dataBody);
     }
 
     const editUserInfo = async (dataBody: Partial<IUsers>) => {
-        console.log(userInfo?._id);
         let url = URL_API + "/users/" + userInfo?._id;
         let data = await doApiMethod(url, "PUT", dataBody);
-        console.log(data)
         if (data.n === 1) {
             toast.success("User Information Updated!");
             window.location.reload();
@@ -158,7 +151,6 @@ const Checkout: React.FC<CheckoutProps> = () => {
                             <div className="col-lg-3 mx-auto p-2 d-flex justify-content-center align-items-start text-center" style={{ height: "300px" }}>
                                 <div>
                                     <h3 className="mb-4">Total price: {totalCart.toFixed(2)} $</h3>
-                                    {/* <button onClick={checkoutReal} className="btn btn-outline-info w-100">Commit buy</button> */}
                                     <PaypalBtn successFunc={checkoutReal} total={totalCart.toFixed(2)} clientId="AbiWx8wSIUBrmPTxcyHs8TTCHi1k6u9vYdGP4VvOsO42snOPp6hQ0WwKDvgr3berBD8LuqrNXhZ9793I" />
                                 </div>
                             </div>

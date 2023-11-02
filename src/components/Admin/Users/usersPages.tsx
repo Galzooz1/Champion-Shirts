@@ -17,7 +17,6 @@ const UsersPages: React.FC<UsersPagesProps> = () => {
 
     const doCountApi = async () => {
         let data = await doApiGet(URL_API + "/users/count");
-        console.log(data);
         setPages(Math.ceil(data.count / perPage));
     }
     return (

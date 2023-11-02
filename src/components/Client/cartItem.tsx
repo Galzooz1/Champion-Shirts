@@ -11,14 +11,9 @@ interface CartItemProps {
 const CartItem: React.FC<CartItemProps> = ({ item }, props) => {
     let dispatch = useDispatch();
 
-    // React.useEffect(() => {
-    //     item.product_name = item?.product_name.length > 11 ? item?.product_name.substr(0, 10) + "..." : item?.product_name;
-    // }, [props])
-
     const delFromCart = () => {
         if (window.confirm("Are you sure you want to delete " + item.product_name + "?")) {
             item.count = 0;
-            // dispatch({ type: "UPDATE_IS_CART", flag: false })
             dispatch({ type: "UPDATE_THE_CART", data: item })
             deleteFromDB();
         }

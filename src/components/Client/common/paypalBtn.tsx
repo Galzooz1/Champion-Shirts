@@ -16,14 +16,8 @@ const PaypalBtn: React.FC<PaypalBtnProps> = ({successFunc, total, clientId}) => 
           
           // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
           onSuccess={(details: any, data:any) => {
-            console.log("Transaction completed by ", details);
-            console.log("data ", data);
             successFunc(data.orderID);
           }}  
-        //   onCancel={(err: any = {}) => {
-        //     // אם המשתמש ביטל
-        //     console.log(err);
-        //   }}
   
           options={{
             clientId: clientId

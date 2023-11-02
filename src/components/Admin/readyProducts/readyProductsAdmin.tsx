@@ -24,7 +24,6 @@ const ReadyProductsAdmin: React.FC<ReadyProductsAdminProps> = (props) => {
         let currentPage = props.match.params.page || 0;
         let url = URL_API + `/readyProducts?page=${currentPage}&sort=_id&reverse=yes&perPage=5`;
         let data = await doApiGet(url);
-        console.log(data);
         setReadyProdsAr(data);
       }
 

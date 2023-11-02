@@ -17,7 +17,6 @@ const ProductsPages: React.FC<ProductsPagesProps> = () => {
 
     const doCountApi = async () => {
         let data = await doApiGet(URL_API + "/products/count");
-        console.log(data);
         setPages(Math.ceil(data.count / perPage));
     }
     return (

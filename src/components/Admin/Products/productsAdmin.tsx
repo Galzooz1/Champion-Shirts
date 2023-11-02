@@ -37,7 +37,6 @@ const ProductsAdmin: React.FC<ProductsAdminProps> = (props) => {
   }, [props.match]);
 
   const toggleModal = () => { 
-    //Just another way of -> isModalVisible ? setisModalVisible(false) : setisModalVisible(true);
     setisModalVisible(wasModalVisible => !wasModalVisible);
 }
 
@@ -49,7 +48,6 @@ const onBackdropClick = () => {
     let currentPage = props.match.params.page || 0;
     let url = URL_API + `/products?page=${currentPage}&sort=_id&reverse=yes&perPage=5`;
     let data = await doApiGet(url);
-    console.log(data);
     setProdsAr(data);
   }
 
@@ -61,13 +59,10 @@ const onBackdropClick = () => {
     if (window.confirm("Are you sure you want to delete " + _name + " ?")) {
         let url = URL_API + "/products/" + _s_id;
         let data = await doApiMethod(url, "DELETE", {});
-        console.log(data);
         if (data.n === 1) {
             toast.success(_name + " Deleted Successfuly!");
-            // window.location.reload()
             history.push("/admin");
         } else {
-            console.log(data);
             toast.error("Error occuired, time to check the code.");
         }
     }
@@ -89,7 +84,6 @@ const onBackdropClick = () => {
       </div>
       <hr />
       </motion.div>
-      {/* <Link to="/admin/addProd">add new prod</Link> */}
       <motion.table
       transition={{duration:1, delay:0.5}} initial={{opacity: 0}} animate={{opacity: 1}}
       className="table table-striped container">

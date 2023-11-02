@@ -6,7 +6,7 @@ import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import Slider from 'react-slick';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { IProdItems, Property } from '../Admin/interfaces/prodItems';
+import { IProdItems } from '../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
 import { doApiGet, doApiMethod, URL_API } from '../services/apiService';
 import { SizeInput, SizeLabel, SizeSpan } from './designSteps/firstDesignStep';
@@ -97,9 +97,7 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
 
     React.useEffect(() => {
         getSingleProdData();
-        console.log("useEffect singleProduct: ", carts_ar);
         carts_ar.map(prodItem => {
-            console.log("map: ", prodItem);
             if (prodItem._id) {
                 setCountCartItems(prodItem.count);
             }
@@ -109,11 +107,9 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
     const getSingleProdData = async () => {
         let url = URL_API + "/products/single/" + props.match.params.s_id;
         let data = await doApiGet(url)
-        console.log(data);
         setIsLoading(false)
         let url_cat = URL_API + "/categories/single/" + data.category_s_id;
         let dataCategory = await doApiGet(url_cat);
-        console.log(dataCategory);
         data.catName = dataCategory.name;
         setProductData(data);
         setPropertiesData(data.properties);
@@ -124,43 +120,33 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
         if (!localStorage["token"]) {
             toast.error("Please Login!");
         } else {
-            console.log(dataBody)
             addReadyProduct(dataBody);
         }
     }
 
     const addReadyProduct = async (dataBody: any) => {
-        console.log("dataBody: ", dataBody);
         let url = URL_API + "/readyProducts"
         let data = await doApiMethod(url, "POST", dataBody);
         data.count = 0;
         setReadyProductData(data);
-        console.log("data: ", data);
         if (isAddToCart) {
             setCountCartItems(countCartItems + 1);
             data.count = countCartItems + 1;
             dispatch({ type: "UPDATE_THE_CART", data: data })
-            console.log("data2: ", data);
             toast.success(productData.name + " Added to Cart!")
             setIsAddToCart(false);
         }
         else if (isAddToWish) {
-            // if(!isWish){
             setCountWishItems(countWishItems + 1);
             data.count = countWishItems + 1;
             dispatch({ type: "UPDATE_IS_WISH", flag: true })
             dispatch({ type: "UPDATE_THE_WISH", data: data })
-            console.log("data2: ", data);
             toast.success(productData.name + " Added to Wish!")
             setIsAddToWish(false);
-            // }else{
-            //     toast.error(productData.name + " is Already On Wish List!")
-            // }
         }
     }
 
     const setValuesFunc = (i: any) => {
-        console.log(propertiesData[i])
         setValue("isClean", false);
         setValue("price", productData?.price!);
         setValue("product_name", productData?.name!);
@@ -322,8 +308,6 @@ const SingleProduct: React.FC<SingleProductProps> = (props) => {
                                         <img className="border rounded-2 shadow mb-4" src={URL_API + productData?.image + "?" + Date.now()} height="400px" width="100%" alt={productData?.name} />
                                     }
 
-                                    {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
-                                    {/* <img className="border rounded-2 shadow mb-4" src={productData.image} alt={productData?.name} /> */}
                                 </Slider>
                             </div>
                         </div>

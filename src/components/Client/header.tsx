@@ -16,10 +16,6 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import CartSide from './cartSide';
 import AuthUser from './authUser';
 import { IReadyproducts } from '../Admin/interfaces/readyproducts';
-import { ReactComponent as MoonSVG } from '../../assets/moon.svg';
-// import DropdownMenu from 'react-bootstrap/lib/DropdownMenu';
-// import DropdownItem from 'react-bootstrap/esm/DropdownItem';
-
 
 interface HeaderProps {
 
@@ -93,11 +89,6 @@ const Header: React.FC<HeaderProps> = () => {
 
 
     React.useEffect(() => {
-        console.log("Wish: ", wish_ar);
-        console.log("Cart: ", carts_ar);
-        // dispatch({type:"RESET_CARTS", carts_ar:[]})
-        // dispatch({type:"RESET_WISH", wish_ar:[]})
-        // dispatch({type:"UPDATE_IS_WISH", flag: false})
         getCategoriesData();
         checkIfAdmin();
         if (localStorage["token"]) {
@@ -108,7 +99,6 @@ const Header: React.FC<HeaderProps> = () => {
     const getCategoriesData = async () => {
         let url = URL_API + `/categories?sort=_id&reverse=yes&perPage=200`
         let data = await doApiGet(url);
-        console.log(data);
         setCategoriesAr(data);
     }
 
@@ -143,7 +133,6 @@ const Header: React.FC<HeaderProps> = () => {
     const getUserData = async () => {
         let url = URL_API + "/users/myInfo";
         let data = await doApiMethod(url, "GET");
-        console.log(data);
         setUserInfo(data);
     }
 
@@ -209,9 +198,6 @@ const Header: React.FC<HeaderProps> = () => {
                                     {searchIcon()}
                                 </motion.div>
                             }
-                            {/* <div>
-                                <MoonSVG fill="black" stroke="red" width="100" height="100" />
-                            </div> */}
                             <motion.div whileHover={{ scale: 1.1 }} className="mx-2 d-flex justify-content-center justify-content-lg-end align-items-center ms-4 my-2 my-lg-0">
                                 {(carts_ar.length > 0) ?
                                     <motion.h3 whileHover={{color:"#6cabc0"}} className="cart_header_icon me-2 text-warning" style={{ cursor: "pointer", color:"white" }} onClick={() => { toggleCart() }}>
@@ -253,7 +239,6 @@ const Header: React.FC<HeaderProps> = () => {
                                                                     </button>
                                                                     <div className="mx-4 text-dark fw-bold">{item.size}</div>
                                                                     <div className="fw-bold text-dark">{item?.price?.toFixed(2)}$</div>
-                                                                    {/* <img src={item.images.frontImage.image} alt={item.product_name} width="20" /> */}
                                                                 </div>
                                                             </Dropdown.Item>
                                                             <Dropdown.Item style={{width:"15%"}} className="d-flex justify-content-end">
@@ -262,7 +247,7 @@ const Header: React.FC<HeaderProps> = () => {
                                                                 </button>
                                                             </Dropdown.Item>
                                                         </tbody>
-                                                            {(wish_ar.length > 0 && (i != wish_ar.length-1)) &&
+                                                            {(wish_ar.length > 0 && (i !== wish_ar.length-1)) &&
                                                                 <Dropdown.Divider />
                                                             }
                                                     </>
@@ -326,7 +311,6 @@ const Header: React.FC<HeaderProps> = () => {
             </HeaderDiv>
             <Navbar /*style={{ position: "sticky", top: 0 }}*/ className="Navbar container-fluid d-flex justify-content-center" style={{backgroundColor:"#487686"}} variant="light" expand="lg">
                 <Container className="justify-content-start">
-                    {/* <Navbar.Brand href="#home"><Link className="text-white text-white text-decoration-none" to="/">Home</Link></Navbar.Brand> */}
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav style={{ color: "whitesmoke", fontSize: "20px" }} className="d-flex justify-content-around w-25 mx-auto">
@@ -346,20 +330,6 @@ const Header: React.FC<HeaderProps> = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            {/* <nav className="container-fluid p-3 bg-primary">
-                <div className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {categoriesAr.map((item, i) => {
-                            return (
-                                <li><Link className="text-white dropdown-item" key={i} to={"/categories/single/" + item.s_id}>{item.name}</Link></li>
-                            )
-                        })}
-                    </ul>
-                </div>
-            </nav> */}
         </>
     )
 }
@@ -367,9 +337,7 @@ const Header: React.FC<HeaderProps> = () => {
 // מחשב כמה מוצרים יש בסהכ בעגלה
 const cartTotal = (carts_ar: any) => {
     let total = 0;
-    // carts_ar.map((item: any) => {
     total += carts_ar.length;
-    // })
     return total;
 }
 

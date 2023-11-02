@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import React from 'react';
-import { Circle, Image, Text, Transformer } from 'react-konva';
+import { Image, Transformer } from 'react-konva';
 import useImage from 'use-image';
 import TrashPng from '../../../assets/trash.png';
 
@@ -23,15 +23,12 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({ premuimExtraPriceFunc
     let deleteRef = React.useRef<any>();
     let [isDesignShown, setIsDesignShown] = React.useState(true);
     let [premiumClicks, setPremiumClicks] = React.useState<number>(0);
-    // let premiumClicks: number = 0;
 
     React.useEffect(() => {
-        // console.log(key)
         // setValue(`shirtDesigns.front[${props.key}].design.is_design`, true);
         if (isSelected) {
             trRef.current.nodes([designRef.current]);
             trRef.current.getLayer().batchDraw();
-            // console.log("aaa" + designWidth, designX, designRotation);
         }
     }, [isSelected]);
     
@@ -76,7 +73,6 @@ const SecondStepImage: React.FC<SecondStepImageProps> = ({ premuimExtraPriceFunc
                                 x: e.target.x(),
                                 y: e.target.y(),
                             })
-                            console.log(e.target.x(), e.target.y(), e.target.width(), e.target.height(), e.target.rotation())
                             setValues(e);
                         }}
                         onTransformEnd={(e) => {

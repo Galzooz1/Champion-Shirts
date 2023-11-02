@@ -9,7 +9,6 @@ import { doApiGet, URL_API } from '../services/apiService';
 import Footer from './footer';
 import Header from './header';
 import Loading from './loading';
-import { H2HR, HR, SpanH2 } from './styles/headerCategory';
 import { DesignedH2, DesignedLine } from './userPanel';
 
 interface CategoriesProps {
@@ -53,7 +52,6 @@ const Categories: React.FC<CategoriesProps> = () => {
     const getCategories = async () => {
         let url = URL_API + `/categories?sort=_id&reverse=yes&perPage=6`
         let data = await doApiGet(url)
-        console.log(data)
         setCatList(data);
     }
     return (

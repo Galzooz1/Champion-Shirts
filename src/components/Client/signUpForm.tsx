@@ -25,13 +25,6 @@ export interface SignUpArgs {
     password2: string;
 };
 
-// export type returnedValues = {
-// isSigned: boolean,
-// confirmationCode?: string,
-// userId?: string
-// }
-
-// export type UserConfirmFunction = (code: string) => Promise<void>;
 export type SignUpFunction = (args: SignUpArgs) => Promise<any[]>;
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
@@ -42,10 +35,8 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     let [confirmationCode, setConfirmationCode] = useState<string>("");
     let [userId, setUserId] = useState<string>();
     let verifyCodeRef = useRef<HTMLInputElement | any>();
-    // let [isVerified, setIsVerified] = useState<boolean>(false);
 
     const onSubmit = async(SignUpArgs: any) => {
-        console.log(SignUpArgs);
         delete SignUpArgs['password2'];
         results = await props.onSignUpRequested(SignUpArgs);
         setIsSigned(results[0]);
@@ -54,11 +45,8 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     }
 
     const verifyUser = () => { 
-        console.log(verifyCodeRef.current.value);
-        console.log(confirmationCode);
         if(verifyCodeRef.current.value === confirmationCode){
             doUserConfirm(verifyCodeRef.current.value)
-            // setIsVerified(true);
             toast.success("Confirmation succeed!")
             history.push("/users/confirm/" + verifyCodeRef.current.value);
         }else{
@@ -69,16 +57,13 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     const doUserConfirm = async(code: string) => { 
         let url = URL_API + "/users/confirm/" + code;
         let data = await doApiGet(url);
-        console.log(data);
     }
 
     const resendConfirmationCode = async() => { 
         let url = URL_API + "/users/confirm/" + userId;
         let data = await doApiGet(url);
-        console.log(data);
         setConfirmationCode(data);
         toast.info("Confirmation code sent again, Please check your Email!")
-        // console.log(confirmationCode);
     }
 
     return (
@@ -148,7 +133,6 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         <div className="display-6 text-white">Didn't get a code?</div>
         <button onClick={resendConfirmationCode} className="btn btn-danger">Send me code Again</button>
         </div>
-        {/* {isVerified ? <UserConfirm doUserConfirm={doUserConfirm} /> : null} */}
         </>
     )
     )

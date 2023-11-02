@@ -17,7 +17,6 @@ const DesignsPages: React.FC<DesignsPagesProps> = () => {
 
     const doCountApi = async () => {
         let data = await doApiGet(URL_API + "/designs/count");
-        console.log(data);
         setPages(Math.ceil(data.count / perPage));
     }
     return (

@@ -28,10 +28,6 @@ color:white;
 }
 `;
 
-// const InputUpload = styled.input`
-// border-radius: 50%;
-// `;
-
 const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, productData, getSingleProductData, params }, props) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Partial<IProdItems>>({});
     let [categoriesAr, setCategoriesAr] = useState<Partial<ICategories[]>>([]);
@@ -47,12 +43,10 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
     const getCategoriesData = async() => {
         let url = URL_API + "/categories"
         let data = await doApiGet(url)
-        console.log(data);
         setCategoriesAr(data)
     }
 
     const onSubmit = (dataBody: any) => {
-        console.log(dataBody);
         editProduct(dataBody);
     }
 
@@ -63,12 +57,10 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
         let editId = params;
         let url = URL_API + "/products/" + editId;
         let data = await doApiMethod(url, "PUT", dataBody);
-        console.log(data);
         if (data.n === 1) {
             toast.success("Product updated!")
             history.push("/admin");
         } else {
-            console.log(dataBody)
             toast.error("There's a problem!")
         }
     }
@@ -79,7 +71,6 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
 
     const uploadFile = async () => {
         let editId = params;
-        console.log(fileRef.current.files[0]);
         const myData = new FormData();
         myData.append("fileSend", fileRef.current.files[0]);
         let url = URL_API + "/products/upload/" + editId;
@@ -93,10 +84,8 @@ const EditProduct: React.FC<EditProductProps> = ({ onClose, isModalVisible, prod
             if (resp.data.n === 1) {
                 getSingleProductData()
             }
-            console.log(resp.data);
         }
         catch (err) {
-            console.log(err);
         }
 
     }

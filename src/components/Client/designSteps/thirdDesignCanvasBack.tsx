@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layer, Stage } from 'react-konva';
-import { IProdItems } from '../../Admin/interfaces/prodItems';
 import { IReadyproducts } from '../../Admin/interfaces/readyproducts';
 import { URL_API } from '../../services/apiService';
 import { MainImgDiv } from './secondStepWorkspace';

@@ -27,14 +27,12 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
 
 
     const onSubmit = (dataBody: any) => {
-        console.log(dataBody);
         AddDesign(dataBody);
     }
 
     const AddDesign = async (dataBody: any) => {
         let url = URL_API + "/designs";
         let data = await doApiMethod(url, "POST", dataBody);
-        console.log(data);
         if (data.s_id) {
             if (fileRef.current.files.length > 0) {
                 uploadFile(data.s_id);
@@ -43,7 +41,6 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
                 window.location.reload();
             }
         } else {
-            console.log(dataBody)
             toast.error("There's a problem!")
         }
     }
@@ -53,7 +50,6 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
     }
 
     const uploadFile = async (s_id: number) => {
-        console.log(fileRef.current.files[0]);
         const myData = new FormData();
         myData.append("fileSend", fileRef.current.files[0]);
         let url = URL_API + "/designs/upload/" + s_id;
@@ -68,7 +64,6 @@ const AddDesign: React.FC<AddDesignProps> = ({ isModalVisible, onClose }) => {
                 toast.success("Design Added!");
                 window.location.reload();
             }
-            console.log(resp.data);
         }
         catch (err) {
             console.log(err);

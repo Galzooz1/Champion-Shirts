@@ -35,7 +35,6 @@ const CategoriesAdmin: React.FC<CategoriesAdminProps> = (props) => {
         let currentPage = props.match.params.page || 0;
         let url = URL_API + `/categories?page=${currentPage}&sort=_id&reverse=yes&perPage=5`
         let data = await doApiGet(url);
-        console.log(data);
         setCategoriesAr(data);
     }
 
@@ -43,12 +42,10 @@ const CategoriesAdmin: React.FC<CategoriesAdminProps> = (props) => {
         if (window.confirm("Are you sure you want to delete?")) {
             let url = URL_API + "/categories/" + s_id;
             let data = await doApiMethod(url, "DELETE", {});
-            console.log(data);
             if (data.n === 1) {
                 toast.success("Deleted Successfuly!");
                 window.location.reload();
             } else {
-                console.log(data);
                 toast.error("Error occuired, time to check the code.");
             }
         }
@@ -70,7 +67,6 @@ const CategoriesAdmin: React.FC<CategoriesAdminProps> = (props) => {
                 </div>
                 <hr />
             </motion.div>
-            {/* <Link to="/admin/addProd">add new prod</Link> */}
             <motion.table
                 transition={{ duration: 1, delay: 0.5 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="table table-striped container">

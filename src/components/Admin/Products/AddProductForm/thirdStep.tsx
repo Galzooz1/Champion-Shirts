@@ -10,19 +10,16 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
     const [indexes, setIndexes] = React.useState<any[]>([]);
     const [counter, setCounter] = React.useState<number>(0);
     const [disable, setDisable] = React.useState(false);
-    // let btnRef = useRef<HTMLButtonElement>();
 
     const addDirection = () => {
         setIndexes(prevIndexes => [...prevIndexes, counter]);
         setCounter(prevCounter => prevCounter + 1);
-        // btnRef.disabled=true;
     }
 
     const removeDirection = (index: any) => () => {
         setIndexes(prevIndexes => [...prevIndexes.filter(item => item !== index)]);
         setCounter(prevCounter => prevCounter - 1);
         setDisable(false)
-        // btnRef.disabled=false;
     };
 
     return (
@@ -32,12 +29,6 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                 return (
                     <fieldset name={fieldName} key={fieldName}>
                         <div className="mb-3">
-                            {/* <div>
-                                <LabelContainer className="text-warning">Front Image</LabelContainer>
-                                <InputContainer>
-                                    <input {...register(`properties[${index}].frontImg`, { required: false })} type="text" name={`properties[${index}].direction`} id={`properties[${index}].direction`} className="form-control" />
-                                </InputContainer>
-                            </div> */}
                             <LabelContainer className="text-warning">Front Image</LabelContainer>
                             <br/>
                             <LabelContainer style={{ textDecoration: 'underline' }}>Size Of Canvas</LabelContainer>
@@ -73,12 +64,6 @@ const ThirdStep: React.FC<ThirdStepProps> = ({ errors, register }) => {
                         </div>
                         <hr className="bg-light" />
                         <div className="mb-3">
-                            {/* <div>
-                                <LabelContainer className="text-warning">Back Image</LabelContainer>
-                                <InputContainer>
-                                    <input {...register(`properties[${index}].backImg`, { required: false })} type="text" name={`properties[${index}].direction`} id={`properties[${index}].direction`} className="form-control" />
-                                </InputContainer>
-                            </div> */}
                                 <LabelContainer className="text-warning">Back Image</LabelContainer>
                                 <br/>
                             <LabelContainer style={{ textDecoration: 'underline' }}>Size Of Canvas</LabelContainer>

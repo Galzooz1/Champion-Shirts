@@ -67,14 +67,12 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
     const getUserInfo = async () => {
         let url = URL_API + "/users/myInfo";
         let data = await doApiMethod(url, "GET");
-        console.log(data);
         setUserInfo(data);
     }
 
     const editUserInfo = async (dataBody: IUsers) => {
         let url = URL_API + "/users/" + userInfo?._id;
         let data = await doApiMethod(url, "PUT", dataBody);
-        console.log(data);
         if (data.n === 1) {
             window.location.reload();
             toast.success("User Updated!")
@@ -85,7 +83,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
 
     const onSubmit = (dataBody: IUsers) => {
         if (dataBody.password !== "" && dataBody.avatar_img !== "") {
-            console.log(dataBody);
             editUserInfo(dataBody)
         } else {
             toast.error("Please Fill empty Fields!")
@@ -94,7 +91,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
 
     const uploadFile = async () => {
         let editId = userInfo?._id;
-        console.log(fileRef.current.files[0]);
         const myData = new FormData();
         myData.append("fileSend", fileRef.current.files[0]);
         let url = URL_API + "/users/upload/" + editId;
@@ -109,7 +105,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                 getUserInfo()
                 toast.success("Avatar Image Updated!")
             }
-            console.log(resp.data);
         }
         catch (err) {
             console.log(err);
@@ -141,7 +136,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                                         {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
                                         <div className="ms-2" onClick={() => {
                                             setEditFirstName(wasEditFirstName => !wasEditFirstName);
-                                            console.log(editFirstName)
                                         }}>
                                             <i style={{ cursor: "pointer" }} className="fas fa-pencil-alt fa-2x"></i>
                                         </div>
@@ -164,14 +158,12 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Email</LabelContainer>
                                 <InputContainer>
-                                    {/* {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput defaultValue={userInfo?.email} disabled={true} type="text" name="email" id="email" className="form-control" />
                                 </InputContainer>
                             </div>
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Password</LabelContainer>
                                 <InputContainer>
-                                    {/* {UserIcon && <IconContainer className="me-3"><img src={UserIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput onFocus={(e) => {
                                         e.target.value = "";
                                     }} type="password" defaultValue={userInfo?._id} disabled={editPassword ? false : true} {...register("password", { required: false, minLength: 6 })} name="password" id="password" className="form-control" />
@@ -186,8 +178,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Phone</LabelContainer>
                                 <InputContainer>
-                                    {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
-
                                     <ModalInput defaultValue={userInfo?.phone} disabled={editPhone ? false : true} {...register("phone", { required: false, minLength: 2 })} type="text" name="phone" id="phone" className="form-control" />
 
                                     {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
@@ -201,7 +191,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                             <div className="mb-3">
                                 <LabelContainer className="text-dark">Address</LabelContainer>
                                 <InputContainer>
-                                    {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                     <ModalInput defaultValue={userInfo?.address} disabled={editAddress ? false : true} {...register("address", { required: false, minLength: 2 })} type="text" name="address" id="address" className="form-control" />
 
                                     {errors.firstName && <span className="text-danger m-2 text-center">Name must be min 2 chars!</span>}
@@ -274,7 +263,6 @@ const UserPanel: React.FC<UserPanelProps> = (props) => {
                                 <div className="mb-3">
                                     <LabelContainer className="text-dark">Status</LabelContainer>
                                     <InputContainer className={userInfo?.status === "Active" ? "border border-success" : "border border-danger"}>
-                                        {/* {NameIcon && <IconContainer className="me-3"><img src={NameIcon} className="rounded-circle" width="36px" height="36px" alt="user-icon" /></IconContainer>} */}
                                         <ModalInput defaultValue={userInfo?.status} disabled type="text" name="status" id="status" className="form-control" />
                                     </InputContainer>
                                 </div>

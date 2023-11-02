@@ -6,7 +6,6 @@ import DesignsPng from '../../../assets/designs.png';
 import UploadsPng from '../../../assets/upload.png';
 import PremiumPng from '../../../assets/diamond.png';
 import { URL_API } from '../../services/apiService';
-import { IDesignsArr } from './secondStepApp';
 
 interface SecondStepPanelProps {
     productData: Partial<IProdItems>;
@@ -119,7 +118,6 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,se
     // const [ selectedFiles, setSelectedFiles ] = React.useState<any[]>([]);
 
     React.useEffect(() => {
-        console.log(UploadedImageRef);
 
     }, [selectedFiles]);
 
@@ -144,11 +142,8 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,se
     // Method 2
 
     const handleImageChange = (e: any) => {
-        // console.log(e.target.files[])
         if (e.target.files) {
             const filesArray = Array.from(e.target.files).map((file: any) => URL.createObjectURL(file));
-
-            // console.log("filesArray: ", filesArray);
 
             setSelectedFiles((prevImages: any) => prevImages.concat(filesArray));
             Array.from(e.target.files).map(
@@ -160,7 +155,6 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,se
 
     // מרנדר קוד HTML כאן!
     const renderPhotos = (source: any) => {
-        console.log('source: ', source);
         return source.map((photo: any) => {
             return <DesignBox onClick={() => handleFileClicked(photo)}> <img src={photo} alt="" key={photo} width="100" height="100" /></DesignBox>;
         });
@@ -238,46 +232,7 @@ const SecondStepPanel: React.FC<SecondStepPanelProps> = ({ premuimExtraPrice ,se
                             </DesignsDiv>
                         </>
                     }
-                    {/* {chooseMethod === 1 &&
-                    <DesignsDiv>
-                    
-                    <>
-                    <DesignBox>
-                    <input onChange={handleImageUpload} ref={fileRef} type="file" ng-multiple="allowMultiple" accept="image/*" style={{ display: "none" }} />
-                    <div
-                    style={{
-                        height: "100px",
-                        width: "100px",
-                                        border: "1px dashed black"
-                                    }}
-                                    onClick={() => { fileRef.current.click() }}
-                                    >
-                                    <div style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        display: "flex", alignItems: 'center', justifyContent: 'center'
-                                    }}>
-                                    <i className="fa fa-upload fa-3x" aria-hidden="true"></i>
-                                    </div>
-                                    </div>
-                                    </DesignBox>
-                                    <DesignBox>
-                                    <div style={{
-                                        height: "100px",
-                                        width: "100px",
-                                    }}>
-                                    <img
-                                    ref={UploadedImageRef}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
-                                    />
-                                    </div>
-                                    </DesignBox>
-                                    </>
-                                    </DesignsDiv>
-                                } */}
+
                     {chooseMethod === 2 &&
                         <DesignsDiv>
                             <DesignBox>

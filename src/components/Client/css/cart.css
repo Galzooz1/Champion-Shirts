@@ -10,7 +10,6 @@
     top:90px;
     right:0;
     width:30%;
-    /* border-radius: 20px 0 0 20px; */
     background:white;
     height: 70%;
     z-index: 999999;
@@ -41,7 +40,6 @@
   }
   .cart_side .cart_items::-webkit-scrollbar-thumb{
     border-radius: 100px;
-    /* background-color: darkgrey; */
     background-image: linear-gradient(180deg, #D0368A 0%, #708AD4 99%);
 
   outline: 1px solid slategrey;

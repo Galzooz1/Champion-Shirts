@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import { InputContainer, LabelContainer, ModalInput } from '../../../Client/LoginModal/InputWithIcon';
 import { ICategories } from '../../interfaces/categoriesArgs';
 

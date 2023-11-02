@@ -17,7 +17,6 @@ const CategoriesPages: React.FC<CategoriesPagesProps> = () => {
 
     const doCountApi = async () => {
         let data = await doApiGet(URL_API + "/categories/count");
-        console.log(data);
         setPages(Math.ceil(data.count / perPage));
     }
     return (

@@ -30,8 +30,6 @@ const BaseModalWrapper: React.FC<Props> = ({onBackdropClick, isModalVisble, head
                 <CloseButtonComponent onClick={onBackdropClick}>
                 <CloseSign data-tip="change the color to red when hover" />
                 </CloseButtonComponent>
-                {/* <CloseButtonComponent>
-                </CloseButtonComponent> */}
                 <Header>{header}</Header>
                 {message && <Message>{message}</Message>}
                 <Content>{content}</Content>
